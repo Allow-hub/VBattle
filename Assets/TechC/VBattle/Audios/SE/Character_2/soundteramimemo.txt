@@ -1,0 +1,9 @@
+音を入れた部分    名前（題名題名）
+WeakneutralAttackData_1　swing2
+WeakleftAttackData 　se_pyun1
+WeakrightAttackData 　Kick
+WeakupAttackData 　se_zusyan02
+WeakDownAttackData 　strange_wave
+StrongrightAttackDate  magical_elevator
+StrongupAttackDate　se_power_up18
+StrongDownAttackDate　Strong
