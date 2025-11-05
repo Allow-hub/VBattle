@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace TechC.VBattle.Scripts.Title
+namespace TechC.VBattle.Title
 {
     public class TitleManager : MonoBehaviour
     {

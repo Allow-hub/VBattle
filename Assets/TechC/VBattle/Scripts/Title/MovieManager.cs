@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TechC.VBattle.Scripts.Title
+namespace TechC.VBattle.Title
 {
 
     public class MovieManager : MonoBehaviour
