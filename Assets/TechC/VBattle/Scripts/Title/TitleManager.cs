@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,7 +27,7 @@ namespace TechC.VBattle.Title
 
         void Update()
         {
-            if (pressAnyKeyAction.triggered)
+            if (Input.anyKeyDown)
             {
                 if (MoviePlaying)
                 {
@@ -33,7 +35,7 @@ namespace TechC.VBattle.Title
                 }
                 else
                 {
-                    // GameManager.I.ChangeSelectState(); // TODO:GameManagerがインポートできたらコメントアウトを消す
+                    SceneLoader.I.LoadSelectSceneAsync().Forget();
                 }
             }
         }
