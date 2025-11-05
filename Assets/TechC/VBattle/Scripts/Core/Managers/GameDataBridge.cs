@@ -16,7 +16,7 @@ namespace TechC.VBattle.Core.Managers
         [SerializeField] private bool canConnectWifi = true;
 
         protected override bool UseDontDestroyOnLoad => true;
-        protected override void Init()
+        public override void Init()
         {
             Application.runInBackground = true;
             QualitySettings.vSyncCount = 0;

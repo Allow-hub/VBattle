@@ -44,7 +44,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// Singletonの初期化処理をoverride
         /// </summary>
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             // BGM用のAudioSourceを2つ作成（クロスフェード用）
