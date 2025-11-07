@@ -404,6 +404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13bbdd5881aa4c7478d96f66fc28e9cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inGameManager: {fileID: 6733301921680445614}
+  charaAttackFactory: {fileID: 8042099456699637893}
+  effectFactory: {fileID: 9105864281085549204}
 --- !u!114 &6733301921680445614
 MonoBehaviour:
   m_ObjectHideFlags: 0
