@@ -7,20 +7,15 @@ namespace TechC.VBattle.InGame.Character
 {
     public class MoveCommand : ICommand
     {
-        private readonly CharacterController owner;
         private readonly Vector2 dir;
-        public MoveCommand(CharacterController owner, UnityEngine.Vector2 dir)
+        public MoveCommand(Vector2 dir)
         {
-            this.owner = owner;
             this.dir = dir;
         }
-        
-        public bool IsFinished => true;
+        public CommandType Type => CommandType.Move;
+
         public void Execute()
         {
-            owner.Move(dir);
         }
-        public void Undo() { }
-        public void ForceFinish() { }
     }
 }

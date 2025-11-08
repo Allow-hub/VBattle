@@ -1,0 +1,41 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+namespace TechC.VBattle.InGame.Character
+{
+      // ==========================================
+    // Neutral状態（地上通常時）
+    // ==========================================
+    public class NeutralState : CharacterState
+    {
+        public NeutralState(CharacterController controller) : base(controller) { }
+
+        public override bool CanExecuteCommand(ICommand command)
+        {
+            // 地上ではすべての行動が可能
+            return command.Type == CommandType.Move ||
+                   command.Type == CommandType.Jump ||
+                   command.Type == CommandType.Attack ||
+                   command.Type == CommandType.Guard;
+        }
+
+        public override void OnEnter(CharacterState prevState)
+        {
+        }
+
+        public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
+        {
+            // コマンドによって状態が変わるまで待機
+            while (!ct.IsCancellationRequested)
+            {
+                await UniTask.Yield(ct);
+            }
+            return this;
+        }
+
+        public override void OnExit()
+        {
+        }
+    }
+}

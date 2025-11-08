@@ -4,79 +4,107 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
+    /// <summary>
+    /// CharacterState用のStateMachine
+    /// </summary>
     public class StateMachine
     {
-        public class State
-        {
-            public delegate void OnEnterCallback(State prev);
-            public delegate UniTask<State> OnUpdateCallback(CancellationToken ct);
-            public delegate void OnExitCallback();
-
-            public OnEnterCallback OnEnter;
-            public OnUpdateCallback OnUpdate;
-            public OnExitCallback OnExit;
-        }
-
-        private State _currentState;
+        private CharacterState _currentState;
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsForState;
 
-        private void ChangeState(State nextState)
+        public CharacterState CurrentState => _currentState;
+
+        /// <summary>
+        /// 外部から状態を変更
+        /// </summary>
+        public void ChangeState(CharacterState nextState)
         {
+            if (nextState == null)
+                return;
+
+            // 現在の状態をキャンセル
             if (_ctsForState != null)
             {
                 _ctsForState.Cancel();
                 _ctsForState.Dispose();
+                _ctsForState = null;
             }
 
             var prev = _currentState;
-            _currentState?.OnExit?.Invoke();
+            _currentState?.OnExit();
             _currentState = nextState;
-            _currentState?.OnEnter?.Invoke(prev);
+            _currentState?.OnEnter(prev);
+
+            // 新しい状態用のCancellationTokenを作成
+            _ctsForState = new CancellationTokenSource();
         }
 
-        public async UniTaskVoid Run(State start)
+        public async UniTaskVoid Run(CharacterState start)
         {
+            if (start == null)
+                return;
+
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
-            var state = start;
+            // 初期状態を設定（ChangeStateを使わずに直接設定）
+            _currentState = start;
+            _currentState.OnEnter(null);
+            _ctsForState = new CancellationTokenSource();
+
+            CharacterState nextState = start;
 
             while (!token.IsCancellationRequested)
             {
-                ChangeState(state);
+                // 外部からChangeStateが呼ばれて状態が変わった場合
+                if (_currentState != nextState)
+                {
+                    nextState = _currentState;
+                }
 
-                _ctsForState = new CancellationTokenSource();
+                if (_ctsForState == null)
+                    _ctsForState = new CancellationTokenSource();
+
                 using var linked = CancellationTokenSource.CreateLinkedTokenSource(token, _ctsForState.Token);
                 var ct = linked.Token;
 
-                if (_currentState.OnUpdate == null)
+                try
                 {
-                    // Updateが未定義なら永遠にEndOfFrameを待つ
-                    while (!ct.IsCancellationRequested)
+                    if (_currentState == null)
+                        break;
+
+                    // 状態のUpdateを実行し、次の状態を取得
+                    nextState = await _currentState.OnUpdate(ct);
+
+                    // OnUpdateから返された状態がnullでないか確認
+                    if (nextState == null)
                     {
-                        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate, ct);
+                        nextState = _currentState; // 現在の状態を維持
+                    }
+
+                    // 状態が変わる場合は遷移
+                    if (nextState != _currentState)
+                    {
+                        ChangeState(nextState);
                     }
                 }
-                else
+                catch (System.OperationCanceledException)
                 {
-                    try
-                    {
-                        // awaitで次のStateを受け取る
-                        state = await _currentState.OnUpdate.Invoke(ct);
-                    }
-                    catch (System.OperationCanceledException)
-                    {
-                        // キャンセルされた場合はループを抜ける
-                        break;
-                    }
+                    // キャンセルされた場合は現在の状態を維持
+                    nextState = _currentState;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"State update error in {_currentState?.GetType().Name}: {ex}");
+                    nextState = _currentState;
                 }
             }
         }
 
-        public void Start(State start)
+        public void Start(CharacterState start)
         {
-            Run(start).Forget(); // 非同期開始
+            Run(start).Forget();
         }
 
         public void Cancel()

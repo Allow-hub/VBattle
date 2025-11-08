@@ -6,24 +6,18 @@ namespace TechC.VBattle.InGame.Character
 {
     public class JumpCommand : ICommand
     {
-        private readonly CharacterController owner;
-        public JumpCommand(CharacterController owner)
+        private CharacterController characterController;
+        public JumpCommand(CharacterController controller)
         {
-            this.owner = owner;
+            characterController = controller;
         }
         
-        public bool IsFinished => false;
+
+        public CommandType Type => CommandType.Jump;
 
         public void Execute()
         {
-            Debug.Log("Jump Command Executed");
+            characterController.Jump();
         }
-        public void Undo()
-        {
-        }
-        public void ForceFinish()
-        {
-        }
-
     }
 }

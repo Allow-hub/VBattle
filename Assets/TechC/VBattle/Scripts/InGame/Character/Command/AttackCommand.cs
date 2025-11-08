@@ -23,23 +23,21 @@ namespace TechC.VBattle.InGame.Character
 
     public class AttackCommand : ICommand
     {
-        private readonly CharacterController owner;
         private readonly AttackType attackType;
         private readonly AttackDirection attackDirection;
 
-        public AttackCommand(CharacterController owner, AttackType attackType, AttackDirection attackDirection)
+        public AttackCommand(AttackType attackType, AttackDirection attackDirection)
         {
-            this.owner = owner;
             this.attackType = attackType;
             this.attackDirection = attackDirection;
         }
+        public CommandType Type => CommandType.Attack;
 
-        public bool IsFinished => true;
         public void Execute()
         {
-            Debug.Log($"Attack Command Executed: {attackType}");
         }
-        public void Undo() { }
-        public void ForceFinish() { }
+
+        public AttackType GetAttackType() => attackType;
+        public AttackDirection GetAttackDirection() => attackDirection;
     }
 }
