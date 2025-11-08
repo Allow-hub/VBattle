@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KoorinoAme
   m_EditorClassIdentifier: 
   CharacterName: 0
-  MoveSpeed: 0
+  MoveSpeed: 10
   DashMoveSpeed: 0
   JumpPower: 0
   DoubleJumpPower: 0

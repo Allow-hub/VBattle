@@ -23,7 +23,6 @@ namespace TechC.VBattle.Core.Managers
         public event Action<string> OnSceneLoadStarted;
         public event Action<string> OnSceneLoadCompleted;
         public event Action<string, string> OnSceneLoadFailed;
-        public event Action<float> OnLoadingProgress;
         #endregion
 
         #region Loading Scene Management
