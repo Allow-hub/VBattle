@@ -1,0 +1,1 @@
+# Characterの管理法
