@@ -1,25 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using TechC.VBattle.Core.Managers;
-using UnityEngine;
 
-namespace TechC.VBattle.InGame
+namespace TechC.VBattle.InGame.Character
 {
-    /// <summary>
-    /// バトルの調停者
-    /// </summary>
     public class BattleJudge
     {
-        // public void OnAttackHit(AttackInfo info, Character attacker, Character defender)
-        // {
-        //     if (defender.IsGuarding) HandleGuard(info, defender);
-        //     else HandleDamage(info, defender);
-        // }
+        private readonly CharacterController player_1;
+        private readonly CharacterController player_2;
 
-        // private void HandleDamage(AttackInfo info, Character defender)
-        // {
-        //     defender.TakeDamage(info.Power);
-        //     EventBus.Publish(new OnCharacterDamagedEvent(defender, info.Power));
-        // }
+        public BattleJudge(CharacterController p1, CharacterController p2)
+        {
+            player_1 = p1;
+            player_2 = p2;
+        }
+
+        private void Update()
+        {
+
+        }
+        
     }
 }

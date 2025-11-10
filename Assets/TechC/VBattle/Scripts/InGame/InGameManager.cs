@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.InGame.Systems;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame
@@ -12,16 +13,19 @@ namespace TechC.VBattle.InGame
     {
         public InGameState InGameState => inGameState;
         private InGameState inGameState;
+        public BattleEventBus BattleBus { get; private set; }
 
         protected override bool UseDontDestroyOnLoad => false;
 
         public override void Init()
         {
             base.Init();
+            BattleBus = new BattleEventBus();
         }
         protected override void OnRelease()
         {
             base.OnRelease();
+            BattleBus.ClearAllListeners();
         }
     }
 

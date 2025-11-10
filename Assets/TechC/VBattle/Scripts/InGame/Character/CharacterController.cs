@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TechC.VBattle.InGame.Character
 {
-    public partial class CharacterController : MonoBehaviour
+    public partial class CharacterController : MonoBehaviour, ITakeDamageable
     {
         [SerializeField] private CharacterData characterData;
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   CharacterName: 0
   MoveSpeed: 10
   DashMoveSpeed: 0
-  JumpPower: 0
+  JumpPower: 5
   DoubleJumpPower: 0
   AirControlMultiplier: 0.7
   FastFallSpeed: 15
