@@ -74,14 +74,16 @@ namespace TechC.VBattle.Core.Managers
                 }
             }
         }
+
         /// <summary>
         /// 派生クラス用の初期化メソッド
         /// </summary>
-        protected virtual void Init()
+        public virtual void Init()
         {
             I = this as T;
+            isInitialized = true;
         }
- 
+
         /// <summary>
         /// 派生クラス用の破棄処理
         /// </summary>
