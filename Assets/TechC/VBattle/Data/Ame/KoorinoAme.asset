@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f12eb2df8a34946abfddc69a03cb27, type: 3}
+  m_Name: KoorinoAme
+  m_EditorClassIdentifier: 
+  CharacterName: 0
+  MoveSpeed: 0
+  DashMoveSpeed: 0
+  JumpPower: 0
+  DoubleJumpPower: 0
+  AirControlMultiplier: 0.7
+  FastFallSpeed: 15
+  MaxHP: 500
+  GuardPower: 100
+  GuardDecreasePower: 0.1
+  GuardRecoverySpeed: 0.3
+  GuardRecoveryInterval: 2
+  GuardBreakDuration: 2
