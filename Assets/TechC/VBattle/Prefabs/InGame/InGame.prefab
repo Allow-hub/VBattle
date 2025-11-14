@@ -220,6 +220,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPool: {fileID: 6434067615194947122}
+--- !u!1 &1926662757053923083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5351596295383579294}
+  m_Layer: 5
+  m_Name: Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5351596295383579294
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926662757053923083}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4342816883228926432}
+  m_Father: {fileID: 2690429553758000768}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3045432767732057544
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +291,7 @@ RectTransform:
   - {fileID: 5540369896654637210}
   - {fileID: 223110773079729471}
   - {fileID: 2167465806626922688}
-  - {fileID: 2448958857879525888}
+  - {fileID: 5351596295383579294}
   - {fileID: 8807865205251514581}
   m_Father: {fileID: 4880679695495569093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -879,7 +915,7 @@ RectTransform:
   - {fileID: 3053360590425670608}
   - {fileID: 3451151144335209382}
   - {fileID: 8967254576891144219}
-  m_Father: {fileID: 2448958857879525888}
+  m_Father: {fileID: 5351596295383579294}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1003,11 +1039,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5c48da8d290ec774bb7ab8c62ba007b2, type: 3}
-  m_Type: 3
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1489,38 +1525,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 8f0d77ac29364264fa50fe9842627f8a, type: 2}
---- !u!1 &9030581368050548382
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2448958857879525888}
-  m_Layer: 0
-  m_Name: Timer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2448958857879525888
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9030581368050548382}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4342816883228926432}
-  m_Father: {fileID: 2690429553758000768}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2506563339735383753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1806,7 +1810,7 @@ PrefabInstance:
     - target: {fileID: 471495845830376202, guid: d9dd290009ba7194db30ea68a948927c,
         type: 3}
       propertyPath: m_Type
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 471495845830376202, guid: d9dd290009ba7194db30ea68a948927c,
         type: 3}
@@ -1814,6 +1818,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 345211974, guid: a2d77162b8460ab47a5ea6c2be84eb3c,
         type: 3}
+    - target: {fileID: 471495845830376202, guid: d9dd290009ba7194db30ea68a948927c,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 471495845830376202, guid: d9dd290009ba7194db30ea68a948927c,
         type: 3}
       propertyPath: m_FillMethod
