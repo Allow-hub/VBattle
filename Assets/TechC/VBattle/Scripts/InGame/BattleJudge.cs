@@ -1,5 +1,7 @@
 
-namespace TechC.VBattle.InGame.Character
+using TechC.VBattle.InGame.Character;
+
+namespace TechC.VBattle.InGame.Systems
 {
     public class BattleJudge
     {
