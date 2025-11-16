@@ -11,7 +11,7 @@ namespace TechC.VBattle.InGame.Character
     {
         public NeutralState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand(ICommand command)
+        public override bool CanExecuteCommand<T>(T command)
         {
             // 地上ではすべての行動が可能
             return command.Type == CommandType.Move ||

@@ -8,8 +8,10 @@
 攻撃、ジャンプ、移動などを実行したいと通知
 
 ## それぞれのCommand(ConcreteCommand)
-CommandTypeを持ち、それぞれのロジックに必要な情報を持つ
+CommandTypeを持ち、それぞれのロジックに必要な情報を持つ<br>
+情報しか持たないので構造体で定義
 
 ## CharacterController(Receiver)
 FSMのStateMachineとCharacterDataを持つ。<br>
 StateMachineの状態によって受け取ったCommandを受け付けるか拒否するかを決める<br>
+コマンドがロジックを呼ぶよりもコマンドが通知してロジックとCharacterControllerをアダプターするクラスに任せるのが綺麗だが過剰実装なので今回はCharacterControllerにロジックを持たせる

@@ -1,21 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Character
 {
-    public class MoveCommand : ICommand
+    /// <summary>
+    /// 移動コマンド、移動方向の情報を持つ
+    /// </summary>
+    public struct MoveCommand : ICommand
     {
-        private readonly Vector2 dir;
+        public CommandType Type => CommandType.Move;
+        public Vector2 Dir { get; }
+        
         public MoveCommand(Vector2 dir)
         {
-            this.dir = dir;
-        }
-        public CommandType Type => CommandType.Move;
-
-        public void Execute()
-        {
+            Dir = dir;
         }
     }
 }

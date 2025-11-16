@@ -13,7 +13,7 @@ namespace TechC.VBattle.InGame.Character
 
         public DamageState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand(ICommand command)
+        public override bool CanExecuteCommand<T>(T command)
         {
             // ダメージ中は一切の行動不可
             return false;

@@ -135,7 +135,7 @@ namespace TechC.VBattle.InGame.Character
             {
                 if (!suppressNextJumpRelease)
                 {
-                    controller.ExecuteCommand(new JumpCommand(controller));
+                    controller.ExecuteCommand(new JumpCommand());
                 }
                 else
                 {

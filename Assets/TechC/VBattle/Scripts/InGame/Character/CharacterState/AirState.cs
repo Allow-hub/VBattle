@@ -13,7 +13,7 @@ namespace TechC.VBattle.InGame.Character
 
         public AirState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand(ICommand command)
+        public override bool CanExecuteCommand<T>(T command)
         {
             // 空中では空中移動と空中攻撃のみ
             if (command.Type == CommandType.Move)
@@ -26,7 +26,7 @@ namespace TechC.VBattle.InGame.Character
             return false;
         }
 
-        public override void OnCommandExecuted(ICommand command)
+        public override void OnCommandExecuted<T>(T command)
         {
             if (command.Type == CommandType.Attack)
             {

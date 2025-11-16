@@ -11,10 +11,12 @@ namespace TechC.VBattle.InGame
         Guard
     }
 
-    // コマンドインターフェース
+    /// <summary>
+    /// コマンドインターフェース
+    /// 継承先はデータしか持たないので構造体にする
+    /// </summary>
     public interface ICommand
     {
         CommandType Type { get; }
-        public void Execute();
     }
 }

@@ -11,7 +11,7 @@ namespace TechC.VBattle.InGame.Character
     {
         public GuardState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand(ICommand command)
+        public override bool CanExecuteCommand<T>(T command)
         {
             // ガード中はガード解除のみ
             return command.Type == CommandType.Guard;

@@ -1,3 +1,4 @@
+// CharacterController.cs (本体 - 構造と管理)
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -45,10 +46,7 @@ namespace TechC.VBattle.InGame.Character
             commandInvoker.Update();
         }
 
-        private void RegisterState(CharacterState state)
-        {
-            stateCache[state.GetType()] = state;
-        }
+        private void RegisterState(CharacterState state) => stateCache[state.GetType()] = state;
 
         /// <summary>
         /// 状態取得用のヘルパーメソッド
@@ -63,74 +61,44 @@ namespace TechC.VBattle.InGame.Character
             return null;
         }
 
-        // ==========================================
-        // 実際のアクション実行メソッド
-        // ==========================================
-
-        public void Move(Vector2 direction)
-        {
-            Vector3 move = new Vector3(direction.x, 0, 0) * characterData.MoveSpeed * Time.deltaTime;
-            rb.MovePosition(transform.position + move);
-        }
-
-        public void Jump()
-        {
-            if (isGrounded)
-            {
-                rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
-                isGrounded = false;
-                
-                // 空中状態へ遷移
-                stateMachine.ChangeState(GetState<AirState>());
-            }
-        }
-
-        public void Attack(AttackType type, AttackDirection direction)
-        {
-        }
-
-        public void StartGuard()
-        {
-        }
-
-        public void EndGuard()
-        {
-        }
-
         /// <summary>
-        /// ダメージを受ける
+        /// コマンド実行、ステートが実行の可否を決める 
+        /// ジェネリクスで値型かつICommandの継承をしていることを保証
+        /// ICommandを引数として受け取るとinterface(参照型)として展開されるのでボクシングの発生がある
         /// </summary>
-        public void TakeDamage(float damage, float stunDuration = 0.3f)
-        {
-            var damageState = GetState<DamageState>();
-            damageState.SetStunDuration(stunDuration);
-            stateMachine.ChangeState(damageState);
-        }
-
-        // ==========================================
-        // コマンド実行（状態に判断を委譲）
-        // ==========================================
-        public void ExecuteCommand(ICommand command)
+        /// <param name="command"></param>
+        public void ExecuteCommand<T>(T command) where T : struct, ICommand
         {
             var currentState = stateMachine.CurrentState;
 
-            // 現在の状態がコマンドを受け付けるかチェック
             if (currentState == null || !currentState.CanExecuteCommand(command))
             {
                 Debug.Log($"Command {command.Type} rejected in state {currentState?.GetType().Name}");
                 return;
             }
 
-            // コマンド実行
-            command.Execute();
+            if (command is MoveCommand moveCmd)
+                Move(moveCmd.Dir);
+            else if (command is JumpCommand)
+                Jump();
+            else if (command is AttackCommand attackCmd)
+                Attack(attackCmd.AttackType, attackCmd.AttackDirection);
+            else if (command is GuardCommand guardCmd)
+            {
+                if (guardCmd.IsPress)
+                    StartGuard();
+                else
+                    EndGuard();
+            }
 
-            // 状態にコマンド実行を通知
             currentState.OnCommandExecuted(command);
-
-            // コマンドに応じて状態遷移
             TransitionByCommand(command);
         }
 
+        /// <summary>
+        /// コマンドによるステート分岐
+        /// </summary>
+        /// <param name="command">コマンドの種類</param>
         private void TransitionByCommand(ICommand command)
         {
             CharacterState nextState = null;
@@ -172,15 +140,12 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
-        // ==========================================
-        // 物理判定
-        // ==========================================
 
         private void OnCollisionEnter(Collision collision)
         {
             isGrounded = true;
         }
-        
+
         private void OnCollisionExit(Collision collision)
         {
             isGrounded = false;

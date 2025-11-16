@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using TechC.VBattle.InGame;
-using UnityEngine;
-
 namespace TechC.VBattle.InGame.Character
 {
+    /// <summary>
+    /// 攻撃種　弱・強など
+    /// </summary>
     public enum AttackType
     {
         None,
@@ -12,6 +10,10 @@ namespace TechC.VBattle.InGame.Character
         Strong,
         Air,
     }
+
+    /// <summary>
+    /// 攻撃方向（派生用）
+    /// </summary>
     public enum AttackDirection
     {
         Neutral,    // 通常攻撃
@@ -21,23 +23,20 @@ namespace TechC.VBattle.InGame.Character
         Downer,     // 下攻撃
     }
 
-    public class AttackCommand : ICommand
+    /// <summary>
+    /// 攻撃コマンド
+    /// 攻撃種と攻撃方向の保持し、渡す
+    /// </summary>
+    public struct AttackCommand : ICommand
     {
-        private readonly AttackType attackType;
-        private readonly AttackDirection attackDirection;
+        public CommandType Type => CommandType.Attack;
+        public AttackType AttackType { get; }
+        public AttackDirection AttackDirection { get; }
 
         public AttackCommand(AttackType attackType, AttackDirection attackDirection)
         {
-            this.attackType = attackType;
-            this.attackDirection = attackDirection;
+            AttackType = attackType;
+            AttackDirection = attackDirection;
         }
-        public CommandType Type => CommandType.Attack;
-
-        public void Execute()
-        {
-        }
-
-        public AttackType GetAttackType() => attackType;
-        public AttackDirection GetAttackDirection() => attackDirection;
     }
 }

@@ -15,35 +15,20 @@ namespace TechC.VBattle.InGame.Character
 
         public AttackState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand(ICommand command)
+        public override bool CanExecuteCommand<T>(T command)
         {
             // キャンセル可能タイミングでのみ次の攻撃を受け付ける
             if (command.Type == CommandType.Attack && canCancel)
             {
-                var attackCmd = command as AttackCommand;
-                if (attackCmd != null)
-                {
-                    // 弱攻撃は強攻撃でキャンセル可能
-                    if (currentAttackType == AttackType.Weak)
-                        return attackCmd.GetAttackType() == AttackType.Strong;
-
-                    // 地上攻撃は必殺技でキャンセル可能（例）
-                    // return attackCmd.GetAttackType() == AttackType.Special;
-                }
             }
 
             return false;
         }
 
-        public override void OnCommandExecuted(ICommand command)
+        public override void OnCommandExecuted<T>(T command)
         {
             if (command.Type == CommandType.Attack)
             {
-                var attackCmd = command as AttackCommand;
-                if (attackCmd != null)
-                {
-                    currentAttackType = attackCmd.GetAttackType();
-                }
             }
         }
 
