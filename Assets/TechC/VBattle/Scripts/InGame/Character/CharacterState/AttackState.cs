@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-    // ==========================================
-    // Attack状態（攻撃中）
-    // ==========================================
+    /// <summary>
+    /// 攻撃ステート
+    /// </summary>
     public class AttackState : CharacterState
     {
         private AttackType currentAttackType;

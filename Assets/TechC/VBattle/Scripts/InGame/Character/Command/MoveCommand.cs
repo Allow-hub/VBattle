@@ -9,10 +9,12 @@ namespace TechC.VBattle.InGame.Character
     {
         public CommandType Type => CommandType.Move;
         public Vector2 Dir { get; }
-        
-        public MoveCommand(Vector2 dir)
+        public bool IsDashing { get; }
+
+        public MoveCommand(Vector2 dir, bool isDashing)
         {
             Dir = dir;
+            IsDashing = isDashing;
         }
     }
 }

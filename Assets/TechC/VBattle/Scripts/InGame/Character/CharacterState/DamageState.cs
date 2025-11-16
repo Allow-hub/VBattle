@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-    // ==========================================
-    // Damage状態（被ダメージ中）
-    // ==========================================
+    /// <summary>
+    /// 被ダメージステート
+    /// </summary>
     public class DamageState : CharacterState
     {
         private float damageStunDuration = 0.3f;
@@ -31,7 +31,7 @@ namespace TechC.VBattle.InGame.Character
             await UniTask.Delay((int)(damageStunDuration * 1000), cancellationToken: ct);
 
             // 空中でダメージを受けた場合
-            if (!controller.IsGrounded)
+            if (!controller.IsGrounded())
             {
                 return controller.GetState<AirState>();
             }

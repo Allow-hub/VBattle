@@ -1,24 +1,28 @@
-// CharacterController.cs (本体 - 構造と管理)
 using UnityEngine;
 using System.Collections.Generic;
 
 namespace TechC.VBattle.InGame.Character
 {
+    /// <summary>
+    /// キャラクターのコントローラーの本体
+    /// </summary>
     public partial class CharacterController : MonoBehaviour, ITakeDamageable
     {
         [SerializeField] private CharacterData characterData;
-
+        [SerializeField] private float groundCheckDistance;
+        [SerializeField] private GameObject guardObj;
+        [SerializeField] private LayerMask groundMask;
         private Rigidbody rb;
         private StateMachine stateMachine;
         private CommandInvoker commandInvoker;
-        private bool isGrounded;
-
-        // 状態のキャッシュ
         private Dictionary<System.Type, CharacterState> stateCache = new();
-
-        // 外部から参照可能なプロパティ
-        public bool IsGrounded => isGrounded;
         public CharacterData Data => characterData;
+        public float CurrentGuardPower => currentGuardPower;
+        private float currentGuardPower;
+        private bool isInvincible = false;
+        public bool IsInvincible => isInvincible;
+        private bool isGuarding = false;
+        public bool IsGuarding => isGuarding;
 
         private void Awake()
         {
@@ -33,6 +37,7 @@ namespace TechC.VBattle.InGame.Character
 
             stateMachine = new StateMachine();
             commandInvoker = new CommandInvoker(this);
+            currentGuardPower = Data.GuardPower;
         }
 
         private void Start()
@@ -46,6 +51,11 @@ namespace TechC.VBattle.InGame.Character
             commandInvoker.Update();
         }
 
+        private void FixedUpdate()
+        {
+            IsGrounded();
+        }
+
         private void RegisterState(CharacterState state) => stateCache[state.GetType()] = state;
 
         /// <summary>
@@ -54,9 +64,8 @@ namespace TechC.VBattle.InGame.Character
         public T GetState<T>() where T : CharacterState
         {
             if (stateCache.TryGetValue(typeof(T), out var state))
-            {
                 return state as T;
-            }
+
             Debug.LogError($"State {typeof(T).Name} not found!");
             return null;
         }
@@ -92,63 +101,21 @@ namespace TechC.VBattle.InGame.Character
             }
 
             currentState.OnCommandExecuted(command);
-            TransitionByCommand(command);
         }
 
-        /// <summary>
-        /// コマンドによるステート分岐
-        /// </summary>
-        /// <param name="command">コマンドの種類</param>
-        private void TransitionByCommand(ICommand command)
+        public bool IsGrounded()
         {
-            CharacterState nextState = null;
-
-            switch (command.Type)
-            {
-                case CommandType.Jump:
-                    // ジャンプは内部でAirStateへ遷移
-                    break;
-
-                case CommandType.Attack:
-                    nextState = GetState<AttackState>();
-                    break;
-
-                case CommandType.Guard:
-                    var currentState = stateMachine.CurrentState;
-                    if (currentState is GuardState)
-                    {
-                        // ガード解除
-                        EndGuard();
-                        nextState = GetState<NeutralState>();
-                    }
-                    else
-                    {
-                        // ガード開始
-                        StartGuard();
-                        nextState = GetState<GuardState>();
-                    }
-                    break;
-
-                case CommandType.Move:
-                    // 移動は状態遷移しない（NeutralやAirで継続）
-                    break;
-            }
-
-            if (nextState != null)
-            {
-                stateMachine.ChangeState(nextState);
-            }
+            Vector3 origin = transform.position;
+            Vector3 dir = Vector3.down;
+            // Debug.DrawRay(origin, dir * groundCheckDistance, Color.yellow);
+            return Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
         }
 
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            isGrounded = true;
-        }
+        public void SetGuardPower(float amount) => currentGuardPower = amount;
+        public void DecreaseGuardPower(float amount) => currentGuardPower -= amount;
 
         private void OnCollisionExit(Collision collision)
         {
-            isGrounded = false;
             if (stateMachine.CurrentState == GetState<AirState>()) return;
             stateMachine.ChangeState(GetState<AirState>());
         }

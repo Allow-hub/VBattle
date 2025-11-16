@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.InGame.Systems;
-using UnityEngine;
 
 namespace TechC.VBattle.InGame
 {
@@ -21,16 +18,8 @@ namespace TechC.VBattle.InGame
         public override void Init()
         {
             base.Init();
-            if (GameDataBridge.I.IsDebug)//デバッグなら
-            {
-                BattleBus = new BattleEventBus();
-                // BattleJudge = new BattleJudge();
-            }
-            else
-            {
-                BattleBus = new BattleEventBus();
-                // BattleJudge = new BattleJudge();
-            }
+            BattleBus = new BattleEventBus();
+            // BattleJudge = new BattleJudge();
         }
 
         private void Update()

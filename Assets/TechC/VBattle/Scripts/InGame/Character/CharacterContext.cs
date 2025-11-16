@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TechC.VBattle.InGame.Character
 {
     /// <summary>
@@ -7,7 +5,6 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class CharacterContext
     {
-        // 基本情報
         public CharacterData Data { get; }
         public CharacterController Controller { get; }
         public int PlayerIndex { get; } // 0: P1, 1: P2
@@ -18,11 +15,10 @@ namespace TechC.VBattle.InGame.Character
         public int CurrentHP { get; set; }
         public float CurrentGuardPower { get; set; }
         
-        
         // 状態フラグ（Controllerから参照）
-        // public bool IsGrounded => Controller.IsGrounded;
-        // public bool IsGuarding => Controller.IsGuarding;
-        // public bool IsInvincible => Controller.IsInvincible;
+        public bool IsGrounded => Controller.IsGrounded();
+        public bool IsGuarding => Controller.IsGuarding;
+        public bool IsInvincible => Controller.IsInvincible;
         
         public CharacterContext(
             CharacterData data, 
@@ -47,5 +43,4 @@ namespace TechC.VBattle.InGame.Character
         public float HPRatio => (float)CurrentHP / Data.MaxHP;
         public float GuardPowerRatio => CurrentGuardPower / Data.GuardPower;
     }
-
 }

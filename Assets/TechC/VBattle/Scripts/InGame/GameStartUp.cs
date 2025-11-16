@@ -6,7 +6,7 @@ namespace TechC.VBattle.InGame
     /// <summary>
     /// Singletonの初期化順序を決める
     /// </summary>
-    [DefaultExecutionOrder(-10000)]
+    [DefaultExecutionOrder(-9999)]
     public class GameStartUp : MonoBehaviour
     {
         [SerializeField] private InGameManager inGameManager;

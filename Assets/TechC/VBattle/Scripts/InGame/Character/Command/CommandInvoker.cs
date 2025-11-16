@@ -19,11 +19,16 @@ namespace TechC.VBattle.InGame.Character
         private bool suppressNextJumpRelease = false;
         private bool isGuarding = false;
         private int frame = 0;
+        
+        private float lastMoveDir = 0f;
+        private int lastMoveFrame = -999;
+        private bool lastMoveReleased = true; 
+        private const int DashInputWindow = 20;
 
         public CommandInvoker(CharacterController controller)
         {
             this.controller = controller;
-            this.baseInput = controller.GetComponent<BaseInputManager>();
+            baseInput = controller.GetComponent<BaseInputManager>();
         }
 
         public void Update()
@@ -53,36 +58,50 @@ namespace TechC.VBattle.InGame.Character
 
             frame++;
         }
-
+        
+        /// <summary>
+        /// ガード入力チェック
+        /// </summary>
+        /// <param name="snap"></param>
         private void CheckGuardInput(BaseInputManager.InputSnapshot snap)
         {
+            bool guardHolding = (snap.holdButtons & BaseInputManager.InputButton.Guard) != 0;
             bool guardPressed = (snap.pressedButtons & BaseInputManager.InputButton.Guard) != 0;
             bool guardReleased = (snap.releasedButtons & BaseInputManager.InputButton.Guard) != 0;
 
+            // ガード開始
             if (guardPressed && !isGuarding)
             {
                 controller.ExecuteCommand(new GuardCommand(true));
                 isGuarding = true;
             }
+            // ガード解除
             else if (guardReleased && isGuarding)
             {
                 controller.ExecuteCommand(new GuardCommand(false));
                 isGuarding = false;
             }
+            // ガード維持（holdButtonsをチェック）
+            else if (!guardHolding && isGuarding)
+            {
+                // 何らかの理由でholdが外れた場合の保険
+                controller.ExecuteCommand(new GuardCommand(false));
+                isGuarding = false;
+            }
         }
 
+        /// <summary>
+        /// 攻撃の入力チェック
+        /// </summary>
+        /// <param name="snap"></param>
         private void CheckAttackInput(BaseInputManager.InputSnapshot snap)
         {
             AttackType attackType = AttackType.None;
 
             if ((snap.pressedButtons & BaseInputManager.InputButton.WeakAttack) != 0)
-            {
                 attackType = AttackType.Weak;
-            }
             else if ((snap.pressedButtons & BaseInputManager.InputButton.StrongAttack) != 0)
-            {
                 attackType = AttackType.Strong;
-            }
 
             if (attackType == AttackType.None)
                 return;
@@ -99,6 +118,11 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
+        /// <summary>
+        /// 攻撃派生を確定する
+        /// </summary>
+        /// <param name="snap"></param>
+        /// <returns></returns>
         private AttackDirection DetermineAttackDirection(BaseInputManager.InputSnapshot snap)
         {
             // 最近の入力履歴から上入力をチェック
@@ -127,6 +151,10 @@ namespace TechC.VBattle.InGame.Character
             return AttackDirection.Neutral;
         }
 
+        /// <summary>
+        /// ジャンプ入力チェック
+        /// </summary>
+        /// <param name="snap"></param>
         private void CheckJumpInput(BaseInputManager.InputSnapshot snap)
         {
             bool jumpReleased = (snap.releasedButtons & BaseInputManager.InputButton.Jump) != 0;
@@ -144,14 +172,42 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
+        /// <summary>
+        /// 移動入力のチェック
+        /// </summary>
+        /// <param name="snap"></param>
         private void CheckMoveInput(BaseInputManager.InputSnapshot snap)
         {
-            const float moveThreshold = 0.01f;
+            const float moveThreshold = 0.2f;
 
-            if (Mathf.Abs(snap.x) > moveThreshold || Mathf.Abs(snap.y) > moveThreshold)
+            float x = snap.x;
+
+            // ニュートラル  
+            if (Mathf.Abs(x) <= moveThreshold)
             {
-                controller.ExecuteCommand(new MoveCommand(new Vector2(snap.x, snap.y)));
+                lastMoveReleased = true;
+                return;
             }
+
+            float currentDir = x > 0 ? 1f : -1f;
+
+            bool dash = false;
+
+            if (lastMoveReleased)
+            {
+                int delta = frame - lastMoveFrame;
+
+                if (currentDir == lastMoveDir && delta <= DashInputWindow)
+                {
+                    dash = true;
+                }
+            }
+
+            controller.ExecuteCommand(new MoveCommand(new Vector2(currentDir, 0), dash));
+
+            lastMoveDir = currentDir;
+            lastMoveFrame = frame;
+            lastMoveReleased = false;
         }
     }
 }

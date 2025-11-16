@@ -1,12 +1,11 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-     // ==========================================
-    // Air状態（空中通常時）
-    // ==========================================
+    /// <summary>
+    /// 空中状態
+    /// </summary>
     public class AirState : CharacterState
     {
         private bool hasUsedAirAction = false; // 空中行動を使ったか
@@ -36,19 +35,18 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnEnter(CharacterState prevState)
         {
-            Debug.Log("Enter Air");
             hasUsedAirAction = false;
         }
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
-            // 着地判定（簡易版）
+            // 着地判定
             while (!ct.IsCancellationRequested)
             {
                 await UniTask.Yield(ct);
                 
                 // 地面に接地したらNeutralへ
-                if (controller.IsGrounded)
+                if (controller.IsGrounded())
                 {
                     return controller.GetState<NeutralState>();
                 }
@@ -58,7 +56,6 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnExit()
         {
-            Debug.Log("Exit Air");
         }
     }
 }

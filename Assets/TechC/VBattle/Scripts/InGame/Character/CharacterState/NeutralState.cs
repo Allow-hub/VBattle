@@ -1,12 +1,11 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-      // ==========================================
-    // Neutral状態（地上通常時）
-    // ==========================================
+    /// <summary>
+    /// ニュートラルのステート
+    /// </summary>
     public class NeutralState : CharacterState
     {
         public NeutralState(CharacterController controller) : base(controller) { }

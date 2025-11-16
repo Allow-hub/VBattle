@@ -19,11 +19,9 @@ namespace TechC.VBattle.InGame.Character
 
         public void Jump()
         {
-            if (isGrounded)
+            if (IsGrounded())
             {
                 rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
-                isGrounded = false;
-                
                 // 空中状態へ遷移
                 stateMachine.ChangeState(GetState<AirState>());
             }
@@ -40,10 +38,14 @@ namespace TechC.VBattle.InGame.Character
 
         public void StartGuard()
         {
+            guardObj.SetActive(true);
+            stateMachine.ChangeState(GetState<GuardState>());
         }
 
         public void EndGuard()
         {
+            guardObj.SetActive(false);
+            stateMachine.ChangeState(GetState<NeutralState>());
         }
 
         /// <summary>

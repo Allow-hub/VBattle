@@ -3,6 +3,10 @@ using TechC.VBattle.InGame.Character;
 
 namespace TechC.VBattle.InGame.Systems
 {
+    /// <summary>
+    /// 戦闘の調停者
+    /// BattleEventBusからイベントを受け取り、攻撃の成功かどうかを判定して返す
+    /// </summary>
     public class BattleJudge
     {
         private readonly CharacterController player_1;
@@ -18,6 +22,5 @@ namespace TechC.VBattle.InGame.Systems
         {
 
         }
-        
     }
 }

@@ -1,4 +1,3 @@
-using TechC.VBattle.InGame.Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -25,18 +24,40 @@ namespace TechC.VBattle.InGame.Input
             }
         }
 
+        /// <summary>
+        /// 下入力
+        /// </summary>
+        /// <param name="ctx"></param>
         public void OnDown(InputAction.CallbackContext ctx)
         {
             if (ctx.performed) { holdY = -1f; SetMove(new Vector2(holdX, holdY)); }
             if (ctx.canceled) { if (holdY < 0f) holdY = 0f; SetMove(new Vector2(holdX, holdY)); }
         }
 
+        /// <summary>
+        /// ガード
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnGuard(InputAction.CallbackContext ctx)
+        {
+            if (ctx.started) OnButtonDown(InputButton.Guard);
+            if (ctx.canceled) OnButtonUp(InputButton.Guard);
+        }
+
+        /// <summary>
+        /// 弱攻撃
+        /// </summary>
+        /// <param name="ctx"></param>
         public void OnWeakAttack(InputAction.CallbackContext ctx)
         {
             if (ctx.started) OnButtonDown(InputButton.WeakAttack);
             if (ctx.canceled) OnButtonUp(InputButton.WeakAttack);
         }
 
+        /// <summary>
+        /// 強攻撃
+        /// </summary>
+        /// <param name="ctx"></param>
         public void OnStrongAttack(InputAction.CallbackContext ctx)
         {
             if (ctx.started) OnButtonDown(InputButton.StrongAttack);
