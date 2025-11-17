@@ -64,7 +64,7 @@ namespace TechC.VBattle.InGame.Character
                 shieldObj[i].transform.LookAt(center);
             }
         }
-        
+
         private void Update()
         {
             // プレイヤーの移動に追従するように中心点を更新
@@ -110,7 +110,7 @@ namespace TechC.VBattle.InGame.Character
                         // 破壊エフェクトを生成
                         if (breakPrefab != null)
                         {
-                            var obj =  EffectFactory.I.GetEffectObj(breakPrefab, shieldObj[i].transform.position, Quaternion.identity);
+                            var obj = EffectFactory.I.GetEffectObj(breakPrefab, shieldObj[i].transform.position, Quaternion.identity);
                             DelayUtility.StartDelayedActionWithPauseAsync(
                             0.1f,
                             () => { EffectFactory.I.ReturnEffect(obj); },

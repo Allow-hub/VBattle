@@ -39,12 +39,14 @@ namespace TechC.VBattle.InGame.Character
         public void StartGuard()
         {
             guardObj.SetActive(true);
+            isGuarding = true;
             stateMachine.ChangeState(GetState<GuardState>());
         }
 
         public void EndGuard()
         {
             guardObj.SetActive(false);
+            isGuarding = false;
             stateMachine.ChangeState(GetState<NeutralState>());
         }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
+    /// <summary>
+    /// ガード状態
+    /// </summary>
     public class GuardState : CharacterState
     {
         public GuardState(CharacterController controller) : base(controller) { }
@@ -22,34 +25,32 @@ namespace TechC.VBattle.InGame.Character
         {
             var data = controller.Data;
 
-            // --- ガード中の耐久値減少 ---
-            controller.DecreaseGuardPower(data.GuardDecreasePower * Time.deltaTime);
-            Debug.Log(controller.CurrentGuardPower);
-
-            // ガードブレイク判定
-            if (controller.CurrentGuardPower <= 0f)
+            while (!ct.IsCancellationRequested)
             {
-                controller.SetGuardPower(0f);
+                // ガード中の耐久値減少
+                var deltaTime = Time.deltaTime;
+                if (deltaTime > 0f)
+                {
+                    controller.DecreaseGuardPower(data.GuardDecreasePower * deltaTime);
+                }
 
-                // ガードブレイク状態へ遷移（DamageState など）
-                return controller.GetState<DamageState>();
-            }
+                // ガードブレイク判定
+                if (controller.CurrentGuardPower <= 0f)
+                {
+                    controller.SetGuardPower(0f);
+                    controller.EndGuard();
+                    return controller.GetState<DamageState>();
+                }
 
-            // ボタンが離されたらガード終了（Invoker が GuardCommand(false) を発行）
-            if (!controller.IsGuarding)
-            {
-                // NeutralState に戻る
-                return controller.GetState<NeutralState>();
-            }
-            try
-            {
+                // ボタンが離されたらガード終了
+                if (!controller.IsGuarding)
+                {
+                    return controller.GetState<NeutralState>();
+                }
+                // 次のフレームまで待機
                 await UniTask.Yield(ct);
             }
-            catch (System.OperationCanceledException)
-            {
-                // 外部からChangeStateされた場合（攻撃を受けてダメージ状態になるなど）
-                throw; // 再スローしてStateMachineに伝える
-            }
+            
             return this;
         }
 
