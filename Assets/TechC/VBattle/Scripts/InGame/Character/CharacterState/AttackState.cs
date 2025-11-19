@@ -34,9 +34,20 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnEnter(CharacterState prevState)
         {
-            Debug.Log("Enter Attack");
-            canCancel = false;
-            isAirAttack = prevState is AirState;
+            
+            //空中攻撃は派生させない予定なので無理やり矯正する形で
+            // if(!IsGrounded())
+            // {
+            //     anim.SetInteger(AnimatorParam.AttackType, 2);//Air
+            //     anim.SetInteger(AnimatorParam.AttackDirection, 0);//Neutral
+            // }
+            // else
+            // {
+            //     //地上での攻撃
+            //     anim.SetInteger(AnimatorParam.AttackType, (int)type);
+            //     anim.SetInteger(AnimatorParam.AttackDirection, (int)direction);
+            // }
+            // AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsAttacking);
         }
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)

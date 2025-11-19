@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TechC.VBattle.Audio;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.InGame.Character;
 using UnityEngine;
 
 namespace TechC.VBattle.Core.Managers
@@ -100,7 +101,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクターデータをアンロード
         /// </summary>
-        public void UnloadCharacterAudioData(CharacterType characterType)
+        public void UnloadCharacterAudioData(CharaName characterType)
         {
             characterAudioDataList.RemoveAll(data => data.characterType == characterType);
         }
@@ -108,7 +109,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクタータイプからデータを取得
         /// </summary>
-        private CharacterAudioData GetCharacterAudioData(CharacterType characterType)
+        private CharacterAudioData GetCharacterAudioData(CharaName characterType)
         {
             return characterAudioDataList.Find(data => data.characterType == characterType);
         }
@@ -395,7 +396,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクター固有のSEを再生
         /// </summary>
-        public AudioSource PlayCharacterSE(CharacterType characterType, CharacterSEType seType)
+        public AudioSource PlayCharacterSE(CharaName characterType, CharacterSEType seType)
         {
             CharacterAudioData characterData = GetCharacterAudioData(characterType);
             if (characterData == null)
@@ -499,7 +500,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクターボイスを再生
         /// </summary>
-        public AudioSource PlayCharacterVoice(CharacterType characterType, CharacterVoiceType voiceType)
+        public AudioSource PlayCharacterVoice(CharaName characterType, CharacterVoiceType voiceType)
         {
             CharacterAudioData characterData = GetCharacterAudioData(characterType);
             if (characterData == null)

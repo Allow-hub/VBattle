@@ -92,9 +92,7 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="direction">入力方向</param>
         public void Attack(AttackType type, AttackDirection direction)
         {
-            anim.SetInteger(AnimatorParam.AttackType, (int)type);
-            anim.SetInteger(AnimatorParam.AttackDirection, (int)direction);
-            AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsAttacking);
+            stateMachine.ChangeState(GetState<AttackState>());
         }
 
         public void StartGuard()

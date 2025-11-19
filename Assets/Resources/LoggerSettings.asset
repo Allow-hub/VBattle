@@ -26,6 +26,10 @@ MonoBehaviour:
     displayName: Input System
     color: {r: 0.8, g: 0.3, b: 0.3, a: 1}
     enabledByDefault: 1
+  - categoryId: audio
+    displayName: Audio
+    color: {r: 0.56716055, g: 0.40676445, b: 0.012310507, a: 1}
+    enabledByDefault: 1
   defaultCategory:
     categoryId: default
     displayName: Default
