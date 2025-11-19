@@ -9,6 +9,7 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class CommandInvoker
     {
+        public bool HasMoveInput { get; private set; }
         private const int SnapshotBufferSize = 10;
         private const int ComboWindow = 5;
 
@@ -19,10 +20,12 @@ namespace TechC.VBattle.InGame.Character
         private bool suppressNextJumpRelease = false;
         private bool isGuarding = false;
         private int frame = 0;
-        
+        private BaseInputManager.InputSnapshot latestSnap;
+        private bool isDashing = false;
+
         private float lastMoveDir = 0f;
         private int lastMoveFrame = -999;
-        private bool lastMoveReleased = true; 
+        private bool lastMoveReleased = true;
         private const int DashInputWindow = 20;
 
         public CommandInvoker(CharacterController controller)
@@ -33,32 +36,36 @@ namespace TechC.VBattle.InGame.Character
 
         public void Update()
         {
+            HasMoveInput = false;
             if (baseInput == null)
                 return;
 
-            var snap = baseInput.ConsumeSnapshot(frame);
-            snapHistory.Add(snap);
+            latestSnap = baseInput.ConsumeSnapshot(frame);
+            snapHistory.Add(latestSnap);
             if (snapHistory.Count > SnapshotBufferSize)
                 snapHistory.RemoveAt(0);
 
             // --- ガード ---
-            CheckGuardInput(snap);
+            CheckGuardInput(latestSnap);
 
             // --- 攻撃 ---
-            CheckAttackInput(snap);
+            CheckAttackInput(latestSnap);
 
             // --- ジャンプ ---
-            CheckJumpInput(snap);
-
-            // --- 移動 ---
-            if (!isGuarding)
-            {
-                CheckMoveInput(snap);
-            }
+            CheckJumpInput(latestSnap);
 
             frame++;
         }
-        
+
+        public void FixedUpdate()
+        {
+            // --- 移動 ---
+            if (!isGuarding)
+            {
+                CheckMoveInput(latestSnap);
+            }
+        }
+
         /// <summary>
         /// ガード入力チェック
         /// </summary>
@@ -108,11 +115,11 @@ namespace TechC.VBattle.InGame.Character
 
             // 攻撃方向を判定
             AttackDirection direction = DetermineAttackDirection(snap);
-            
+
             controller.ExecuteCommand(new AttackCommand(attackType, direction));
 
             // 上攻撃の時はジャンプ抑制
-            if (direction == AttackDirection.Upper)
+            if (direction == AttackDirection.Up)
             {
                 suppressNextJumpRelease = true;
             }
@@ -140,13 +147,13 @@ namespace TechC.VBattle.InGame.Character
             }
 
             if (recentUpInput)
-                return AttackDirection.Upper;
+                return AttackDirection.Up;
 
             if (snap.y < -0.5f)
-                return AttackDirection.Downer;
+                return AttackDirection.Down;
 
             if (Mathf.Abs(snap.x) > 0.5f)
-                return snap.x > 0 ? AttackDirection.Forward : AttackDirection.Back;
+                return snap.x > 0 ? AttackDirection.Right : AttackDirection.Left;
 
             return AttackDirection.Neutral;
         }
@@ -172,20 +179,20 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
-        /// <summary>
-        /// 移動入力のチェック
-        /// </summary>
-        /// <param name="snap"></param>
+
         private void CheckMoveInput(BaseInputManager.InputSnapshot snap)
         {
+            bool moveHolding = (snap.holdButtons & BaseInputManager.InputButton.Move) != 0;
             const float moveThreshold = 0.2f;
 
             float x = snap.x;
 
-            // ニュートラル  
-            if (Mathf.Abs(x) <= moveThreshold)
+            // ニュートラル
+            if (!moveHolding || Mathf.Abs(x) <= moveThreshold)
             {
                 lastMoveReleased = true;
+                isDashing = false;//話したらダッシュ解除
+                controller.Anim.SetBool(AnimatorParam.IsMoving, false);
                 return;
             }
 
@@ -193,18 +200,26 @@ namespace TechC.VBattle.InGame.Character
 
             bool dash = false;
 
+            // 前回移動がリリースされていた場合に短時間連打でダッシュ判定
             if (lastMoveReleased)
             {
                 int delta = frame - lastMoveFrame;
-
                 if (currentDir == lastMoveDir && delta <= DashInputWindow)
                 {
                     dash = true;
+                    isDashing = true; // ダッシュ状態に
                 }
+                controller.Anim.SetBool(AnimatorParam.IsMoving, true); // Press時にtrue
+            }
+            else if (isDashing)
+            {
+                // ダッシュ状態を維持
+                dash = true;
             }
 
             controller.ExecuteCommand(new MoveCommand(new Vector2(currentDir, 0), dash));
-
+            HasMoveInput = true;
+            // 状態更新
             lastMoveDir = currentDir;
             lastMoveFrame = frame;
             lastMoveReleased = false;

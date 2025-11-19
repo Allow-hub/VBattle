@@ -1,3 +1,4 @@
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -11,16 +12,61 @@ namespace TechC.VBattle.InGame.Character
         /// 左右の移動
         /// </summary>
         /// <param name="direction">向き</param>
-        public void Move(Vector2 direction)
+        public void Move(Vector2 direction, bool isDashing)
         {
-            Vector3 move = new Vector3(direction.x, 0, 0) * characterData.MoveSpeed * Time.deltaTime;
-            rb.MovePosition(transform.position + move);
+
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                bool isGrounded = IsGrounded();
+                float moveSpeed = isDashing ? characterData.DashMoveSpeed : characterData.MoveSpeed;
+                // 空中では制御係数を適用
+                if (!isGrounded)
+                {
+                    moveSpeed *= characterData.AirControlMultiplier;
+                }
+
+                // 移動方向を計算
+                Vector3 moveDirection = new Vector3(direction.x, 0, 0).normalized;
+                Vector3 targetVelocity = moveDirection * moveSpeed;
+
+                // 現在の速度を取得してY軸は保持
+                Vector3 currentVelocity = rb.velocity;
+                Vector3 velocityChange = new Vector3(
+                    targetVelocity.x - currentVelocity.x,
+                    0,
+                    0
+                );
+
+                // 加速度を調整（地上は即座、空中はマイルド）
+                float acceleration = isGrounded ? 0.8f : 0.3f;
+                rb.AddForce(velocityChange * acceleration, ForceMode.VelocityChange);
+
+                // 最高速度の制限
+                Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                if (horizontalVelocity.magnitude > moveSpeed)
+                {
+                    horizontalVelocity = horizontalVelocity.normalized * moveSpeed;
+                    rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
+                }
+
+                // キャラクターの向きを移動方向に変更
+                if (moveDirection.sqrMagnitude > 0.01f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = Quaternion.Slerp(
+                        transform.rotation,
+                        targetRotation,
+                        Time.deltaTime * 15f
+                    );
+                }
+            }
         }
 
         public void Jump()
         {
             if (IsGrounded())
             {
+                AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsJumping);
                 rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
                 // 空中状態へ遷移
                 stateMachine.ChangeState(GetState<AirState>());
@@ -34,10 +80,15 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="direction">入力方向</param>
         public void Attack(AttackType type, AttackDirection direction)
         {
+            anim.SetInteger(AnimatorParam.AttackType, (int)type);
+            anim.SetInteger(AnimatorParam.AttackDirection, (int)direction);
+            AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsAttacking);
         }
 
         public void StartGuard()
         {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);//x速度を0に
+            AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsGuarding);//ガード以外のアニメーションを停止
             guardObj.SetActive(true);
             isGuarding = true;
             stateMachine.ChangeState(GetState<GuardState>());
@@ -45,6 +96,7 @@ namespace TechC.VBattle.InGame.Character
 
         public void EndGuard()
         {
+            anim.SetBool(AnimatorParam.IsGuarding, false);
             guardObj.SetActive(false);
             isGuarding = false;
             stateMachine.ChangeState(GetState<NeutralState>());

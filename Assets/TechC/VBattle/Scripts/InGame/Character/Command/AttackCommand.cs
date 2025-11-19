@@ -5,10 +5,10 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public enum AttackType
     {
-        None,
-        Weak,
-        Strong,
+        Weak = 0,
+        Strong = 1,
         Air,
+        None,
     }
 
     /// <summary>
@@ -17,10 +17,10 @@ namespace TechC.VBattle.InGame.Character
     public enum AttackDirection
     {
         Neutral,    // 通常攻撃
-        Forward,    // 前攻撃
-        Back,       // 後ろ攻撃
-        Upper,      // 上攻撃
-        Downer,     // 下攻撃
+        Left,       // 左攻撃
+        Right,      // 右攻撃
+        Up,         // 上攻撃
+        Down,       // 下攻撃
     }
 
     /// <summary>

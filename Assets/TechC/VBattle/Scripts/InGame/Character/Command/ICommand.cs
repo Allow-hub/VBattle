@@ -8,7 +8,8 @@ namespace TechC.VBattle.InGame
         Move,
         Attack,
         Jump,
-        Guard
+        Guard,
+        Crouch,
     }
 
     /// <summary>

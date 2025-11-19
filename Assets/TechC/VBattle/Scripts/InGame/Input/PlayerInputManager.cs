@@ -12,6 +12,8 @@ namespace TechC.VBattle.InGame.Input
         {
             var value = ctx.ReadValue<Vector2>();
             SetMove(value);
+            if (Mathf.Abs(value.x) > 0f) OnButtonDown(InputButton.Move);
+            else OnButtonUp(InputButton.Move);
 
             // ジャンプをReleaseベースに
             if (value.y > 0f)

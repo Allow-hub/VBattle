@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -9,6 +10,7 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class StateMachine
     {
+        public readonly string LOGNAME = "state";
         private CharacterState _currentState;
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsForState;
@@ -33,7 +35,7 @@ namespace TechC.VBattle.InGame.Character
                     if (_currentState == null)
                         break;
 
-                    // ⭐ 状態専用のトークンを使用
+                    // 状態専用のトークンを使用
                     var stateToken = _ctsForState.Token;
 
                     // OnUpdateを実行
@@ -47,19 +49,19 @@ namespace TechC.VBattle.InGame.Character
                     // 状態遷移が必要な場合
                     if (nextState != _currentState)
                     {
-                        // ⭐ OnUpdateが正常に完了してから遷移
+                        // OnUpdateが正常に完了してから遷移
                         ChangeState(nextState);
                     }
                 }
                 catch (System.OperationCanceledException)
                 {
-                    // ⭐ 外部からChangeStateが呼ばれた場合
-                    Debug.Log($"[StateMachine] State {_currentState?.GetType().Name} was cancelled");
+                    // 外部からChangeStateが呼ばれた場合
+                    CustomLogger.Info($"{_currentState?.GetType().Name} was cancelled", LOGNAME);
                     // 既に新しい状態に遷移済みなので、次のループで新しい状態のOnUpdateが呼ばれる
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError($"State update error in {_currentState?.GetType().Name}: {ex}");
+                    CustomLogger.Error($"State update error in {_currentState?.GetType().Name}: {ex}", LOGNAME);
                 }
 
                 await UniTask.Yield(token);
@@ -74,7 +76,7 @@ namespace TechC.VBattle.InGame.Character
             if (nextState == null || nextState == _currentState)
                 return;
 
-            Debug.Log($"[StateMachine] ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}");
+            CustomLogger.Info($"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}", LOGNAME);
 
             // 現在の状態をキャンセル
             _ctsForState?.Cancel();

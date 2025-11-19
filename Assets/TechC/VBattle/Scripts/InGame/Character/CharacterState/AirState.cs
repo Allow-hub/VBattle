@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -9,7 +10,7 @@ namespace TechC.VBattle.InGame.Character
     public class AirState : CharacterState
     {
         private bool hasUsedAirAction = false; // 空中行動を使ったか
-
+        private float smoothSpeed = 0;
         public AirState(CharacterController controller) : base(controller) { }
 
         public override bool CanExecuteCommand<T>(T command)
@@ -43,8 +44,9 @@ namespace TechC.VBattle.InGame.Character
             // 着地判定
             while (!ct.IsCancellationRequested)
             {
+                UpdateJumpAnimation();
                 await UniTask.Yield(ct);
-                
+
                 // 地面に接地したらNeutralへ
                 if (controller.IsGrounded())
                 {
@@ -56,6 +58,26 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnExit()
         {
+            controller.Anim.SetBool(AnimatorParam.IsJumping, false);
+        }
+
+        /// <summary>
+        /// ジャンプのBlendTreeを更新
+        /// </summary>
+        private void UpdateJumpAnimation()
+        {
+            var velocity = controller.Rb.velocity;
+
+            // 上方向の速度を正規化
+            // 0 = 落下最大速度, 1 = 上昇最大速度
+            float maxJumpSpeed = controller.Data.JumpPower; // 事前にキャラクターのジャンプ速度を取得
+            float targetSpeed = Mathf.Clamp01((velocity.y + maxJumpSpeed) / (2f * maxJumpSpeed));
+
+            // スムージング
+            smoothSpeed = Mathf.Lerp(smoothSpeed, targetSpeed, 0.15f);
+
+            // Animatorに反映
+            controller.Anim.SetFloat(AnimatorParam.YSpeed, smoothSpeed);
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -9,11 +10,15 @@ namespace TechC.VBattle.InGame.Character
     public partial class CharacterController : MonoBehaviour, ITakeDamageable
     {
         [SerializeField] private CharacterData characterData;
+        [SerializeField] private Animator anim;
+        public Animator Anim => anim;
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
+        public Rigidbody Rb=>rb;
         private Rigidbody rb;
         private StateMachine stateMachine;
+        public CommandInvoker CommandInvoker => commandInvoker;
         private CommandInvoker commandInvoker;
         private Dictionary<System.Type, CharacterState> stateCache = new();
         public CharacterData Data => characterData;
@@ -49,11 +54,13 @@ namespace TechC.VBattle.InGame.Character
         private void Update()
         {
             commandInvoker.Update();
+            CustomLogger.Info($"{stateMachine.CurrentState}", stateMachine.LOGNAME);
         }
 
         private void FixedUpdate()
         {
             IsGrounded();
+            commandInvoker.FixedUpdate();
         }
 
         private void RegisterState(CharacterState state) => stateCache[state.GetType()] = state;
@@ -87,7 +94,7 @@ namespace TechC.VBattle.InGame.Character
             }
 
             if (command is MoveCommand moveCmd)
-                Move(moveCmd.Dir);
+                Move(moveCmd.Dir, moveCmd.IsDashing);
             else if (command is JumpCommand)
                 Jump();
             else if (command is AttackCommand attackCmd)
@@ -99,7 +106,6 @@ namespace TechC.VBattle.InGame.Character
                 else
                     EndGuard();
             }
-
             currentState.OnCommandExecuted(command);
         }
 
@@ -114,6 +120,15 @@ namespace TechC.VBattle.InGame.Character
         public void SetGuardPower(float amount) => currentGuardPower = amount;
         public void DecreaseGuardPower(float amount) => currentGuardPower -= amount;
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
+            // 着地時に横方向の速度を少し減衰
+            Vector3 velocity = rb.velocity;
+            velocity.x *= 0.8f;
+            velocity.z *= 0.8f;
+            rb.velocity = velocity;
+        }
         private void OnCollisionExit(Collision collision)
         {
             if (stateMachine.CurrentState == GetState<AirState>()) return;

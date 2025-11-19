@@ -19,6 +19,7 @@ namespace TechC.VBattle.InGame.Input
             StrongAttack = 1 << 1,
             Jump = 1 << 2,
             Guard = 1 << 3,
+            Move = 1 << 4,
         }
 
         /// <summary>

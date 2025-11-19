@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -22,6 +23,7 @@ namespace TechC.VBattle.InGame.Character
         public override void OnEnter(CharacterState prevState)
         {
             Debug.Log("Enter Damage");
+            AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim,AnimatorParam.IsHitting);
             // ノックバック処理など
         }
 
