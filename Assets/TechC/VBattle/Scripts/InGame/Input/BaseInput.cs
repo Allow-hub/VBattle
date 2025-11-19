@@ -20,6 +20,7 @@ namespace TechC.VBattle.InGame.Input
             Jump = 1 << 2,
             Guard = 1 << 3,
             Move = 1 << 4,
+            Crouch = 1 << 5,
         }
 
         /// <summary>

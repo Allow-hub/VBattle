@@ -15,6 +15,8 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
+        private int currentJumpCount = 0;
+        private int maxJumpCount = 2;
         public Rigidbody Rb=>rb;
         private Rigidbody rb;
         private StateMachine stateMachine;
@@ -39,6 +41,7 @@ namespace TechC.VBattle.InGame.Character
             RegisterState(new AttackState(this));
             RegisterState(new DamageState(this));
             RegisterState(new GuardState(this));
+            RegisterState(new CrouchState(this));
 
             stateMachine = new StateMachine();
             commandInvoker = new CommandInvoker(this);
@@ -105,7 +108,15 @@ namespace TechC.VBattle.InGame.Character
                     StartGuard();
                 else
                     EndGuard();
+            }else if (command is CrouchCommand crouchCommand)
+            {
+                if (crouchCommand.IsPress)
+                    StartCrouch();
+                else
+                    EndCrouch();
             }
+
+            Debug.Log($"{command}");
             currentState.OnCommandExecuted(command);
         }
 
@@ -128,6 +139,7 @@ namespace TechC.VBattle.InGame.Character
             velocity.x *= 0.8f;
             velocity.z *= 0.8f;
             rb.velocity = velocity;
+            currentJumpCount = 0;
         }
         private void OnCollisionExit(Collision collision)
         {

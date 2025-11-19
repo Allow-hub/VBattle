@@ -64,14 +64,26 @@ namespace TechC.VBattle.InGame.Character
 
         public void Jump()
         {
-            if (IsGrounded())
+            if (currentJumpCount < maxJumpCount)
             {
+                currentJumpCount++;
+
                 AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsJumping);
-                rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
+
+                // Y速度をリセットして二段目の高さが安定するようにする
+                var v = rb.velocity;
+                v.y = 0;
+                rb.velocity = v;
+                if (currentJumpCount == 1)
+                    rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
+                else
+                    rb.AddForce(Vector3.up * characterData.DoubleJumpPower, ForceMode.Impulse);
+
                 // 空中状態へ遷移
                 stateMachine.ChangeState(GetState<AirState>());
             }
         }
+
 
         /// <summary>
         /// 攻撃、SOから構築
@@ -99,6 +111,16 @@ namespace TechC.VBattle.InGame.Character
             anim.SetBool(AnimatorParam.IsGuarding, false);
             guardObj.SetActive(false);
             isGuarding = false;
+            stateMachine.ChangeState(GetState<NeutralState>());
+        }
+
+        public void StartCrouch()
+        {
+            stateMachine.ChangeState(GetState<CrouchState>());
+        }
+
+        public void EndCrouch()
+        {
             stateMachine.ChangeState(GetState<NeutralState>());
         }
 

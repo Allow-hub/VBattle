@@ -19,6 +19,7 @@ namespace TechC.VBattle.InGame.Character
 
         private bool suppressNextJumpRelease = false;
         private bool isGuarding = false;
+        private bool isCrouching = false;
         private int frame = 0;
         private BaseInputManager.InputSnapshot latestSnap;
         private bool isDashing = false;
@@ -53,6 +54,9 @@ namespace TechC.VBattle.InGame.Character
 
             // --- ジャンプ ---
             CheckJumpInput(latestSnap);
+            
+            // --- しゃがみ ---
+            CheckCrouchInput(latestSnap);
 
             frame++;
         }
@@ -179,7 +183,43 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
+        /// <summary>
+        /// しゃがみ入力
+        /// </summary>
+        /// <param name="snap"></param>
+        private void CheckCrouchInput(BaseInputManager.InputSnapshot snap)
+        {
+            bool crouchHolding = (snap.holdButtons & BaseInputManager.InputButton.Crouch) != 0;
+            bool crouchPressed = (snap.pressedButtons & BaseInputManager.InputButton.Crouch) != 0;
+            bool crouchReleased = (snap.releasedButtons & BaseInputManager.InputButton.Crouch) != 0;
 
+            // しゃがみ開始
+            if (crouchPressed && !isCrouching)
+            {
+                Debug.Log($"{crouchPressed}");
+
+                controller.ExecuteCommand(new CrouchCommand(true));
+                isCrouching = true;
+            }
+            // しゃがみ解除
+            else if (crouchReleased && isCrouching)
+            {
+                controller.ExecuteCommand(new CrouchCommand(false));
+                isCrouching = false;
+            }
+            // しゃがみ維持（holdButtonsをチェック）
+            else if (!crouchHolding && isCrouching)
+            {
+                // 何らかの理由でholdが外れた場合の保険
+                controller.ExecuteCommand(new CrouchCommand(false));
+                isCrouching = false;
+            }
+        }
+
+        /// <summary>
+        /// 移動入力
+        /// </summary>
+        /// <param name="snap"></param>
         private void CheckMoveInput(BaseInputManager.InputSnapshot snap)
         {
             bool moveHolding = (snap.holdButtons & BaseInputManager.InputButton.Move) != 0;

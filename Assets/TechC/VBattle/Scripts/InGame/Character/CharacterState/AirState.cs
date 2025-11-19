@@ -18,6 +18,9 @@ namespace TechC.VBattle.InGame.Character
             // 空中では空中移動と空中攻撃のみ
             if (command.Type == CommandType.Move)
                 return true;
+                
+            if (command.Type == CommandType.Jump)
+                return true;
 
             // 空中攻撃は1回まで
             if (command.Type == CommandType.Attack && !hasUsedAirAction)

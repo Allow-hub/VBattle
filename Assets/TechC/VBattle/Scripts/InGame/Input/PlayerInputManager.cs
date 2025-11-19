@@ -32,8 +32,13 @@ namespace TechC.VBattle.InGame.Input
         /// <param name="ctx"></param>
         public void OnDown(InputAction.CallbackContext ctx)
         {
+            if (ctx.started) OnButtonDown(InputButton.Crouch);
             if (ctx.performed) { holdY = -1f; SetMove(new Vector2(holdX, holdY)); }
-            if (ctx.canceled) { if (holdY < 0f) holdY = 0f; SetMove(new Vector2(holdX, holdY)); }
+            if (ctx.canceled)
+            {
+                if (holdY < 0f) holdY = 0f; SetMove(new Vector2(holdX, holdY));
+                OnButtonUp(InputButton.Crouch);
+            }
         }
 
         /// <summary>

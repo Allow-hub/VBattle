@@ -31,6 +31,6 @@ MonoBehaviour:
     displayName: Default
     color: {r: 1, g: 1, b: 1, a: 1}
     enabledByDefault: 1
-  _enabledCategoryIds: []
-  _disabledCategoryIds:
+  _enabledCategoryIds:
   - state
+  _disabledCategoryIds: []

@@ -11,6 +11,7 @@ namespace TechC.VBattle.InGame.Character
         public static readonly int IsJumping = Animator.StringToHash("IsJumping");
         public static readonly int IsGuarding = Animator.StringToHash("IsGuarding");
         public static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
+        public static readonly int IsCrouching = Animator.StringToHash("IsCrouching");
         public static readonly int IsHitting = Animator.StringToHash("IsHitting");
         public static readonly int IsHiIsWallHittingtting = Animator.StringToHash("IsWallHitting");
         public static readonly int XSpeed = Animator.StringToHash("XSpeed");
