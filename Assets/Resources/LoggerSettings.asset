@@ -30,11 +30,15 @@ MonoBehaviour:
     displayName: Audio
     color: {r: 0.56716055, g: 0.40676445, b: 0.012310507, a: 1}
     enabledByDefault: 1
+  - categoryId: attack
+    displayName: Attack
+    color: {r: 0.9528302, g: 0.20225172, b: 0.7289607, a: 1}
+    enabledByDefault: 1
   defaultCategory:
     categoryId: default
     displayName: Default
     color: {r: 1, g: 1, b: 1, a: 1}
     enabledByDefault: 1
-  _enabledCategoryIds:
+  _enabledCategoryIds: []
+  _disabledCategoryIds:
   - state
-  _disabledCategoryIds: []

@@ -126,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterData: {fileID: 11400000, guid: be491b5c6ce52f648b023c6b378bd04e, type: 2}
   anim: {fileID: 7138977834368204243}
+  attackSet: {fileID: 11400000, guid: 1a3f3f7efd9f16349b37ebf135d75577, type: 2}
   groundCheckDistance: 0.07
   guardObj: {fileID: 1009183316038204525}
   groundMask:

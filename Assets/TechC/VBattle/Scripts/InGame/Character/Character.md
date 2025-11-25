@@ -15,3 +15,6 @@ CommandTypeを持ち、それぞれのロジックに必要な情報を持つ<br
 FSMのStateMachineとCharacterDataを持つ。<br>
 StateMachineの状態によって受け取ったCommandを受け付けるか拒否するかを決める<br>
 コマンドがロジックを呼ぶよりもコマンドが通知してロジックとCharacterControllerをアダプターするクラスに任せるのが綺麗だが過剰実装なので今回はCharacterControllerにロジックを持たせる
+
+## StateMachin,CharacterState
+FSMのStateMachine、CancellationTokenSourceを使用して中断を安全に<br>

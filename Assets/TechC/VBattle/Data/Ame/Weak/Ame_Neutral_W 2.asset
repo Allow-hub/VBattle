@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ame_Neutral_W 2
   m_EditorClassIdentifier: 
   charaName: 0
-  attackName: NormalWeakAttack_1
+  attackName: NormalWeakAttack_3
   attackPrefab: {fileID: 0}
   prefabOffset: {x: 0, y: 0, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
@@ -30,6 +30,10 @@ MonoBehaviour:
   damage: 0
   knockback: 0
   isCounter: 0
+  recoveryDuration: 0.25
+  cancelStartTime: 0.1
+  cancelEndTime: 0.4
+  hitStunDuration: 0.25
   nextChain: {fileID: 0}
   canChain: 0
   isChainPos: 0

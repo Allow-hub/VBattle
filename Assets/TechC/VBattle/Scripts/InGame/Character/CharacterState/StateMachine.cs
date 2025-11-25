@@ -73,7 +73,7 @@ namespace TechC.VBattle.InGame.Character
         /// </summary>
         public void ChangeState(CharacterState nextState)
         {
-            if (nextState == null || nextState == _currentState)
+            if (nextState == null)
                 return;
 
             CustomLogger.Info($"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}", LOGNAME);

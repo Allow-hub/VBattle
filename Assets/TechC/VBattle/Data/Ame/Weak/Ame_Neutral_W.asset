@@ -17,8 +17,8 @@ MonoBehaviour:
   attackPrefab: {fileID: 0}
   prefabOffset: {x: 0, y: 0, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
-  animationSpeed: 1
-  attackDuration: 0
+  animationSpeed: 2.5
+  attackDuration: 0.15
   hitDetectionMode: 1
   targetLayers:
     serializedVersion: 2
@@ -30,10 +30,14 @@ MonoBehaviour:
   damage: 0
   knockback: 0
   isCounter: 0
-  nextChain: {fileID: 0}
-  canChain: 0
+  recoveryDuration: 0.25
+  cancelStartTime: 0.1
+  cancelEndTime: 0.4
+  hitStunDuration: 0.25
+  nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
+  canChain: 1
   isChainPos: 0
-  chainThreshold: 0
+  chainThreshold: 0.3
   hitStopDuration: 0
   hitStopTimeScale: 0
   knockbackDirection: {x: 0, y: 0, z: 1}

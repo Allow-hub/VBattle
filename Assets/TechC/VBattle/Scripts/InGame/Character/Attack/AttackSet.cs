@@ -30,8 +30,22 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
-
+        /// <summary>
+        /// TypeとDirectionを渡してDataのSOを返す
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="direction"></param>
+        /// <returns>攻撃データ</returns>
+        public AttackData GetAttackData(AttackType type, AttackDirection direction)
+        {
+            var key = (direction, type);
+            if (attackDataMap.TryGetValue(key, out var data))
+                return data;
+            Debug.LogWarning($"AttackData not found: {type}, {direction}");
+            return null;
+        }
     }
+
     [System.Serializable]
     public struct AttackEntry
     {

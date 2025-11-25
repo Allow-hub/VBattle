@@ -58,6 +58,17 @@ namespace TechC.VBattle.InGame.Character
         [Tooltip("この攻撃がカウンター攻撃かどうか")]
         public bool isCounter;
 
+        [Header("硬直")]
+        [Tooltip("攻撃後の硬直時間（空振り時）")]
+        public float recoveryDuration = 0.25f;
+        [Header("キャンセル")]
+        [Tooltip("攻撃キャンセル可能になるタイミング（秒）")]
+        public float cancelStartTime = 0.1f;
+        [Tooltip("キャンセル可能終了タイミング（秒）")]
+        public float cancelEndTime = 0.4f;
+        [Header("被弾硬直")]
+        [Tooltip("相手が被弾して行動不能になる時間")]
+        public float hitStunDuration = 0.25f;
         // ===== 連携・派生 =====
         [Header("連携・派生攻撃")]
         [Tooltip("連携先の攻撃データ")]

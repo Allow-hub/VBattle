@@ -14,8 +14,9 @@ namespace TechC.VBattle.InGame.Character
 
         public override bool CanExecuteCommand<T>(T command)
         {
-            // しゃがみ中に許可するのは「しゃがみ解除」だけ
-            return command.Type == CommandType.Crouch;
+            // しゃがみ中に許可するのは「しゃがみ解除」もしくは下攻撃
+            return command.Type == CommandType.Crouch||
+                   command.Type == CommandType.Attack;
         }
 
         public override void OnEnter(CharacterState prevState)

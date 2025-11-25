@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -11,6 +12,12 @@ namespace TechC.VBattle.InGame.Character
     {
         [SerializeField] private CharacterData characterData;
         [SerializeField] private Animator anim;
+        [SerializeField] private AttackSet attackSet;
+        public AttackSet AttackSet=>attackSet;
+        [SerializeField, ReadOnly] private float idleAnimSpeed = 1.1f;
+        public float IdleAnimSpeed => idleAnimSpeed;
+        public AttackType CurrentAttackType {private set; get; }
+        public AttackDirection CurrentAttackDirection { private set; get; }
         public Animator Anim => anim;
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
@@ -19,6 +26,7 @@ namespace TechC.VBattle.InGame.Character
         private int maxJumpCount = 2;
         public Rigidbody Rb=>rb;
         private Rigidbody rb;
+        public StateMachine StateMachine => stateMachine;
         private StateMachine stateMachine;
         public CommandInvoker CommandInvoker => commandInvoker;
         private CommandInvoker commandInvoker;
@@ -116,7 +124,7 @@ namespace TechC.VBattle.InGame.Character
                     EndCrouch();
             }
 
-            Debug.Log($"{command}");
+            // Debug.Log($"{command}");
             currentState.OnCommandExecuted(command);
         }
 

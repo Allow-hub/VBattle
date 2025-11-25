@@ -55,6 +55,22 @@ MonoBehaviour:
     direction: 4
     attackData: {fileID: 11400000, guid: 795f7f8af40278647bb1ab46dbb0d53a, type: 2}
   - attackName: "\u7A7A\u4E2D\u653B\u6483"
-    type: 1
+    type: 2
+    direction: 0
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 1
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 2
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 3
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
     direction: 4
-    attackData: {fileID: 11400000, guid: 795f7f8af40278647bb1ab46dbb0d53a, type: 2}
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
