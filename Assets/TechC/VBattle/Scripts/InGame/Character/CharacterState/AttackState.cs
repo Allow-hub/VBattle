@@ -2,6 +2,9 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame.Events;
+using TechC.VBattle.Systems;
+using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -20,18 +23,15 @@ namespace TechC.VBattle.InGame.Character
 
         public override bool CanExecuteCommand<T>(T command)
         {
-            // キャンセル可能タイミングでのみ次の攻撃を受け付ける
-            if (command.Type == CommandType.Attack && canCancel)
-            {
-                // 連鎖攻撃が可能かチェック
-                if (currentAttackData.canChain && currentAttackData.nextChain != null)
-                {
-                    // 連鎖攻撃をリクエスト
-                    isChainRequested = true;
-                    return true;
-                }
-            }
-            return false;
+            // 攻撃コマンドでなければリターン
+            if (command.Type != CommandType.Attack) return false;
+            // キャンセル不可ならリターン
+            if (!canCancel) return false;
+            // 連鎖攻撃不可ならリターン
+            if (!currentAttackData.canChain || currentAttackData.nextChain == null) return false;
+            // ここまで来たら連鎖攻撃可能
+            isChainRequested = true;
+            return true;
         }
 
         public override void OnEnter(CharacterState prevState)
@@ -60,7 +60,7 @@ namespace TechC.VBattle.InGame.Character
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
-            // 攻撃ループ（連鎖攻撃対応）
+            // 攻撃ループ
             while (true)
             {
                 isChainRequested = false;
@@ -70,7 +70,18 @@ namespace TechC.VBattle.InGame.Character
 
                 // 攻撃開始（キャンセル不可）
                 canCancel = false;
-                await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.cancelStartTime), cancellationToken: ct);
+
+                // hitTimingまで待機
+                await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
+
+                // 攻撃Prefab生成と判定を実行
+                CreateAttackObject();
+                PerformHitDetection();
+
+                // cancelStartTimeまでの残り時間を待機
+                float remainingToCancelStart = currentAttackData.cancelStartTime - currentAttackData.hitTiming;
+                if (remainingToCancelStart > 0)
+                    await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
 
                 // キャンセル可能タイミング
                 canCancel = true;
@@ -109,7 +120,6 @@ namespace TechC.VBattle.InGame.Character
             // 攻撃終了後の状態遷移
             return isAirAttack ? controller.GetState<AirState>() : controller.GetState<NeutralState>();
         }
-
         public override void OnExit()
         {
             controller.Anim.SetInteger(AnimatorParam.Chain, 0);//連鎖リセット
@@ -118,6 +128,48 @@ namespace TechC.VBattle.InGame.Character
             canCancel = false;
             isChainRequested = false;
             chain = 0;
+        }
+
+        /// <summary>
+        /// 攻撃判定の実行,判定は調停者に任せる
+        /// </summary>
+        /// <returns></returns>
+        private void PerformHitDetection()
+        {
+            Vector3 hitPosition = controller.transform.position +
+                controller.transform.TransformDirection(currentAttackData.hitboxOffset);
+
+            Collider[] hits = Physics.OverlapSphere(
+                hitPosition,
+                currentAttackData.radius,
+                currentAttackData.targetLayers
+            );
+            AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
+
+            // BattleJudgeに判定を依頼
+            InGameManager.I.BattleBus.Publish(new AttackRequestEvent
+            {
+                Attacker = controller,
+                AttackData = currentAttackData,
+                HitPosition = hitPosition,
+                HitTargets = hits
+            });
+        }
+        
+        /// <summary>
+        /// 攻撃Prefabの生成
+        /// </summary>
+        private void CreateAttackObject()
+        {
+            if (currentAttackData.attackPrefab != null)
+            {
+                Vector3 spawnPos = controller.transform.position +
+                    controller.transform.TransformDirection(currentAttackData.prefabOffset);
+                Quaternion spawnRot = controller.transform.rotation *
+                    Quaternion.Euler(currentAttackData.prefabRotation);
+                // 攻撃オブジェクトを取得
+                CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
+            }
         }
     }
 }

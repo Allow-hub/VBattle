@@ -38,6 +38,10 @@ MonoBehaviour:
     displayName: Command
     color: {r: 0.4335546, g: 0.74509805, b: 0.08627451, a: 1}
     enabledByDefault: 1
+  - categoryId: event
+    displayName: Event
+    color: {r: 0.14901958, g: 0.7606095, b: 0.9764706, a: 1}
+    enabledByDefault: 1
   defaultCategory:
     categoryId: default
     displayName: Default

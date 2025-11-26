@@ -1,9 +1,13 @@
 using Cinemachine;
 using TechC.VBattle.Audio;
+using TechC.VBattle.InGame.Events;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
+    /// <summary>
+    /// 攻撃データ
+    /// </summary>
     [CreateAssetMenu(fileName = "AttackData", menuName = "TechC/Combat/Attack Data")]
     public class AttackData : ScriptableObject
     {
@@ -130,12 +134,38 @@ namespace TechC.VBattle.InGame.Character
         [Header("サウンド・ボイス・SE")]
         public CharacterSEType characterSEType;
         public CharacterVoiceType characterVoiceType;
-    }
 
-    public enum HitDetectionMode
-    {
-        UseSelf,
-        OverlapSphere,
-        None
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            // hitTimingはcancelStartTimeより前でなければならない
+            if (hitTiming > cancelStartTime)
+            {
+                Debug.LogWarning($"[{name}] hitTiming ({hitTiming}) should be less than cancelStartTime ({cancelStartTime}). Auto-adjusting...");
+                hitTiming = Mathf.Min(hitTiming, cancelStartTime);
+            }
+
+            // cancelStartTimeはcancelEndTimeより前でなければならない
+            if (cancelStartTime > cancelEndTime)
+            {
+                Debug.LogWarning($"[{name}] cancelStartTime ({cancelStartTime}) should be less than cancelEndTime ({cancelEndTime}). Auto-adjusting...");
+                cancelStartTime = Mathf.Min(cancelStartTime, cancelEndTime);
+            }
+
+            // cancelEndTimeはattackDurationより前でなければならない
+            if (cancelEndTime > attackDuration)
+            {
+                Debug.LogWarning($"[{name}] cancelEndTime ({cancelEndTime}) should be less than attackDuration ({attackDuration}). Auto-adjusting...");
+                cancelEndTime = Mathf.Min(cancelEndTime, attackDuration);
+            }
+
+            // 負の値チェック
+            hitTiming = Mathf.Max(0, hitTiming);
+            cancelStartTime = Mathf.Max(0, cancelStartTime);
+            cancelEndTime = Mathf.Max(0, cancelEndTime);
+            attackDuration = Mathf.Max(0, attackDuration);
+            recoveryDuration = Mathf.Max(0, recoveryDuration);
+        }
+#endif
     }
 }
