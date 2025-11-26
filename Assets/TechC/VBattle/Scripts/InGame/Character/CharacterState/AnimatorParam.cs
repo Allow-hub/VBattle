@@ -18,5 +18,6 @@ namespace TechC.VBattle.InGame.Character
         public static readonly int YSpeed = Animator.StringToHash("YSpeed");
         public static readonly int AttackType = Animator.StringToHash("AttackType");
         public static readonly int AttackDirection = Animator.StringToHash("AttackDirection");
+        public static readonly int Chain =  Animator.StringToHash("Chain");
     }
 }

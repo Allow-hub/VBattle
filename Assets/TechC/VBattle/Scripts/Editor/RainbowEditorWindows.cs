@@ -70,7 +70,7 @@ public static class RainbowEditorWindows
 
 
     // ==================================================
-    // 既存機能（変更なし）
+    // 既存機能
     // ==================================================
 
     private static void DrawHierarchyItem(int instanceID, Rect rect)

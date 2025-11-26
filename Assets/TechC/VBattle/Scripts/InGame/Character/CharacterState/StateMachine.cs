@@ -1,7 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Extensions;
-using UnityEngine;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -10,12 +10,16 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class StateMachine
     {
-        public readonly string LOGNAME = "state";
         private CharacterState _currentState;
         private CancellationTokenSource _cts;
         private CancellationTokenSource _ctsForState;
         public CharacterState CurrentState => _currentState;
 
+        /// <summary>
+        /// 状態を実行するメインループ
+        /// </summary>
+        /// <param name="start">始まりのステート</param>
+        /// <returns></returns>
         public async UniTaskVoid Run(CharacterState start)
         {
             if (start == null)
@@ -56,12 +60,12 @@ namespace TechC.VBattle.InGame.Character
                 catch (System.OperationCanceledException)
                 {
                     // 外部からChangeStateが呼ばれた場合
-                    CustomLogger.Info($"{_currentState?.GetType().Name} was cancelled", LOGNAME);
+                    CustomLogger.Info($"{_currentState?.GetType().Name} was cancelled", LogTagUtil.TagState);
                     // 既に新しい状態に遷移済みなので、次のループで新しい状態のOnUpdateが呼ばれる
                 }
                 catch (System.Exception ex)
                 {
-                    CustomLogger.Error($"State update error in {_currentState?.GetType().Name}: {ex}", LOGNAME);
+                    CustomLogger.Error($"State update error in {_currentState?.GetType().Name}: {ex}", LogTagUtil.TagState);
                 }
 
                 await UniTask.Yield(token);
@@ -73,10 +77,9 @@ namespace TechC.VBattle.InGame.Character
         /// </summary>
         public void ChangeState(CharacterState nextState)
         {
-            if (nextState == null || nextState == _currentState)
+            if (nextState == null)
                 return;
-
-            CustomLogger.Info($"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}", LOGNAME);
+            CustomLogger.Info($"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}", LogTagUtil.TagState);
 
             // 現在の状態をキャンセル
             _ctsForState?.Cancel();

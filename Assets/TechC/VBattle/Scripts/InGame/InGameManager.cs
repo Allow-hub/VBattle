@@ -11,7 +11,7 @@ namespace TechC.VBattle.InGame
         public InGameState InGameState => inGameState;
         private InGameState inGameState;
         public BattleEventBus BattleBus { get; private set; }
-        public BattleJudge BattleJudge { get; private set; }
+        private BattleJudge battleJudge;
 
         protected override bool UseDontDestroyOnLoad => false;
 

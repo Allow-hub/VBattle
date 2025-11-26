@@ -35,18 +35,7 @@ namespace TechC.VBattle.Audio
         TabNotification,
         Grass
     }
-
-    /// <summary>
-    /// キャラクターの種類
-    /// </summary>
-    public enum CharacterType
-    {
-        None = -1,
-        Normal, //素体
-        Ame,    //氷乃あめ
-        Terami, //照海・粋
-    }
-
+    
     /// <summary>
     /// キャラクターSE用
     /// </summary>
@@ -132,7 +121,7 @@ namespace TechC.VBattle.Audio
     /// <summary>
     /// 共通音声データを管理するScriptableObject
     /// </summary>
-    [CreateAssetMenu(fileName = "AudioData", menuName = "Audio/AudioData")]
+    [CreateAssetMenu(fileName = "AudioData", menuName = "TechC/Audio/AudioData")]
     public class AudioData : ScriptableObject
     {
         [System.Serializable]

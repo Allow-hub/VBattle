@@ -1,3 +1,4 @@
+using TechC.VBattle.InGame.Character;
 using TechC.VBattle.Systems;
 using UnityEngine;
 
@@ -12,12 +13,14 @@ namespace TechC.VBattle.InGame
         [SerializeField] private InGameManager inGameManager;
         [SerializeField] private CharaAttackFactory charaAttackFactory;
         [SerializeField] private EffectFactory effectFactory;
+        [SerializeField] private AttackVisualizer attackVisualizer;
 
         private void Awake()
         {
             inGameManager.Init();
             charaAttackFactory.Init();
             effectFactory.Init();
+            attackVisualizer.Init();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TechC.VBattle.InGame.Character;
 using UnityEngine;
 
 namespace TechC.VBattle.Audio
@@ -6,11 +7,11 @@ namespace TechC.VBattle.Audio
     /// <summary>
     /// キャラクター別音声データを管理するScriptableObject
     /// </summary>
-    [CreateAssetMenu(fileName = "CharacterAudioData", menuName = "Audio/CharacterAudioData")]
+    [CreateAssetMenu(fileName = "CharacterAudioData", menuName = "TechC/Audio/CharacterAudioData")]
     public class CharacterAudioData : ScriptableObject
     {
         [Header("キャラクタータイプ")]
-        public CharacterType characterType;
+        public CharaName characterType;
 
         [System.Serializable]
         public class CharacterSEInfo

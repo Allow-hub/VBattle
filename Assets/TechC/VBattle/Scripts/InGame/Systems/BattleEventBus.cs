@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 
 namespace TechC.VBattle.InGame.Systems
@@ -24,7 +26,7 @@ namespace TechC.VBattle.InGame.Systems
         /// </summary>
         /// <typeparam name="T">購読するイベント型。IBattleEvent を実装している必要がある。</typeparam>
         /// <param name="listener">イベント発行時に呼び出されるコールバック。</param>
-        public void Subscribe<T>(Action<T> listener) where T : IBattleEvent
+        public void Subscribe<T>(Action<T> listener) where T : struct, IBattleEvent
         {
             var eventType = typeof(T);
 
@@ -40,7 +42,7 @@ namespace TechC.VBattle.InGame.Systems
         /// </summary>
         /// <typeparam name="T">解除対象のイベント型</typeparam>
         /// <param name="listener">登録解除するリスナー</param>
-        public void Unsubscribe<T>(Action<T> listener) where T : IBattleEvent
+        public void Unsubscribe<T>(Action<T> listener) where T : struct, IBattleEvent
         {
             var eventType = typeof(T);
 
@@ -61,10 +63,11 @@ namespace TechC.VBattle.InGame.Systems
         /// </summary>
         /// <typeparam name="T">発行するイベントの型</typeparam>
         /// <param name="eventData">リスナーに渡されるイベントデータ</param>
-        public void Publish<T>(T eventData) where T : IBattleEvent
+        public void Publish<T>(T eventData) where T : struct, IBattleEvent
         {
             var eventType = typeof(T);
-
+            
+            CustomLogger.Info($"Publishing event of type {eventType.Name}", LogTagUtil.TagEvent);
             if (_eventDictionary.TryGetValue(eventType, out var existingDelegate))
                 (existingDelegate as Action<T>)?.Invoke(eventData);
         }

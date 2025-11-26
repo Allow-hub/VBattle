@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TechC.VBattle.Audio;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame.Character;
 using UnityEngine;
 
 namespace TechC.VBattle.Core.Managers
@@ -38,9 +40,6 @@ namespace TechC.VBattle.Core.Managers
         // 現在再生中のBGM
         private BGMID currentBGM = BGMID.None;
         private bool isBgmFading = false;
-
-        [SerializeField, ReadOnly] private string audioLogId = "audio";
-
         /// <summary>
         /// Singletonの初期化処理をoverride
         /// </summary>
@@ -100,7 +99,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクターデータをアンロード
         /// </summary>
-        public void UnloadCharacterAudioData(CharacterType characterType)
+        public void UnloadCharacterAudioData(CharaName characterType)
         {
             characterAudioDataList.RemoveAll(data => data.characterType == characterType);
         }
@@ -108,7 +107,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクタータイプからデータを取得
         /// </summary>
-        private CharacterAudioData GetCharacterAudioData(CharacterType characterType)
+        private CharacterAudioData GetCharacterAudioData(CharaName characterType)
         {
             return characterAudioDataList.Find(data => data.characterType == characterType);
         }
@@ -132,7 +131,7 @@ namespace TechC.VBattle.Core.Managers
             AudioData.BGMInfo bgmInfo = audioData.GetBGM(id);
             if (bgmInfo == null || bgmInfo.clip == null)
             {
-                CustomLogger.Warning($"BGM の ID {id} が見つかりません", audioLogId);
+                CustomLogger.Warning($"BGM の ID {id} が見つかりません", LogTagUtil.TagAudio);
                 return;
             }
 
@@ -285,7 +284,7 @@ namespace TechC.VBattle.Core.Managers
             AudioData.SEInfo seInfo = audioData.GetSE(id);
             if (seInfo == null || seInfo.clip == null)
             {
-                CustomLogger.Warning($"SE の ID {id} が見つかりません", audioLogId);
+                CustomLogger.Warning($"SE の ID {id} が見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -293,7 +292,7 @@ namespace TechC.VBattle.Core.Managers
             AudioSource source = GetAvailableAudioSource(seSources);
             if (source == null)
             {
-                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", audioLogId);
+                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -319,7 +318,7 @@ namespace TechC.VBattle.Core.Managers
             AudioData.SEInfo seInfo = audioData.GetSE(id);
             if (seInfo == null || seInfo.clip == null)
             {
-                CustomLogger.Warning($"SE の ID {id} が見つかりません", audioLogId);
+                CustomLogger.Warning($"SE の ID {id} が見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -337,7 +336,7 @@ namespace TechC.VBattle.Core.Managers
             AudioSource availableSource = GetAvailableAudioSource(seSources);
             if (availableSource == null)
             {
-                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", audioLogId);
+                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -359,7 +358,7 @@ namespace TechC.VBattle.Core.Managers
             AudioData.SEInfo seInfo = audioData.GetSE(id);
             if (seInfo == null || seInfo.clip == null)
             {
-                CustomLogger.Warning($"SE の ID {id} が見つかりません", audioLogId);
+                CustomLogger.Warning($"SE の ID {id} が見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -379,7 +378,7 @@ namespace TechC.VBattle.Core.Managers
             AudioSource availableSource = GetAvailableAudioSource(seSources);
             if (availableSource == null)
             {
-                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", audioLogId);
+                CustomLogger.Warning("利用可能な SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -395,19 +394,19 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクター固有のSEを再生
         /// </summary>
-        public AudioSource PlayCharacterSE(CharacterType characterType, CharacterSEType seType)
+        public AudioSource PlayCharacterSE(CharaName characterType, CharacterSEType seType)
         {
             CharacterAudioData characterData = GetCharacterAudioData(characterType);
             if (characterData == null)
             {
-                CustomLogger.Warning($"キャラクター {characterType} の音声データが見つかりません", audioLogId);
+                CustomLogger.Warning($"キャラクター {characterType} の音声データが見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
             CharacterAudioData.CharacterSEInfo seInfo = characterData.GetCharacterSE(seType);
             if (seInfo == null || seInfo.clip == null)
             {
-                CustomLogger.Warning($"キャラクター {characterType} の SE タイプ {seType} が見つかりません", audioLogId);
+                CustomLogger.Warning($"キャラクター {characterType} の SE タイプ {seType} が見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -415,7 +414,7 @@ namespace TechC.VBattle.Core.Managers
             AudioSource source = GetAvailableAudioSource(characterSESources);
             if (source == null)
             {
-                CustomLogger.Warning("利用可能なキャラクター SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", audioLogId);
+                CustomLogger.Warning("利用可能なキャラクター SE AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -424,7 +423,7 @@ namespace TechC.VBattle.Core.Managers
             source.pitch = seInfo.pitch;
             source.loop = seInfo.loop;
             source.PlayOneShot(seInfo.clip);
-            CustomLogger.Info($"SEを再生しました{characterType},{seInfo.clip},{source.name + source.clip}" , audioLogId);
+            CustomLogger.Info($"SEを再生しました{characterType},{seInfo.clip},{source.name + source.clip}", LogTagUtil.TagAudio);
             return source;
         }
 
@@ -499,19 +498,19 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// キャラクターボイスを再生
         /// </summary>
-        public AudioSource PlayCharacterVoice(CharacterType characterType, CharacterVoiceType voiceType)
+        public AudioSource PlayCharacterVoice(CharaName characterType, CharacterVoiceType voiceType)
         {
             CharacterAudioData characterData = GetCharacterAudioData(characterType);
             if (characterData == null)
             {
-                CustomLogger.Warning($"キャラクター {characterType} の音声データが見つかりません", audioLogId);
+                CustomLogger.Warning($"キャラクター {characterType} の音声データが見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
             CharacterAudioData.CharacterVoiceInfo voiceInfo = characterData.GetCharacterVoice(voiceType);
             if (voiceInfo == null || voiceInfo.clip == null)
             {
-                CustomLogger.Warning($"キャラクター {characterType} のボイス タイプ {voiceType} が見つかりません", audioLogId);
+                CustomLogger.Warning($"キャラクター {characterType} のボイス タイプ {voiceType} が見つかりません", LogTagUtil.TagAudio);
                 return null;
             }
 
@@ -519,7 +518,7 @@ namespace TechC.VBattle.Core.Managers
             AudioSource source = GetAvailableAudioSource(characterVoiceSources);
             if (source == null)
             {
-                CustomLogger.Warning("利用可能なキャラクターボイス AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", audioLogId);
+                CustomLogger.Warning("利用可能なキャラクターボイス AudioSource が見つかりません。プールのサイズを増やすことを検討してください。", LogTagUtil.TagAudio);
                 return null;
             }
 

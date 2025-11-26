@@ -54,7 +54,7 @@ namespace TechC.VBattle.InGame.Character
 
             // --- ジャンプ ---
             CheckJumpInput(latestSnap);
-            
+
             // --- しゃがみ ---
             CheckCrouchInput(latestSnap);
 
@@ -65,9 +65,7 @@ namespace TechC.VBattle.InGame.Character
         {
             // --- 移動 ---
             if (!isGuarding)
-            {
                 CheckMoveInput(latestSnap);
-            }
         }
 
         /// <summary>
@@ -124,9 +122,7 @@ namespace TechC.VBattle.InGame.Character
 
             // 上攻撃の時はジャンプ抑制
             if (direction == AttackDirection.Up)
-            {
                 suppressNextJumpRelease = true;
-            }
         }
 
         /// <summary>
@@ -170,17 +166,11 @@ namespace TechC.VBattle.InGame.Character
         {
             bool jumpReleased = (snap.releasedButtons & BaseInputManager.InputButton.Jump) != 0;
 
-            if (jumpReleased)
-            {
-                if (!suppressNextJumpRelease)
-                {
-                    controller.ExecuteCommand(new JumpCommand());
-                }
-                else
-                {
-                    suppressNextJumpRelease = false;
-                }
-            }
+            if (!jumpReleased) return;
+            if (!suppressNextJumpRelease)
+                controller.ExecuteCommand(new JumpCommand());
+            else
+                suppressNextJumpRelease = false;
         }
 
         /// <summary>
@@ -196,8 +186,6 @@ namespace TechC.VBattle.InGame.Character
             // しゃがみ開始
             if (crouchPressed && !isCrouching)
             {
-                Debug.Log($"{crouchPressed}");
-
                 controller.ExecuteCommand(new CrouchCommand(true));
                 isCrouching = true;
             }
@@ -252,10 +240,7 @@ namespace TechC.VBattle.InGame.Character
                 controller.Anim.SetBool(AnimatorParam.IsMoving, true); // Press時にtrue
             }
             else if (isDashing)
-            {
-                // ダッシュ状態を維持
-                dash = true;
-            }
+                dash = true;// ダッシュ状態を維持
 
             controller.ExecuteCommand(new MoveCommand(new Vector2(currentDir, 0), dash));
             HasMoveInput = true;

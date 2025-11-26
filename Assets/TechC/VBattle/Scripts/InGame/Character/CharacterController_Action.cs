@@ -14,7 +14,6 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="direction">向き</param>
         public void Move(Vector2 direction, bool isDashing)
         {
-
             if (direction.sqrMagnitude > 0.01f)
             {
                 bool isGrounded = IsGrounded();
@@ -51,14 +50,7 @@ namespace TechC.VBattle.InGame.Character
 
                 // キャラクターの向きを移動方向に変更
                 if (moveDirection.sqrMagnitude > 0.01f)
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                    transform.rotation = Quaternion.Slerp(
-                        transform.rotation,
-                        targetRotation,
-                        Time.deltaTime * 15f
-                    );
-                }
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), 0.9f);
             }
         }
 
@@ -92,9 +84,10 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="direction">入力方向</param>
         public void Attack(AttackType type, AttackDirection direction)
         {
-            anim.SetInteger(AnimatorParam.AttackType, (int)type);
-            anim.SetInteger(AnimatorParam.AttackDirection, (int)direction);
-            AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsAttacking);
+            CurrentAttackType = type;
+            CurrentAttackDirection = direction;
+            if (stateMachine.CurrentState == GetState<AttackState>()) return;
+            stateMachine.ChangeState(GetState<AttackState>());
         }
 
         public void StartGuard()

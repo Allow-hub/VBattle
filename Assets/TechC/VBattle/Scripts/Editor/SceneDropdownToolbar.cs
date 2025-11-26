@@ -100,11 +100,19 @@ public static class SceneDropdownToolbar
             string path = scenePaths[i];
             menu.AddItem(new GUIContent(name), false, () =>
             {
-                //実行時かどうか
                 if (Application.isPlaying)
-                    SceneManager.LoadScene(path);//ビルドセッティングに乗ってないシーンは開けない
+                {
+                    // 再生中：普通にロード
+                    SceneManager.LoadScene(path);
+                }
                 else
+                {
+                    // 編集モード：シーンを保存してから切り替え
+                    bool saved = EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+                    if (!saved) return; // キャンセルされたら中断
+
                     EditorSceneManager.OpenScene(path);
+                }
             });
         }
         menu.DropDown(new Rect(0, 20, 0, 0));
