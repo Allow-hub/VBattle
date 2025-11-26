@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -65,7 +66,7 @@ namespace TechC.VBattle.InGame.Character
         private void Update()
         {
             commandInvoker.Update();
-            CustomLogger.Info($"{stateMachine.CurrentState}", stateMachine.LOGNAME);
+            CustomLogger.Info($"{stateMachine.CurrentState}", LogTagUtil.TagState);
         }
 
         private void FixedUpdate()
@@ -100,7 +101,7 @@ namespace TechC.VBattle.InGame.Character
 
             if (currentState == null || !currentState.CanExecuteCommand(command))
             {
-                Debug.Log($"Command {command.Type} rejected in state {currentState?.GetType().Name}");
+                CustomLogger.Info($"Command {command.Type} rejected in state {currentState?.GetType().Name}", LogTagUtil.TagCommand);
                 return;
             }
 

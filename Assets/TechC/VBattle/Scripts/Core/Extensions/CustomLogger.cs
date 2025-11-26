@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace TechC.VBattle.Core.Extensions
@@ -74,7 +75,7 @@ namespace TechC.VBattle.Core.Extensions
             }
             else
             {
-                Debug.LogWarning($"Unknown log category: {categoryId}");
+                UnityEngine.Debug.LogWarning($"Unknown log category: {categoryId}");
             }
         }
 
@@ -106,6 +107,7 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="categoryId"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Info(string message, string categoryId = null)
         {
             Log(message, LogLevel.Info, categoryId);
@@ -116,6 +118,7 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="category"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Info(string message, LogCategoryDefinition category)
         {
             Log(message, LogLevel.Info, category?.categoryId);
@@ -126,6 +129,7 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="categoryId"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Warning(string message, string categoryId = null)
         {
             Log(message, LogLevel.Warning, categoryId);
@@ -136,6 +140,7 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="category"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Warning(string message, LogCategoryDefinition category)
         {
             Log(message, LogLevel.Warning, category?.categoryId);
@@ -146,6 +151,8 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="categoryId"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+
         public static void Error(string message, string categoryId = null)
         {
             Log(message, LogLevel.Error, categoryId);
@@ -156,6 +163,7 @@ namespace TechC.VBattle.Core.Extensions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="category"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Error(string message, LogCategoryDefinition category)
         {
             Log(message, LogLevel.Error, category?.categoryId);
@@ -167,6 +175,7 @@ namespace TechC.VBattle.Core.Extensions
         /// <param name="message"></param>
         /// <param name="level"></param>
         /// <param name="categoryId"></param>
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         private static void Log(string message, LogLevel level, string categoryId)
         {
             // ログが全体的に無効化されている場合は出力しない
@@ -206,13 +215,13 @@ namespace TechC.VBattle.Core.Extensions
             switch (level)
             {
                 case LogLevel.Info:
-                    Debug.Log(colorizedMessage);
+                    UnityEngine.Debug.Log(colorizedMessage);
                     break;
                 case LogLevel.Warning:
-                    Debug.LogWarning(colorizedMessage);
+                    UnityEngine.Debug.LogWarning(colorizedMessage);
                     break;
                 case LogLevel.Error:
-                    Debug.LogError(colorizedMessage);
+                    UnityEngine.Debug.LogError(colorizedMessage);
                     break;
             }
         }

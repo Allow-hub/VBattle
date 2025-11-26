@@ -79,8 +79,6 @@ namespace TechC.VBattle.InGame.Character
 
         [Tooltip("前回連携オブジェクト地点に出すかどうか")]
         public bool isChainPos;
-        [Tooltip("連携可能な時間（秒）")]
-        public float chainThreshold;
 
         // ===== ヒット演出（ヒットストップ・ノックバック・Shake） =====
         [Header("ヒット演出")]

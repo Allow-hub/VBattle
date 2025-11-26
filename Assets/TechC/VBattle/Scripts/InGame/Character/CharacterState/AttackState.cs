@@ -2,12 +2,11 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Util;
-using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
     /// <summary>
-    /// 攻撃ステート
+    /// 攻撃ステート、ここでの連鎖は同一攻撃タイプ内での連続攻撃を指す
     /// </summary>
     public class AttackState : CharacterState
     {
@@ -15,7 +14,6 @@ namespace TechC.VBattle.InGame.Character
         private bool canCancel = false;
         private bool isAirAttack = false;
         private bool isChainRequested = false;
-        private const string TAGNAME = "attack";
         private int chain = 0;
 
         public AttackState(CharacterController controller) : base(controller) { }
@@ -25,10 +23,10 @@ namespace TechC.VBattle.InGame.Character
             // キャンセル可能タイミングでのみ次の攻撃を受け付ける
             if (command.Type == CommandType.Attack && canCancel)
             {
-                // チェーン攻撃が可能かチェック
+                // 連鎖攻撃が可能かチェック
                 if (currentAttackData.canChain && currentAttackData.nextChain != null)
                 {
-                    // チェーン攻撃をリクエスト
+                    // 連鎖攻撃をリクエスト
                     isChainRequested = true;
                     return true;
                 }
@@ -38,7 +36,6 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnEnter(CharacterState prevState)
         {
-            Debug.Log("Enter");
             isChainRequested = false;
             //空中攻撃は派生させない予定なので無理やり矯正する形で
             if (!controller.IsGrounded())
@@ -56,18 +53,18 @@ namespace TechC.VBattle.InGame.Character
                 isAirAttack = false;
                 currentAttackData = controller.AttackSet.GetAttackData(controller.CurrentAttackType, controller.CurrentAttackDirection);
             }
-            
+
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
-            // 攻撃ループ（チェーン攻撃対応）
+            // 攻撃ループ（連鎖攻撃対応）
             while (true)
             {
                 isChainRequested = false;
-                
+
                 float attackTime = currentAttackData.attackDuration;
                 float recoveryTime = currentAttackData.recoveryDuration;
 
@@ -83,10 +80,10 @@ namespace TechC.VBattle.InGame.Character
 
                 // キャンセル可能時間が終了
                 canCancel = false;
-                // チェーン攻撃がリクエストされているかチェック
+                // 連鎖攻撃がリクエストされているかチェック
                 if (isChainRequested && currentAttackData.canChain && currentAttackData.nextChain != null)
                 {
-                    // 次のチェーン攻撃に移行
+                    // 次の連鎖攻撃に移行
                     currentAttackData = currentAttackData.nextChain;
 
                     chain++;
@@ -97,7 +94,7 @@ namespace TechC.VBattle.InGame.Character
                     continue;
                 }
 
-                // チェーンがない場合は残りの硬直を待つ
+                // 連鎖がない場合は残りの硬直を待つ
                 float remainingAttack = attackTime - currentAttackData.cancelEndTime;
                 if (remainingAttack > 0)
                     await UniTask.Delay(TimeSpan.FromSeconds(remainingAttack), cancellationToken: ct);
@@ -115,7 +112,7 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnExit()
         {
-            Debug.Log("Exit");
+            controller.Anim.SetInteger(AnimatorParam.Chain, 0);//連鎖リセット
             controller.Anim.speed = controller.IdleAnimSpeed;
             controller.Anim.SetBool(AnimatorParam.IsAttacking, false);
             canCancel = false;

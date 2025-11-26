@@ -92,13 +92,18 @@ namespace TechC.VBattle.Core.Extensions
             SaveSettings();
         }
 
-        // カテゴリが存在するか確認
-        public bool CategoryExists(string categoryId)
-        {
-            return GetCategory(categoryId) != null;
-        }
+        /// <summary>
+        /// カテゴリが存在するか確認
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public bool CategoryExists(string categoryId) => GetCategory(categoryId) != null;
 
-        // カテゴリ情報を取得
+        /// <summary>
+        /// カテゴリ情報を取得
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
         public LogCategoryInfo GetCategory(string categoryId)
         {
             foreach (var category in availableCategories)
@@ -109,7 +114,9 @@ namespace TechC.VBattle.Core.Extensions
             return defaultCategory;
         }
 
-        // 設定を保存
+        /// <summary>
+        /// 設定を保存
+        /// </summary>
         private void SaveSettings()
         {
 #if UNITY_EDITOR
@@ -118,7 +125,9 @@ namespace TechC.VBattle.Core.Extensions
 #endif
         }
 
-        // インスタンス作成と保存（エディタ専用）
+        /// <summary>
+        /// インスタンス作成と保存（エディタ専用）
+        /// </summary>
         private static void CreateAndSaveSettings()
         {
 #if UNITY_EDITOR
@@ -146,7 +155,9 @@ namespace TechC.VBattle.Core.Extensions
 #endif
         }
 
-        // デフォルトのカテゴリを初期化
+        /// <summary>
+        /// デフォルトのカテゴリを初期化
+        /// </summary>
         private void InitializeDefaultCategories()
         {
             // デフォルトカテゴリ
