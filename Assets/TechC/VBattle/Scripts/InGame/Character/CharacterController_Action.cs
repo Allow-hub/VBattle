@@ -1,4 +1,5 @@
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame.Events;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -118,7 +119,18 @@ namespace TechC.VBattle.InGame.Character
         }
 
         /// <summary>
-        /// ダメージを受ける
+        /// 攻撃をEventBusから処理する、基本的にPlayer同士の攻撃はこちら
+        /// </summary>
+        /// <param name="e">EventBusで処理された結果</param>
+        private void HandleAttackResult(AttackResultEvent e)
+        {
+            if (e.attacker == this) return;//攻撃者が自分の場合は除外
+            if (!e.isHit) return;//攻撃を受けてない場合
+            TakeDamage(e.attackData.damage, e.attackData.hitStunDuration);
+        }
+
+        /// <summary>
+        /// ダメージを受ける.アイテム等はインターフェースを介してこちらでダメージを
         /// </summary>
         public void TakeDamage(float damage, float stunDuration = 0.3f)
         {

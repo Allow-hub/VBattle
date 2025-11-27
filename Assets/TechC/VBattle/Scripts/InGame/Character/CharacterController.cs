@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core;
 using TechC.VBattle.Core.Util;
+using UnityEngine.InputSystem;
+using TechC.VBattle.InGame.Events;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -14,31 +16,47 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private CharacterData characterData;
         [SerializeField] private Animator anim;
         [SerializeField] private AttackSet attackSet;
-        public AttackSet AttackSet=>attackSet;
-        [SerializeField, ReadOnly] private float idleAnimSpeed = 1.1f;
-        public float IdleAnimSpeed => idleAnimSpeed;
-        public AttackType CurrentAttackType {private set; get; }
-        public AttackDirection CurrentAttackDirection { private set; get; }
-        public Animator Anim => anim;
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
-        private int currentJumpCount = 0;
-        private int maxJumpCount = 2;
-        public Rigidbody Rb=>rb;
+
+        // ===== 公開プロパティ =====
+        public int PlayerIndex { get; private set; }
+        public InputDevice DeviceName { get; private set; }
+        public bool IsNPC { get; private set; }
+        public int CurrentHP { get; private set; }
+        [SerializeField, ReadOnly] private float idleAnimSpeed = 1.1f;
+        public float IdleAnimSpeed => idleAnimSpeed;
+
+        // 攻撃情報
+        public AttackType CurrentAttackType { get; private set; }
+        public AttackDirection CurrentAttackDirection { get; private set; }
+
+        // ===== コンポーネント =====
+        public Animator Anim => anim;
+        public Rigidbody Rb => rb;
         private Rigidbody rb;
+
+        // ===== 状態管理 =====
         public StateMachine StateMachine => stateMachine;
         private StateMachine stateMachine;
         public CommandInvoker CommandInvoker => commandInvoker;
         private CommandInvoker commandInvoker;
         private Dictionary<System.Type, CharacterState> stateCache = new();
+
+        // ===== データ値 =====
         public CharacterData Data => characterData;
-        public float CurrentGuardPower => currentGuardPower;
+        public AttackSet AttackSet => attackSet;
         private float currentGuardPower;
+        public float CurrentGuardPower => currentGuardPower;
         private bool isInvincible = false;
         public bool IsInvincible => isInvincible;
         private bool isGuarding = false;
         public bool IsGuarding => isGuarding;
+
+        // ===== ジャンプ関連 =====
+        private int currentJumpCount = 0;
+        private int maxJumpCount = 2;
 
         private void Awake()
         {
@@ -56,7 +74,15 @@ namespace TechC.VBattle.InGame.Character
             commandInvoker = new CommandInvoker(this);
             currentGuardPower = Data.GuardPower;
         }
-
+        public void Initialize(int playerIndex, InputDevice deviceName, bool isNPC)
+        {
+            PlayerIndex = playerIndex;
+            DeviceName = deviceName;
+            IsNPC = isNPC;
+            CurrentHP = characterData.MaxHP;
+            currentGuardPower = characterData.GuardPower;
+            InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
+        }
         private void Start()
         {
             // 初期状態はNeutral
@@ -117,15 +143,14 @@ namespace TechC.VBattle.InGame.Character
                     StartGuard();
                 else
                     EndGuard();
-            }else if (command is CrouchCommand crouchCommand)
+            }
+            else if (command is CrouchCommand crouchCommand)
             {
                 if (crouchCommand.IsPress)
                     StartCrouch();
                 else
                     EndCrouch();
             }
-
-            // Debug.Log($"{command}");
             currentState.OnCommandExecuted(command);
         }
 

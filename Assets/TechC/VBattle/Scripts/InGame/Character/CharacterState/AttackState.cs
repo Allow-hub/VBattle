@@ -145,14 +145,13 @@ namespace TechC.VBattle.InGame.Character
                 currentAttackData.targetLayers
             );
             AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
-
             // BattleJudgeに判定を依頼
             InGameManager.I.BattleBus.Publish(new AttackRequestEvent
             {
-                Attacker = controller,
-                AttackData = currentAttackData,
-                HitPosition = hitPosition,
-                HitTargets = hits
+                attacker = controller,
+                attackData = currentAttackData,
+                hitPosition = hitPosition,
+                hitTargets = hits
             });
         }
         

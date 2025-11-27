@@ -18,21 +18,21 @@ MonoBehaviour:
   prefabOffset: {x: 0, y: 0, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
   animationSpeed: 2.5
-  attackDuration: 0.2
+  attackDuration: 0.5
   hitDetectionMode: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
-  radius: 0
-  hitboxOffset: {x: 0, y: 0, z: 0}
-  hitTiming: 0
+  radius: 0.7
+  hitboxOffset: {x: 0, y: 0.7, z: 1}
+  hitTiming: 0.2
   hitEffectPrefab: {fileID: 0}
   damage: 0
   knockback: 0
   isCounter: 0
   recoveryDuration: 0.05
-  cancelStartTime: 0.05
-  cancelEndTime: 0.3
+  cancelStartTime: 0.2
+  cancelEndTime: 0.5
   hitStunDuration: 0.25
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
   canChain: 1

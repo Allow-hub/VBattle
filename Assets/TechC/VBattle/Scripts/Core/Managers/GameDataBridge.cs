@@ -1,5 +1,6 @@
 using TechC.VBattle.InGame.Character;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TechC.VBattle.Core.Managers
 {
@@ -22,7 +23,7 @@ namespace TechC.VBattle.Core.Managers
         public class PlayerSetupData
         {
             public int PlayerIndex { get; set; }
-            public string DeviceName { get; set; }
+            public InputDevice DeviceName { get; set; }
             public bool IsNPC { get; set; }
             public CharacterData SelectedCharacter { get; set; }
         }
