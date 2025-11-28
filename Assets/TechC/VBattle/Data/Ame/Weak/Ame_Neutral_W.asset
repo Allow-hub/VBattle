@@ -33,7 +33,7 @@ MonoBehaviour:
   recoveryDuration: 0.05
   cancelStartTime: 0.2
   cancelEndTime: 0.5
-  hitStunDuration: 0.25
+  hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
   canChain: 1
   isChainPos: 0

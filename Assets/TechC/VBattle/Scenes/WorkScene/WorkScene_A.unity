@@ -278,6 +278,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGame
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p1Pos.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p1Pos.z
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p1Rot.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p2Pos.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p2Pos.z
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p2Rot.y
+      value: -90
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
