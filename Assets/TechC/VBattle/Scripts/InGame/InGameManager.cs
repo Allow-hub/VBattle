@@ -11,6 +11,11 @@ namespace TechC.VBattle.InGame
     public class InGameManager : Singleton<InGameManager>
     {
         [SerializeField] private bool isDebug = true;
+        [SerializeField] private Vector3 p1Rot;
+        [SerializeField] private Vector3 p2Rot;
+        [SerializeField] private Vector3 p1Pos;
+        [SerializeField] private Vector3 p2Pos;
+        
         [SerializeField] private GameObject ameObj;
         public InGameState InGameState => inGameState;
         private InGameState inGameState;
@@ -25,13 +30,11 @@ namespace TechC.VBattle.InGame
             BattleBus = new BattleEventBus();
             if (isDebug)
             {
-                var p1Pos = new Vector3(0,0,-6);
-                var p2Pos = new Vector3(2,0,-6);
-                var p1 = Instantiate(ameObj,p1Pos,Quaternion.identity).GetComponent<Character.CharacterController>();
-                var p2 = Instantiate(ameObj,p2Pos,Quaternion.identity).GetComponent<Character.CharacterController>();
+                var p1 = Instantiate(ameObj,p1Pos,Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                var p2 = Instantiate(ameObj,p2Pos,Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
 
-                p1.Initialize(1,Keyboard.current,false);
-                p2.Initialize(2,Keyboard.current,false);
+                p1.Init(1,Keyboard.current,false);
+                p2.Init(2,Keyboard.current,false);
                 p2.GetComponent<PlayerInput>().enabled = false;
                 
                 battleJudge = new BattleJudge(p1,p2,BattleBus);                

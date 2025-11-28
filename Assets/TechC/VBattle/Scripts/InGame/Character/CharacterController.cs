@@ -74,7 +74,14 @@ namespace TechC.VBattle.InGame.Character
             commandInvoker = new CommandInvoker(this);
             currentGuardPower = Data.GuardPower;
         }
-        public void Initialize(int playerIndex, InputDevice deviceName, bool isNPC)
+
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        /// <param name="playerIndex">PlayerID: 1or2</param>
+        /// <param name="deviceName">デバイス名</param>
+        /// <param name="isNPC">NPCかどうか</param>
+        public void Init(int playerIndex, InputDevice deviceName, bool isNPC)
         {
             PlayerIndex = playerIndex;
             DeviceName = deviceName;
@@ -83,6 +90,7 @@ namespace TechC.VBattle.InGame.Character
             currentGuardPower = characterData.GuardPower;
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
         }
+
         private void Start()
         {
             // 初期状態はNeutral
@@ -101,6 +109,10 @@ namespace TechC.VBattle.InGame.Character
             commandInvoker.FixedUpdate();
         }
 
+        /// <summary>
+        /// ステートの登録
+        /// </summary>
+        /// <param name="state">登録したいステート</param>
         private void RegisterState(CharacterState state) => stateCache[state.GetType()] = state;
 
         /// <summary>

@@ -126,16 +126,28 @@ namespace TechC.VBattle.InGame.Character
         {
             if (e.attacker == this) return;//攻撃者が自分の場合は除外
             if (!e.isHit) return;//攻撃を受けてない場合
-            TakeDamage(e.attackData.damage, e.attackData.hitStunDuration);
+            TakeDamage(e.attackData);
+        }
+
+        /// <summary>
+        /// AttackDataを使用した攻撃処理、Eventからのダメージはこちら
+        /// </summary>
+        /// <param name="attackData"></param>
+        public void TakeDamage(AttackData attackData)
+        {
+            var damageState = GetState<DamageState>();
+            damageState.SetDamageInfo(attackData); // damage, knockback, stunなど全て含む
+            stateMachine.ChangeState(damageState);
         }
 
         /// <summary>
         /// ダメージを受ける.アイテム等はインターフェースを介してこちらでダメージを
         /// </summary>
-        public void TakeDamage(float damage, float stunDuration = 0.3f)
+        public void TakeDamage(float damage, Vector3 knockbackDirection, float knockbackForce, float stunDuration = 0.3f)
         {
             var damageState = GetState<DamageState>();
             damageState.SetStunDuration(stunDuration);
+            damageState.SetKnockback(knockbackDirection, knockbackForce);
             stateMachine.ChangeState(damageState);
         }
     }

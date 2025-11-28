@@ -18,7 +18,6 @@ namespace TechC.VBattle.InGame.Character
         private bool isAirAttack = false;
         private bool isChainRequested = false;
         private int chain = 0;
-
         public AttackState(CharacterController controller) : base(controller) { }
 
         public override bool CanExecuteCommand<T>(T command)

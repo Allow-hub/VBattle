@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Util;
@@ -11,6 +12,9 @@ namespace TechC.VBattle.InGame.Character
     public class DamageState : CharacterState
     {
         private float damageStunDuration = 0.3f;
+        private AttackData attackData;
+        private Vector3 kcockbackDir;
+        private float knockbackForce;
 
         public DamageState(CharacterController controller) : base(controller) { }
 
@@ -22,21 +26,18 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnEnter(CharacterState prevState)
         {
-            Debug.Log("Enter Damage");
-            AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim,AnimatorParam.IsHitting);
-            // ノックバック処理など
+            controller.Anim.SetBool(AnimatorParam.IsHitting, false);
+            AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsHitting);
         }
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
             // ダメージ硬直時間待機
-            await UniTask.Delay((int)(damageStunDuration * 1000), cancellationToken: ct);
+            await UniTask.Delay(TimeSpan.FromSeconds(damageStunDuration), cancellationToken: ct);
 
             // 空中でダメージを受けた場合
             if (!controller.IsGrounded())
-            {
                 return controller.GetState<AirState>();
-            }
 
             // 地上なら通常状態へ
             return controller.GetState<NeutralState>();
@@ -44,12 +45,21 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnExit()
         {
-            Debug.Log("Exit Damage");
+            controller.Anim.SetBool(AnimatorParam.IsHitting, false);
+            controller.Anim.SetBool(AnimatorParam.IsWallHitting, false);
         }
 
-        public void SetStunDuration(float duration)
+        /// <summary>攻撃情報を設定、Eventからの処理用</summary>
+        public void SetDamageInfo(AttackData data) => attackData = data;
+
+        /// <summary>攻撃情報を設定、Eventからの処理用</summary>
+        public void SetStunDuration(float duration) => damageStunDuration = duration;
+
+        /// <summary>攻撃方向と力</summary>
+        public void SetKnockback(Vector3 knockbackDirection, float knockbackForce)
         {
-            damageStunDuration = duration;
+            kcockbackDir = knockbackDirection;
+            this.knockbackForce = knockbackForce;
         }
     }
 }
