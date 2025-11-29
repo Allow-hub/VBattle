@@ -29,14 +29,14 @@ namespace TechC.VBattle.Core.Managers
         public override void Init()
         {
             base.Init();
-            DelayUtility.StartDelayedActionAsync(0.1f, () =>
-            {
-                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
-                WindowUtility.MoveWindow((HWND)w.Hwnd, 500, 500);
-                if(w is ImageWindow imageWindow)
-                    imageWindow.SetImage(image.texture);
+            // DelayUtility.StartDelayedActionAsync(0.1f, () =>
+            // {
+            //     var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
+            //     WindowUtility.MoveWindow((HWND)w.Hwnd, 500, 500);
+            //     if(w is ImageWindow imageWindow)
+            //         imageWindow.SetImage(image.texture);
                 
-            });
+            // });
         }
 
         void Update()
