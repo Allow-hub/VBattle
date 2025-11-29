@@ -42,6 +42,10 @@ MonoBehaviour:
     displayName: Event
     color: {r: 0.14901958, g: 0.7606095, b: 0.9764706, a: 1}
     enabledByDefault: 1
+  - categoryId: icon
+    displayName: Icon
+    color: {r: 0.8726415, g: 0.9957547, b: 1, a: 1}
+    enabledByDefault: 1
   defaultCategory:
     categoryId: default
     displayName: Default
@@ -52,3 +56,4 @@ MonoBehaviour:
   - event
   - attack
   - state
+  - icon
