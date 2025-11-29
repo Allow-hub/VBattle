@@ -60,7 +60,6 @@ namespace TechC.VBattle.InGame.Character
             if (currentJumpCount < maxJumpCount)
             {
                 currentJumpCount++;
-
                 AnimatorUtil.SetAnimatorBoolExclusive(anim, AnimatorParam.IsJumping);
 
                 // Y速度をリセットして二段目の高さが安定するようにする
@@ -72,6 +71,7 @@ namespace TechC.VBattle.InGame.Character
                 else
                     rb.AddForce(Vector3.up * characterData.DoubleJumpPower, ForceMode.Impulse);
 
+                if(stateMachine.CurrentState == GetState<AirState>())return;
                 // 空中状態へ遷移
                 stateMachine.ChangeState(GetState<AirState>());
             }
@@ -124,18 +124,37 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="e">EventBusで処理された結果</param>
         private void HandleAttackResult(AttackResultEvent e)
         {
-            if (e.attacker == this) return;//攻撃者が自分の場合は除外
-            if (!e.isHit) return;//攻撃を受けてない場合
-            TakeDamage(e.attackData.damage, e.attackData.hitStunDuration);
+            // 攻撃者の所有者が自分の場合は除外（自分の攻撃を受けない）
+            if (e.attacker?.Owner == this) return;
+            // 攻撃がヒットしていない場合
+            if (!e.isHit) return;
+            // ターゲットが自分でない場合
+            if (e.target != this) return;
+
+            TakeDamage(e.attackData, e.attacker.Transform.position,e.damage);
         }
 
         /// <summary>
-        /// ダメージを受ける.アイテム等はインターフェースを介してこちらでダメージを
+        /// AttackDataを使用した攻撃処理、Eventからのダメージはこちら
         /// </summary>
-        public void TakeDamage(float damage, float stunDuration = 0.3f)
+        /// <param name="attackData">攻撃データ</param>
+        public void TakeDamage(AttackData attackData, Vector3 attackerPosition, int damage)
         {
             var damageState = GetState<DamageState>();
+            damageState.SetDamageInfo(attackData, attackerPosition);
+            CurrentHP -= damage;
+            stateMachine.ChangeState(damageState);
+        }
+
+        /// <summary>
+        /// 個別パラメータでダメージを受ける。環境ダメージやアイテムなど簡易的な用途向け
+        /// </summary>
+        public void TakeDamage(int damage,Vector3 attackerPosition ,Vector3 knockbackDirection, float knockbackForce, float stunDuration = 0.3f)
+        {
+            var damageState = GetState<DamageState>();
+            CurrentHP -= damage;
             damageState.SetStunDuration(stunDuration);
+            damageState.SetKnockback(attackerPosition, knockbackForce, knockbackDirection);
             stateMachine.ChangeState(damageState);
         }
     }

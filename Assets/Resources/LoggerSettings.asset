@@ -49,4 +49,6 @@ MonoBehaviour:
     enabledByDefault: 1
   _enabledCategoryIds: []
   _disabledCategoryIds:
+  - event
+  - attack
   - state

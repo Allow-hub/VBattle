@@ -15,7 +15,7 @@ namespace TechC.VBattle.InGame.Events
     /// </summary>
     public struct AttackRequestEvent : IBattleEvent
     {
-        public Character.CharacterController attacker;      // 攻撃者
+        public IAttacker attacker;                // 攻撃者（インターフェース化）
         public AttackData attackData;             // 使用された攻撃データ
         public Vector3 hitPosition;               // 攻撃判定位置
         public Collider[] hitTargets;             // 攻撃判定にヒットしたコライダー群
@@ -26,8 +26,8 @@ namespace TechC.VBattle.InGame.Events
     /// </summary>
     public struct AttackResultEvent : IBattleEvent
     {
-        public Character.CharacterController attacker;      // 攻撃者
-        public Character.CharacterController target;        // 被攻撃者
+        public IAttacker attacker;                // 攻撃者（インターフェース化）
+        public Character.CharacterController target;        // 被攻撃者（現状はCharacterControllerのみ）
         public AttackData attackData;             // 使用された攻撃データ
         public bool isHit;                        // ヒットしたか
         public bool isCounter;                    // カウンターヒットか
