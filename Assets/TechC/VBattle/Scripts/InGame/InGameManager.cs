@@ -21,6 +21,7 @@ namespace TechC.VBattle.InGame
         private InGameState inGameState;
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
+        private HitStopManager hitStopManager;//イベントを使用しているので保持しておく必要がある
 
         protected override bool UseDontDestroyOnLoad => false;
 
@@ -28,6 +29,7 @@ namespace TechC.VBattle.InGame
         {
             base.Init();
             BattleBus = new BattleEventBus();
+            hitStopManager = new HitStopManager(BattleBus);
             if (isDebug)
             {
                 var p1 = Instantiate(ameObj,p1Pos,Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
@@ -37,7 +39,7 @@ namespace TechC.VBattle.InGame
                 p2.Init(2,Keyboard.current,false);
                 p2.GetComponent<PlayerInput>().enabled = false;
                 
-                battleJudge = new BattleJudge(p1,p2,BattleBus);                
+                battleJudge = new BattleJudge(p1,p2,BattleBus);
             }
             else
                 Debug.LogError($"まだDebug状態しか対応していません");

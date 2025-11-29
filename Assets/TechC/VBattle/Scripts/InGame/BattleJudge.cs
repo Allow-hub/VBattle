@@ -1,4 +1,5 @@
 using TechC.VBattle.InGame.Events;
+using TechC.VBattle.InGame.Character;
 using System.Linq;
 
 namespace TechC.VBattle.InGame.Systems
@@ -11,11 +12,11 @@ namespace TechC.VBattle.InGame.Systems
     /// </summary>
     public class BattleJudge
     {
-        private readonly Character.CharacterController player_1;
-        private readonly Character.CharacterController player_2;
+        private readonly IDamageable player_1;
+        private readonly IDamageable player_2;
         private readonly BattleEventBus eventBus;
 
-        public BattleJudge(Character.CharacterController p1, Character.CharacterController p2, BattleEventBus eventBus)
+        public BattleJudge(IDamageable p1, IDamageable p2, BattleEventBus eventBus)
         {
             player_1 = p1;
             player_2 = p2;
@@ -35,7 +36,7 @@ namespace TechC.VBattle.InGame.Systems
 
             if (target == null)
             {
-                PublishAttackResult(attackEvent, null, false, false, 0);
+                PublishAttackResult(attackEvent, null, false, false, false, 0);
                 return;
             }
 
@@ -44,12 +45,13 @@ namespace TechC.VBattle.InGame.Systems
 
             if (!isHitRange)
             {
-                PublishAttackResult(attackEvent, target, false, false, 0);
+                PublishAttackResult(attackEvent, target, false, false, false, 0);
                 return;
             }
 
             // 攻撃命中時のダメージ/属性判定
             bool isHit = true;
+            bool isGuard = target.IsGuarding;
             bool isCounter = false; // 追加入力予定があれば後で判定可能
             int damage = attackEvent.attackData.damage;
 
@@ -60,26 +62,41 @@ namespace TechC.VBattle.InGame.Systems
                 damage = 0;
             }
 
-            PublishAttackResult(attackEvent, target, isHit, isCounter, damage);
+            PublishAttackResult(attackEvent, target, isHit, isCounter, isGuard, damage);
         }
 
         /// <summary>
         /// 対象が攻撃のヒットリストに含まれているか判定する
         /// </summary>
-        private bool ContainsTargetInHitList(AttackRequestEvent attackEvent, Character.CharacterController target)
+        private bool ContainsTargetInHitList(AttackRequestEvent attackEvent, IDamageable target)
         {
             if (attackEvent.hitTargets == null) return false;
 
             return attackEvent.hitTargets.Any(col =>
-                col.GetComponentInParent<Character.CharacterController>() == target
-            );
+            {
+                var damageable = col.GetComponentInParent<IDamageable>();
+                return damageable != null && damageable.GameObject == target.GameObject;
+            });
         }
 
         /// <summary>
-        /// 自分と異なる方のプレイヤーを返す
+        /// 攻撃者の対戦相手を特定する
+        /// 飛び道具の場合はOwnerを辿って本来の攻撃者を特定
         /// </summary>
-        private Character.CharacterController GetOpponent(Character.CharacterController attacker)
-            => attacker == player_1 ? player_2 : player_1;
+        private IDamageable GetOpponent(IAttacker attacker)
+        {
+            if (attacker == null) return null;
+
+            // 攻撃者の所有者を取得（飛び道具などの場合はOwnerが設定されている）
+            var owner = attacker.Owner;
+            if (owner == null) return null;
+
+            // 所有者のGameObjectで対戦相手を判定
+            if (owner.gameObject == player_1.GameObject) return player_2;
+            if (owner.gameObject == player_2.GameObject) return player_1;
+
+            return null;
+        }
 
         /// <summary>
         /// 攻撃判定結果をイベントで通知する
@@ -87,18 +104,20 @@ namespace TechC.VBattle.InGame.Systems
         /// </summary>
         private void PublishAttackResult(
             AttackRequestEvent request,
-            Character.CharacterController target,
+            IDamageable target,
             bool isHit,
             bool isCounter,
+            bool isGuard,
             int damage)
         {
             var resultEvent = new AttackResultEvent
             {
                 attacker = request.attacker,
-                target = target,
+                target = target as CharacterController, // CharacterControllerにキャスト（nullの可能性あり）
                 attackData = request.attackData,
                 isHit = isHit,
                 isCounter = isCounter,
+                isGuard = isGuard,
                 damage = damage
             };
             eventBus.Publish(resultEvent);

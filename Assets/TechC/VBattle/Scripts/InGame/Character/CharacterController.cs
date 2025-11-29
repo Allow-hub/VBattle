@@ -10,8 +10,10 @@ namespace TechC.VBattle.InGame.Character
 {
     /// <summary>
     /// キャラクターのコントローラーの本体
+    /// IAttacker: 攻撃者として振る舞う
+    /// IDamageable: ダメージを受ける対象として振る舞う
     /// </summary>
-    public partial class CharacterController : MonoBehaviour, ITakeDamageable
+    public partial class CharacterController : MonoBehaviour, IAttacker, IDamageable
     {
         [SerializeField] private CharacterData characterData;
         [SerializeField] private Animator anim;
@@ -57,6 +59,16 @@ namespace TechC.VBattle.InGame.Character
         // ===== ジャンプ関連 =====
         private int currentJumpCount = 0;
         private int maxJumpCount = 2;
+
+        // ===== IAttacker実装 =====
+        GameObject IAttacker.GameObject => gameObject;
+        Transform IAttacker.Transform => transform;
+        CharacterController IAttacker.Owner => this; // 自分自身が所有者
+
+        // ===== IDamageable実装 =====
+        GameObject IDamageable.GameObject => gameObject;
+        bool IDamageable.IsInvincible => isInvincible;
+        bool IDamageable.IsGuarding => isGuarding;
 
         private void Awake()
         {
@@ -170,7 +182,6 @@ namespace TechC.VBattle.InGame.Character
         {
             Vector3 origin = transform.position;
             Vector3 dir = Vector3.down;
-            // Debug.DrawRay(origin, dir * groundCheckDistance, Color.yellow);
             return Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
         }
 
@@ -187,6 +198,7 @@ namespace TechC.VBattle.InGame.Character
             rb.velocity = velocity;
             currentJumpCount = 0;
         }
+        
         private void OnCollisionExit(Collision collision)
         {
             if (stateMachine.CurrentState == GetState<AirState>()) return;

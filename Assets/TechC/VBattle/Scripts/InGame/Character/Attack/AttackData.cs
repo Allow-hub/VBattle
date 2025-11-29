@@ -57,7 +57,7 @@ namespace TechC.VBattle.InGame.Character
         public int damage;
 
         [Tooltip("ノックバックの強さ")]
-        public float knockback;
+        public float knockbackForce;
 
         [Tooltip("この攻撃がカウンター攻撃かどうか")]
         public bool isCounter;
