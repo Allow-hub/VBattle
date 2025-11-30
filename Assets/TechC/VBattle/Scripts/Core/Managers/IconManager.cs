@@ -9,6 +9,9 @@ using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.Core.Managers
 {
+    /// <summary>
+    /// 通知領域アイコンを表示
+    /// </summary>
     public class IconManager : Singleton<IconManager>
     {
         [SerializeField, ReadOnly] private const string LOGTAG = "icon";
@@ -22,11 +25,11 @@ namespace TechC.VBattle.Core.Managers
         private HWND hWnd;
         private HICON hIcon;
         private NOTIFYICONDATAW nid;
-        private bool isInitialized = false;
-        
+        private bool isInitializedIcon = false;
+
         private WNDPROC wndProcDelegate;
         private string windowClassName = "TechCHelperWindow";
-        
+
         /// <summary>
         /// シングルトンの初期化
         /// </summary>
@@ -53,7 +56,7 @@ namespace TechC.VBattle.Core.Managers
         {
             try
             {
-                if (isInitialized)
+                if (isInitializedIcon)
                 {
                     CustomLogger.Info("通知アイコンは既に初期化済みです", LOGTAG);
                     return;
@@ -104,12 +107,12 @@ namespace TechC.VBattle.Core.Managers
                     hIcon = hIcon,
                     szTip = tooltipText
                 };
-                
+
                 // 通知アイコンの追加
                 bool result = PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_ADD, in nid);
                 if (result)
                 {
-                    isInitialized = true;
+                    isInitializedIcon = true;
                     CustomLogger.Info("通知アイコンが正常に追加されました", LOGTAG);
                 }
                 else
@@ -189,12 +192,12 @@ namespace TechC.VBattle.Core.Managers
         /// </summary>
         public void RemoveNotificationIcon()
         {
-            if (isInitialized)
+            if (isInitializedIcon)
             {
                 CustomLogger.Info("通知アイコンを削除します", LOGTAG);
                 if (!PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_DELETE, in nid))
                     CustomLogger.Info("通知アイコンの削除に失敗しました", LOGTAG);
-                isInitialized = false;
+                isInitializedIcon = false;
             }
             CleanupResources();
         }
@@ -221,7 +224,7 @@ namespace TechC.VBattle.Core.Managers
 
             // ウィンドウクラスの登録解除
             UnregisterWindowClass();
-            
+
             // デリゲート参照をクリア
             wndProcDelegate = null;
         }
@@ -263,7 +266,7 @@ namespace TechC.VBattle.Core.Managers
                     else
                     {
                         CustomLogger.Info($"ヘルパーウィンドウを作成しました: {hWnd}", LOGTAG);
-                        
+
                         // ウィンドウを非表示にする
                         PInvoke.ShowWindow(hWnd, SHOW_WINDOW_CMD.SW_HIDE);
                     }
@@ -335,7 +338,7 @@ namespace TechC.VBattle.Core.Managers
             ShowContextMenu();
         }
 
-             /// <summary>
+        /// <summary>
         /// コンテキストメニューを表示します
         /// </summary>
         private void ShowContextMenu()

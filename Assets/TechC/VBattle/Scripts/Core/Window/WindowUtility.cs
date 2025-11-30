@@ -5,6 +5,8 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,7 +19,6 @@ namespace TechC.VBattle.Core.Window
     /// </summary>
     public static class WindowUtility
     {
-        public static string WINDOWLOGTAG = "window";
         #region ウィンドウ作成・取得
 
         /// <summary>
@@ -29,9 +30,7 @@ namespace TechC.VBattle.Core.Window
 #if UNITY_EDITOR
             var gameView = FindWindowWithTitleSubstring("Game");
             if (gameView != IntPtr.Zero)
-            {
                 return GetWindowRect(gameView);
-            }
             else
             {
                 // 画面全体の解像度をRECTで返す
@@ -83,10 +82,52 @@ namespace TechC.VBattle.Core.Window
             unsafe
             {
                 fixed (char* ptr = buffer)
-                {
                     return PInvoke.GetWindowText(hWnd, ptr, buffer.Length);
-                }
             }
+        }
+
+        /// <summary>
+        /// プロセスIDから最初に見つかったトップレベルウィンドウハンドルを取得
+        /// </summary>
+        /// <param name="processId">プロセスID</param>
+        /// <param name="className">ウィンドウクラス名（省略可）</param>
+        /// <returns>ウィンドウハンドル（見つからなければ HWND.Null）</returns>
+        public static HWND GetWindowByProcessId(int processId, string className = null)
+        {
+            HWND found = HWND.Null;
+            PInvoke.EnumWindows((hwnd, lParam) =>
+            {
+                uint pid = 0;
+                unsafe { PInvoke.GetWindowThreadProcessId(hwnd, &pid); }
+                if (pid == processId)
+                {
+                    if (className != null)
+                    {
+                        char[] buffer = new char[256];
+                        int len;
+                        unsafe
+                        {
+                            fixed (char* pBuffer = buffer)
+                            {
+                                len = PInvoke.GetClassName(hwnd, new PWSTR(pBuffer), buffer.Length);
+                            }
+                        }
+                        string winClass = new string(buffer, 0, len);
+                        if (winClass == className)
+                        {
+                            found = hwnd;
+                            return false; // stop enumeration
+                        }
+                    }
+                    else
+                    {
+                        found = hwnd;
+                        return false; // stop enumeration
+                    }
+                }
+                return true; // continue enumeration
+            }, 0);
+            return found;
         }
 
         #endregion
@@ -140,25 +181,20 @@ namespace TechC.VBattle.Core.Window
             PInvoke.GetWindowRect(hwnd, out rect);
             return rect;
         }
+
         /// <summary>
         /// ウィンドウが表示されているかどうかを確認
         /// </summary>
         /// <param name="hwnd">ウィンドウハンドル</param>
         /// <returns>表示されている場合true</returns>
-        public static bool IsWindowVisible(HWND hwnd)
-        {
-            return PInvoke.IsWindowVisible(hwnd);
-        }
+        public static bool IsWindowVisible(HWND hwnd) => PInvoke.IsWindowVisible(hwnd);
 
         /// <summary>
         /// ウィンドウハンドルが有効かどうかを確認
         /// </summary>
         /// <param name="hwnd">ウィンドウハンドル</param>
         /// <returns>有効な場合true</returns>
-        public static bool IsValidWindow(HWND hwnd)
-        {
-            return !hwnd.IsNull && PInvoke.IsWindow(hwnd);
-        }
+        public static bool IsValidWindow(HWND hwnd) => !hwnd.IsNull && PInvoke.IsWindow(hwnd);
         #endregion
 
         #region WindowManager用の追加メソッド
@@ -176,9 +212,7 @@ namespace TechC.VBattle.Core.Window
 
         public static bool SetWindowPos(HWND hwnd, HWND insertAfter, int x, int y,
             int width, int height, SET_WINDOW_POS_FLAGS flags)
-        {
-            return PInvoke.SetWindowPos(hwnd, insertAfter, x, y, width, height, flags);
-        }
+            => PInvoke.SetWindowPos(hwnd, insertAfter, x, y, width, height, flags);
 
         /// <summary>
         /// ウィンドウハンドルを破棄
@@ -189,20 +223,20 @@ namespace TechC.VBattle.Core.Window
         {
             if (hwnd == IntPtr.Zero)
             {
-                Debug.LogWarning("DestroyWindowHandle: hwnd is null.");
+                CustomLogger.Warning("DestroyWindowHandle: hwnd is null.", LogTagUtil.TagWidnow);
                 return false;
             }
 
             if (!PInvoke.IsWindow((HWND)hwnd))
             {
-                Debug.LogWarning("DestroyWindowHandle: hwnd is not a valid window.");
+                CustomLogger.Warning("DestroyWindowHandle: hwnd is not a valid window.", LogTagUtil.TagWidnow);
                 return false;
             }
 
             if (!PInvoke.DestroyWindow((HWND)hwnd))
             {
                 int error = Marshal.GetLastWin32Error();
-                Debug.LogError($"DestroyWindowHandle failed with error code {error}");
+                CustomLogger.Warning($"DestroyWindowHandle failed with error code {error}", LogTagUtil.TagWidnow);
                 return false;
             }
 
@@ -230,13 +264,13 @@ namespace TechC.VBattle.Core.Window
         {
             if (hwnd.IsNull)
             {
-                Debug.LogWarning("SetWindowTheme: hwnd is null.");
+                CustomLogger.Warning("SetWindowTheme: hwnd is null.", LogTagUtil.TagWidnow);
                 return;
             }
 
             if (!PInvoke.IsWindow(hwnd))
             {
-                Debug.LogWarning("SetWindowTheme: hwnd is not a valid window.");
+                CustomLogger.Warning("SetWindowTheme: hwnd is not a valid window.", LogTagUtil.TagWidnow);
                 return;
             }
 
@@ -256,7 +290,7 @@ namespace TechC.VBattle.Core.Window
         {
             if (!IsValidWindow(new HWND(nativeWindow.Hwnd))) return;
 
-            HWND hWnd= HWND.Null;
+            HWND hWnd = HWND.Null;
             if (nativeWindow is WebWindow webWindow)
                 hWnd = webWindow.WebWindowHwnd;
             else
@@ -346,17 +380,13 @@ namespace TechC.VBattle.Core.Window
             bool reached = Vector2.Distance(newPos, targetPos) < 1f;
 
             if (reached)
-            {
-                // 最終位置に強制セット
-                MoveWindow(new HWND(hWnd), targetX, targetY);
-            }
+                MoveWindow(new HWND(hWnd), targetX, targetY);// 最終位置に強制セット
             else
-            {
                 MoveWindow(new HWND(hWnd), Mathf.RoundToInt(newPos.x), Mathf.RoundToInt(newPos.y));
-            }
 
             return reached;
         }
+
         /// <summary>
         /// ウィンドウサイズをアニメーションで変更（Lerp補間）
         /// </summary>
@@ -389,9 +419,7 @@ namespace TechC.VBattle.Core.Window
                     break;
                 }
                 else
-                {
                     ResizeWindow(hwnd, Mathf.RoundToInt(newSize.x), Mathf.RoundToInt(newSize.y));
-                }
 
                 await UniTask.Delay(intervalMs);
             }
@@ -420,14 +448,9 @@ namespace TechC.VBattle.Core.Window
             bool reached = Vector2.Distance(newSize, targetSize) < 1f;
 
             if (reached)
-            {
-                // 最終サイズに強制セット
-                ResizeWindow(new HWND(hWnd), targetWidth, targetHeight);
-            }
+                ResizeWindow(new HWND(hWnd), targetWidth, targetHeight);// 最終サイズに強制セット
             else
-            {
                 ResizeWindow(new HWND(hWnd), Mathf.RoundToInt(newSize.x), Mathf.RoundToInt(newSize.y));
-            }
 
             return reached;
         }

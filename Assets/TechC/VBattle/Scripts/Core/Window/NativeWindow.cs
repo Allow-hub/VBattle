@@ -1,5 +1,6 @@
 using System;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
@@ -15,7 +16,7 @@ namespace TechC.VBattle.Core.Window
         public int Height { get; private set; }
         public WindowFactory.WindowType Type { get; }
 
-        protected static readonly string LOGTAG = WindowUtility.WINDOWLOGTAG;
+        protected static readonly string LOGTAG = LogTagUtil.TagWidnow;
 
         public NativeWindow(IntPtr hwnd, int width, int height, WindowFactory.WindowType type)
         {

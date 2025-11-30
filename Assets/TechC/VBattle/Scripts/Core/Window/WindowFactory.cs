@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 using Windows.Win32.UI.WindowsAndMessaging;
 
@@ -16,7 +17,7 @@ namespace TechC.VBattle.Core.Window
 
         private Dictionary<WindowType, Queue<NativeWindow>> poolByType = new();
         private int InitialPoolSize = 1;
-        private Vector2 defaultWindowSize = new Vector2(300, 300); 
+        private Vector2 defaultWindowSize = new Vector2(300, 300);
         Dictionary<WindowType, int> initialPoolSizes = new Dictionary<WindowType, int>
         {
             { WindowType.Basic, 2 },
@@ -28,7 +29,7 @@ namespace TechC.VBattle.Core.Window
         public override void Init()
         {
             base.Init();
-            CustomWindowUtility.RegisterWindowClasses();
+            WindowClassManager.RegisterWindowClasses();
 
             // ウィンドウタイプごとの初期プールサイズを定義
             foreach (WindowType type in Enum.GetValues(typeof(WindowType)))
@@ -48,21 +49,22 @@ namespace TechC.VBattle.Core.Window
         {
             base.OnRelease();
             DisposeAll();
-            CustomWindowUtility.UnregisterWindowClasses();
+            WindowClassManager.UnregisterWindowClasses();
         }
-        
+
+        /// <summary>
+        /// ウィンドウの取得
+        /// </summary>
+        /// <param name="type">ウィンドウの種類</param>
+        /// <returns></returns>
         public NativeWindow GetWindow(WindowType type)
         {
             NativeWindow window = null;
 
             if (poolByType.TryGetValue(type, out var queue) && queue.Count > 0)
-            {
                 window = queue.Dequeue(); // 再利用
-            }
             else
-            {
                 window = CreateNewWindow(type, $"{type} Window", 100, 100); // 必要なら新規作成
-            }
 
             // ウィンドウを表示
             if (window != null)
@@ -129,7 +131,7 @@ namespace TechC.VBattle.Core.Window
                 exStyle = (uint)WINDOW_EX_STYLE.WS_EX_NOACTIVATE | (uint)WINDOW_EX_STYLE.WS_EX_TOPMOST;
             }
 
-            IntPtr hwnd = CustomWindowUtility.CreateWindow(
+            IntPtr hwnd = WindowClassManager.CreateWindow(
                 className,
                 title,
                 style,
@@ -141,18 +143,18 @@ namespace TechC.VBattle.Core.Window
             if (hwnd == IntPtr.Zero)
                 return null;
 
-            // switch (type)
-            // {
-            //     case WindowType.Basic:
-            //         return new BasicWindow(hwnd, width, height);
-            //     case WindowType.Image:
-            //         return new ImageWindow(hwnd, width, height, tex);
-            //     case WindowType.Web:
-            //         // WebWindowはURLを設定する必要があるため、初期URLを指定
-            //         return new WebWindow(hwnd, width, height, this, "https://www.google.com");
-            //     default:
-            //         return new NativeWindow(hwnd, width, height, type);
-            // }
+            switch (type)
+            {
+                case WindowType.Basic:
+                    return new BasicWindow(hwnd, width, height);
+                case WindowType.Image:
+                    return new ImageWindow(hwnd, width, height, tex);
+                case WindowType.Web:
+                    // WebWindowはURLを設定する必要があるため、初期URLを指定
+                    return new WebWindow(hwnd, width, height, this, "https://www.google.com");
+                default:
+                    return new NativeWindow(hwnd, width, height, type);
+            }
         }
 
         /// <summary>
@@ -160,18 +162,18 @@ namespace TechC.VBattle.Core.Window
         /// </summary>
         public void DisposeAll()
         {
-            CustomLogger.Info($"DisposeAll called. Pool count: {poolByType.Count}", WindowUtility.WINDOWLOGTAG);
+            CustomLogger.Info($"DisposeAll called. Pool count: {poolByType.Count}", LogTagUtil.TagWidnow);
 
             // プール内
             foreach (var kvp in poolByType)
             {
                 var type = kvp.Key;
                 var queue = kvp.Value;
-                CustomLogger.Info($"Disposing windows of type: {type}, count: {queue.Count}", WindowUtility.WINDOWLOGTAG);
+                CustomLogger.Info($"Disposing windows of type: {type}, count: {queue.Count}", LogTagUtil.TagWidnow);
 
                 foreach (var window in queue)
                 {
-                    CustomLogger.Info($"Destroying window: HWND={window.Hwnd}, Type={window.Type}", WindowUtility.WINDOWLOGTAG);
+                    CustomLogger.Info($"Destroying window: HWND={window.Hwnd}, Type={window.Type}", LogTagUtil.TagWidnow);
                     if (window.Hwnd != IntPtr.Zero)
                     {
                         window.Destroy();
@@ -183,7 +185,7 @@ namespace TechC.VBattle.Core.Window
             // アクティブウィンドウ
             foreach (var window in activeWindows)
             {
-                CustomLogger.Info($"Destroying active window: HWND={window.Hwnd}, Type={window.Type}", WindowUtility.WINDOWLOGTAG);
+                CustomLogger.Info($"Destroying active window: HWND={window.Hwnd}, Type={window.Type}", LogTagUtil.TagWidnow);
                 if (window.Hwnd != IntPtr.Zero)
                 {
                     window.Destroy();
@@ -191,6 +193,5 @@ namespace TechC.VBattle.Core.Window
             }
             activeWindows.Clear();
         }
-
     }
 }

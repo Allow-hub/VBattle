@@ -1,4 +1,5 @@
 using System;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
 using UnityEngine;
 using Windows.Win32.Foundation;
@@ -58,7 +59,7 @@ namespace TechC.VBattle.Core.Window
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Failed to kill external browser: {ex}");
+                CustomLogger.Error($"Failed to kill external browser: {ex}", LogTagUtil.TagWidnow);
             }
         }
 
@@ -88,7 +89,7 @@ namespace TechC.VBattle.Core.Window
                 string args = $"\"{Url}\" {Hwnd} {Width} {Height}";
                 _browserProcess = System.Diagnostics.Process.Start(exePath, args);
                 int processId = _browserProcess.Id;
-                DelayUtility.StartDelayedAction(mono, 0.1f, () =>
+                DelayUtility.StartDelayedActionAsync(delaySeconds: 0.1f, () =>
                 {
                     webWindow = WindowUtility.GetWindowByProcessId(processId);
 
@@ -104,7 +105,7 @@ namespace TechC.VBattle.Core.Window
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Failed to launch external browser: {ex}");
+                CustomLogger.Error($"Failed to launch external browser: {ex}", LogTagUtil.TagWidnow);
             }
         }
 
@@ -125,9 +126,7 @@ namespace TechC.VBattle.Core.Window
                 Url = url;
             }
             else
-            {
-                Debug.LogWarning("SetUrl: url か htmlFile のどちらかを指定してください。");
-            }
+                CustomLogger.Warning("SetUrl: url か htmlFile のどちらかを指定してください。", LogTagUtil.TagWidnow);
         }
 
         public override void SetRect()
