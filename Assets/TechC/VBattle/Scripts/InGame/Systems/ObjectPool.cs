@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.Systems
 {
+    /// <summary>
+    /// オブジェクトプール
+    /// </summary>
     public class ObjectPool : MonoBehaviour
     {
         [Header("Object Pool Settings")]
