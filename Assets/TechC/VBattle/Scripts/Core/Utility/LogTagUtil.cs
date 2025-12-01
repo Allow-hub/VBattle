@@ -11,5 +11,6 @@ namespace TechC.VBattle.Core.Util
         public static readonly string TagInput = "input";
         public static readonly string TagAttack = "attack";
         public static readonly string TagEvent = "event";
+        public static readonly string TagWidnow = "window";
     }
 }

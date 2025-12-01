@@ -1,0 +1,12 @@
+C:\Users\student\Documents\VBattle\Assets\Plugins\netstandard2.0\netstandard2.0\PInvoke.deps.json
+C:\Users\student\Documents\VBattle\Assets\Plugins\netstandard2.0\netstandard2.0\PInvoke.dll
+C:\Users\student\Documents\VBattle\Assets\Plugins\netstandard2.0\netstandard2.0\PInvoke.pdb
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.csproj.AssemblyReference.cache
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.AssemblyInfoInputs.cache
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.AssemblyInfo.cs
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.csproj.CoreCompileInputs.cache
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.sourcelink.json
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.csproj.Up2Date
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.dll
+C:\Users\student\Documents\VBattle\PInvoke\obj\Debug\netstandard2.0\PInvoke.pdb
