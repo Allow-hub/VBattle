@@ -27,23 +27,23 @@ namespace TechC.Select
         //             GameManager.I.RemovePlayerById(info.playerId);
         //         }
 
-        //         if (SelectUIManagerFix.I == null)
+        //         if (SelectUIManager.I == null)
         //         {
         //             Debug.Log("SelectUIManagerの初期化が済んでいません");
         //             return;
         //         }
-        //         SelectUIManagerFix.I.OnStartGamePicked += DicidePick;
+        //         SelectUIManager.I.OnStartGamePicked += DicidePick;
         //     });
         // }
         // private void DicidePick()
         // {
-        //     if (!SelectUIManagerFix.I.HasPicked[0] || !SelectUIManagerFix.I.HasPicked[1])
+        //     if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1])
         //     {
         //         Debug.Log("まだ全プレイヤーがピックしていません");
         //         return;
         //     }
         //     bool isNpc = false;
-        //     foreach (var pick in SelectUIManagerFix.I.CurrentPicks)
+        //     foreach (var pick in SelectUIManager.I.CurrentPicks)
         //     {
         //         GameManager.I.RegisterPlayer(pick.characterObject, pick.playerId, pick.inputDevice);
         //         if (pick.inputDevice == null)

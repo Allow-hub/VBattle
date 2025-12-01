@@ -1,3 +1,4 @@
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 
 namespace TechC.Select
 {
-    public class SelectUIManagerFix : Singleton<SelectUIManagerFix>
+    public class SelectUIManager : Singleton<SelectUIManager>
     {
         public struct CharacterPick
         {
@@ -43,6 +44,13 @@ namespace TechC.Select
         private bool[] hasPicked = new bool[2];
         private CharacterPick[] currentPicks = new CharacterPick[2];
         protected override bool UseDontDestroyOnLoad => false;
+
+        private void Awake()
+        {
+            // UseDontDestroyOnLoad = falseの場合、基底クラスのAwakeでは初期化されないため
+            // 明示的にInitializeSingletonを呼び出す
+            InitializeSingleton();
+        }
         public override void Init()
         {
             base.Init();

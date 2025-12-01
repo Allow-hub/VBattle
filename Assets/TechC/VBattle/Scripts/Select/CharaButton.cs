@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.Select
 {
@@ -46,8 +47,21 @@ namespace TechC.Select
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (SelectUIManager.I == null)
+            {
+                CustomLogger.Error("SelectUIManager.I is null in OnPointerEnter!");
+                return;
+            }
+            
+            if (pickCharaPrefab == null)
+            {
+                CustomLogger.Error("pickCharaPrefab is null in OnPointerEnter!");
+                return;
+            }
+            
             var (device, deviceName) = ResolveDevice(eventData);
-            int id = SelectUIManagerFix.I.SetCharacterPick(device, pickCharaPrefab);
+            CustomLogger.Info($"Device: {device}, PickChara: {pickCharaPrefab.name}");
+            int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
             ChangePickThumbnail(id);
         }
 
@@ -58,18 +72,29 @@ namespace TechC.Select
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (SelectUIManager.I == null)
+            {
+                CustomLogger.Error("SelectUIManager.I is null in OnPointerClick!");
+                return;
+            }
+            
+            if (pickCharaPrefab == null)
+            {
+                CustomLogger.Error("pickCharaPrefab is null in OnPointerClick!");
+                return;
+            }
+            
             var (device, deviceName) = ResolveDevice(eventData);
 
             if (device != null)
             {
-                int id = SelectUIManagerFix.I.SetCharacterPick(device, pickCharaPrefab);
+                CustomLogger.Info($"Click - Device: {deviceName}, PickChara: {pickCharaPrefab.name}");
+                int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
                 DicidePick(id);
-
-                // Debug.Log($"クリック - デバイス: {deviceName}");
             }
             else
             {
-                Debug.Log("旧InputSystem経由のクリック");
+                CustomLogger.Info("旧InputSystem経由のクリック");
             }
         }
 
@@ -97,27 +122,33 @@ namespace TechC.Select
         private void ChangePickThumbnail(int id)
         {
             if (id == 0) return;
+            
+            if (SelectUIManager.I == null)
+            {
+                CustomLogger.Error("SelectUIManager.I is null in ChangePickThumbnail!");
+                return;
+            }
 
             if (id == 1)
             {
-                if (SelectUIManagerFix.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
+                if (SelectUIManager.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
                 {
-                    if (!SelectUIManagerFix.I.GetIsNpc()) return;
+                    if (!SelectUIManager.I.GetIsNpc()) return;
                     p2DisplayImage.sprite = p2CharaSprite;
-                    if (!SelectUIManagerFix.I.CheckPicked(++id))
+                    if (!SelectUIManager.I.CheckPicked(++id))
                         p2NameImage.sprite = p2CharaName;
                 }
                 else
                 {
                     p1DisplayImage.sprite = p1CharaSprite;
-                    if (!SelectUIManagerFix.I.CheckPicked(id))
+                    if (!SelectUIManager.I.CheckPicked(id))
                         p1NameImage.sprite = p1CharaName;
                 }
             }
             else
             {
                 p2DisplayImage.sprite = p2CharaSprite;
-                if (!SelectUIManagerFix.I.CheckPicked(id))
+                if (!SelectUIManager.I.CheckPicked(id))
                     p2NameImage.sprite = p2CharaName;
             }
         }
@@ -125,11 +156,17 @@ namespace TechC.Select
         private void DicidePick(int id)
         {
             if (id == 0) return;
-            if (SelectUIManagerFix.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
+            
+            if (SelectUIManager.I == null)
             {
-                if (!SelectUIManagerFix.I.GetIsNpc()) return;
+                CustomLogger.Error("SelectUIManager.I is null in DicidePick!");
+                return;
+            }
+            if (SelectUIManager.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
+            {
+                if (!SelectUIManager.I.GetIsNpc()) return;
                 id = 2;
-                if (SelectUIManagerFix.I.CheckPicked(id)) return;
+                if (SelectUIManager.I.CheckPicked(id)) return;
                 Image target = (id == 1) ? p1DisplayImage : p2DisplayImage;
                 if (target == null || explodeMaterial == null) return;
 
@@ -162,7 +199,11 @@ namespace TechC.Select
             {
                 p2SelectPickAnim.PlayAnim(pickCharaPrefab);
             }
-            SelectUIManagerFix.I.SetPicked(id, true);
+            
+            if (SelectUIManager.I != null)
+            {
+                SelectUIManager.I.SetPicked(id, true);
+            }
 
             while (time < duration)
             {
