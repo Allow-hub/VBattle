@@ -43,7 +43,7 @@ namespace TechC.Select
         private bool[] hasPicked = new bool[2];
         private CharacterPick[] currentPicks = new CharacterPick[2];
         protected override bool UseDontDestroyOnLoad => false;
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
         }

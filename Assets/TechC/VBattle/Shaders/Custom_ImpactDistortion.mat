@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_ImpactDistortion
+  m_Shader: {fileID: 4800000, guid: 68cd29d7a827e524a8ca6b78c6b80bb9, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _AUTOEXPAND_ON
+  - _TRIGGERBURST_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _AutoExpand: 1
+    - _BoundaryWidth: 0.1
+    - _BurstDuration: 1.89
+    - _BurstTime: 0
+    - _DistortionStrength: 5
+    - _DistortionType: 4
+    - _ExpansionRadius: 10
+    - _ExpansionSpeed: 1.81
+    - _FalloffPower: 0.5
+    - _ImpactRadius: 10
+    - _ImpactStrength: 10
+    - _ManualRadius: 0
+    - _MaxRadius: 10
+    - _NoiseScale: 1.04
+    - _Radius: 0.5
+    - _RingWidth: 2
+    - _TimeSpeed: 0.64
+    - _TriggerBurst: 1
+    - _WaveFrequency: 20
+    - _WaveSpeed: 10
+    - _Width: 5
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BoundaryColor: {r: 1, g: 0.5019608, b: 0, a: 1}
+    - _Center: {r: 0, g: 0, b: 0, a: 0}
+    - _DistortionColor: {r: 1, g: 1, b: 1, a: 0.11372549}
+    - _ExpansionCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _ImpactCenter: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
