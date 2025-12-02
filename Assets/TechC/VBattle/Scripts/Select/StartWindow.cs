@@ -59,15 +59,5 @@ namespace TechC.VBattle.Select
                 WindowUtility.AnimateResizeWindow(w.Hwnd, width, height);
             }
         }
-
-        public void ShowStartWindow()
-        {
-            isAnimating = true;
-        }
-
-        public void HideStartWindow()
-        {
-
-        }
     }
 }

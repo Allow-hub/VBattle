@@ -120,16 +120,10 @@ namespace TechC.VBattle.Select.Core
                 _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
                 {
                     if (startObj != null)
-                    {
                         startObj.SetActive(true);
-                    }
                     else
-                    {
                         CustomLogger.Error("startObjが設定されていません");
-                    }
                 });
-                
-                // StartWindow.I.ShowStartWindow(); // TODO: StartWindowを有効にする場合
             }
         }
 
