@@ -14,6 +14,9 @@ using System;
 
 namespace TechC.VBattle.Select
 {
+    /// <summary>
+    /// ゲームパッド用のポインター表示とクリック処理
+    /// </summary>
     public class GamepadPointer : MonoBehaviour
     {
         [SerializeField] private List<Sprite> pointerSprite = new List<Sprite>();

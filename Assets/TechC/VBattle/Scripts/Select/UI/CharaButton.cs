@@ -9,7 +9,7 @@ using TechC.VBattle.Select.Core;
 namespace TechC.VBattle.Select.UI
 {
     /// <summary>
-    /// キャラピックのイベントを送受信
+    /// キャラクター選択ボタンのインタラクション処理
     /// </summary>
     public class CharaButton : MonoBehaviour,
         IPointerEnterHandler,

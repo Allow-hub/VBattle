@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 namespace TechC.VBattle.Select.Core
 {
+    /// <summary>
+    /// キャラクター選択のUI制御とプレイヤー入力処理を管理
+    /// </summary>
     public class SelectUIManager : Singleton<SelectUIManager>
     {
         public struct CharacterPick

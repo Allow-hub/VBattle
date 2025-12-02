@@ -1,13 +1,15 @@
 using Cysharp.Threading.Tasks;
-using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Select.Core
 {
+    /// <summary>
+    /// キャラクター選択画面の管理とゲーム開始処理を担当
+    /// </summary>
     public class CharacterSelectManager : Singleton<CharacterSelectManager>
     {
-        private const float InitializeDelay = 0.5f;
+        private const float INITIALIZE_DELAY = 0.5f;
 
         protected override bool UseDontDestroyOnLoad => false;
 
@@ -15,7 +17,7 @@ namespace TechC.VBattle.Select.Core
         {
             base.Init();
 
-            _ = DelayUtility.StartDelayedActionAsync(InitializeDelay, () =>lizeSelectSystem);
+            _ = DelayUtility.StartDelayedActionAsync(INITIALIZE_DELAY, InitializeSelectSystem);
         }
 
         /// <summary>
@@ -23,13 +25,6 @@ namespace TechC.VBattle.Select.Core
         /// </summary>
         private void InitializeSelectSystem()
         {
-            // GameDataBridgeのプレイヤー情報をクリア
-            if (GameDataBridge.I == null)
-            {
-                CustomLogger.Error("GameDataBridgeが初期化されていません");
-                return;
-            }
-
             GameDataBridge.I.SetupPlayer(0, null);
             GameDataBridge.I.SetupPlayer(1, null);
 
@@ -42,10 +37,7 @@ namespace TechC.VBattle.Select.Core
         /// </summary>
         private void OnGameStartRequested()
         {
-            if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1])
-            {
-                return;
-            }
+            if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1]) return;
 
             // GameDataBridge にプレイヤー情報を設定
             var picks = SelectUIManager.I.CurrentPicks;
@@ -69,8 +61,6 @@ namespace TechC.VBattle.Select.Core
                 SelectedCharacter = null // TODO: CharacterDataの適切な取得方法を実装
             };
             GameDataBridge.I.SetupPlayer(1, player2Data);
-
-            CustomLogger.Info($"GameDataBridge にプレイヤー情報を設定完了: P1_NPC={player1Data.IsNPC}, P2_NPC={player2Data.IsNPC}");
 
             // シーン遷移
             SceneLoader.I.LoadBattleSceneAsync().Forget();

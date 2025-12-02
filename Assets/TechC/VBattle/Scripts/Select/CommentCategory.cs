@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.Select
 {
+    /// <summary>
+    /// コメント表示用のカテゴリ設定データクラス
+    /// </summary>
     [Serializable]
     public class CommentCategory
     {

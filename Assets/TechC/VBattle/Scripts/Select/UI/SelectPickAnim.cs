@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.Select.UI
 {
+    /// <summary>
+    /// キャラクター選択時のアニメーション制御
+    /// </summary>
     public class SelectPickAnim : MonoBehaviour
     {
         [SerializeField] private float animDelay = 1f;

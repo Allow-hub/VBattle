@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace TechC.VBattle.Select.UI
 {
+    /// <summary>
+    /// アイコン表示用のデータセット
+    /// </summary>
     [System.Serializable]
     public class IconData
     {
@@ -15,7 +18,7 @@ namespace TechC.VBattle.Select.UI
     }
 
     /// <summary>
-    /// InputDeviceのアイコン管理
+    /// 入力デバイスに対応するアイコンの表示管理
     /// </summary>
     public class IconController : MonoBehaviour
     {
