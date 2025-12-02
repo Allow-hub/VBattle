@@ -161,7 +161,6 @@ namespace TechC.VBattle.Select
 
                 if (nativeWindows.Count >= pointerSprite.Count)
                 {
-                    Debug.Log($"登録可能なプレイヤー数に達しました ({pointerSprite.Count})");
                     return;
                 }
 

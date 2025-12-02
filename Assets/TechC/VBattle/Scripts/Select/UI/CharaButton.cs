@@ -61,7 +61,6 @@ namespace TechC.VBattle.Select.UI
             }
             
             var (device, deviceName) = ResolveDevice(eventData);
-            CustomLogger.Info($"Device: {device}, PickChara: {pickCharaPrefab.name}");
             int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
             ChangePickThumbnail(id);
         }
@@ -89,13 +88,8 @@ namespace TechC.VBattle.Select.UI
 
             if (device != null)
             {
-                CustomLogger.Info($"Click - Device: {deviceName}, PickChara: {pickCharaPrefab.name}");
                 int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
                 DicidePick(id);
-            }
-            else
-            {
-                CustomLogger.Info("旧InputSystem経由のクリック");
             }
         }
 

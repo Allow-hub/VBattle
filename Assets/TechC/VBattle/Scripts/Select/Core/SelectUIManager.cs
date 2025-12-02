@@ -113,15 +113,12 @@ namespace TechC.VBattle.Select.Core
             hasPicked[id] = b;
             if (hasPicked[0] && hasPicked[1])
             {
-                CustomLogger.Info("両プレイヤーのキャラ選択が完了しました");
-                
                 // 遅延してstartObjを表示
                 _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
                 {
                     if (startObj != null)
                     {
                         startObj.SetActive(true);
-                        CustomLogger.Info("StartObjを表示しました");
                     }
                     else
                     {
