@@ -1,5 +1,4 @@
 using UnityEngine;
-using VRM;
 
 namespace VRM
 {
