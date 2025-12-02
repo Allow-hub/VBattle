@@ -45,12 +45,6 @@ namespace TechC.Select
         private CharacterPick[] currentPicks = new CharacterPick[2];
         protected override bool UseDontDestroyOnLoad => false;
 
-        private void Awake()
-        {
-            // UseDontDestroyOnLoad = falseの場合、基底クラスのAwakeでは初期化されないため
-            // 明示的にInitializeSingletonを呼び出す
-            InitializeSingleton();
-        }
         public override void Init()
         {
             base.Init();

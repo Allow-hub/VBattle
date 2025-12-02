@@ -281,11 +281,60 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3580426450109215290, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1111015401}
     - targetCorrespondingSourceObject: {fileID: 1689558271843047924, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 466558080}
   m_SourcePrefab: {fileID: 100100000, guid: 582dc708363adc345869b03647b3dcc7, type: 3}
+--- !u!1 &1111015398 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3580426450109215290, guid: 582dc708363adc345869b03647b3dcc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1111015397}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1111015399 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3241292241979283148, guid: 582dc708363adc345869b03647b3dcc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1111015397}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466558073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04453b6d7397fab4c89691323626c854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1111015400 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1476566994356012766, guid: 582dc708363adc345869b03647b3dcc7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1111015397}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466558073}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faaa1e894e937ad49b9f71ff7b5d72d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1111015401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111015398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a754a10388af74088e3fae8d42486c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectUIManager: {fileID: 466558080}
+  startWindow: {fileID: 1111015400}
+  characterSelectManagerFix: {fileID: 1111015399}
 --- !u!114 &1128482081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 245124407887088977, guid: 582dc708363adc345869b03647b3dcc7,
