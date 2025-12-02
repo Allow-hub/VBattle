@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
@@ -10,7 +11,7 @@ namespace TechC.VBattle.Select.Core
 {
     public class CharacterSelectManager : Singleton<CharacterSelectManager>
     {
-        private const float INITIALIZE_DELAY  = 0.5f;
+        private const float INITIALIZE_DELAY = 0.5f;
 
         protected override bool UseDontDestroyOnLoad => false;
 
@@ -19,8 +20,7 @@ namespace TechC.VBattle.Select.Core
         {
             base.Init();
 
-            // Fire-and-forget で DelayUtility を使用
-            _ = DelayUtility.StartDelayedActionAsync(INITIALIZE_DELAY , () =>
+            _ = DelayUtility.StartDelayedActionAsync(INITIALIZE_DELAY, () =>
             {
                 // 初期化処理 - GameDataBridge のプレイヤー情報をクリア
                 if (GameDataBridge.I != null)
@@ -30,14 +30,10 @@ namespace TechC.VBattle.Select.Core
                     CustomLogger.Info("GameDataBridge のプレイヤー情報をクリアしました");
                 }
 
-                if (SelectUIManager.I == null)
-                {
-                    CustomLogger.Error("SelectUIManagerの初期化が済んでいません");
-                    return;
-                }
                 SelectUIManager.I.OnStartGamePicked += DicidePick;
             });
         }
+
         private void DicidePick()
         {
             if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1])
@@ -48,7 +44,7 @@ namespace TechC.VBattle.Select.Core
 
             // GameDataBridge にプレイヤー情報を設定
             var picks = SelectUIManager.I.CurrentPicks;
-            
+
             // Player 1 の設定
             var player1Data = new GameDataBridge.PlayerSetupData
             {
@@ -70,9 +66,9 @@ namespace TechC.VBattle.Select.Core
             GameDataBridge.I.SetupPlayer(1, player2Data);
 
             CustomLogger.Info($"GameDataBridge にプレイヤー情報を設定完了: P1_NPC={player1Data.IsNPC}, P2_NPC={player2Data.IsNPC}");
-            
-            // TODO: シーン遷移処理をここに追加
-            // SceneLoader.I.LoadBattleScene();
+
+            // シーン遷移
+            SceneLoader.I.LoadBattleSceneAsync().Forget();
         }
     }
 }

@@ -1,4 +1,3 @@
-using TechC.VBattle.Core.Extensions;
 using UnityEngine;
 
 namespace TechC.VBattle.Select.Core
@@ -16,11 +15,6 @@ namespace TechC.VBattle.Select.Core
 
         private void Awake()
         {
-            // nullチェック
-            if (selectUIManager == null) CustomLogger.Error("SelectUIManager が設定されていません");
-            if (startWindow == null) CustomLogger.Error("StartWindow が設定されていません");
-            if (CharacterSelectManager == null) CustomLogger.Error("CharacterSelectManager が設定されていません");
-
             // 各シングルトンの初期化を順番に実行
             selectUIManager.Init();
             startWindow.Init();

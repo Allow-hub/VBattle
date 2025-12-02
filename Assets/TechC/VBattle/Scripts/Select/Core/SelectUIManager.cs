@@ -1,5 +1,6 @@
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
 using TechC.VBattle.Select.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -112,11 +113,23 @@ namespace TechC.VBattle.Select.Core
             hasPicked[id] = b;
             if (hasPicked[0] && hasPicked[1])
             {
-                // DelayUtility.StartDelayedAction(this, startDelay, () =>
-                // {
-                //     startObj.SetActive(true);
-                // });
-                // StartWindow.I.ShowStartWindow();
+                CustomLogger.Info("両プレイヤーのキャラ選択が完了しました");
+                
+                // 遅延してstartObjを表示
+                _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
+                {
+                    if (startObj != null)
+                    {
+                        startObj.SetActive(true);
+                        CustomLogger.Info("StartObjを表示しました");
+                    }
+                    else
+                    {
+                        CustomLogger.Error("startObjが設定されていません");
+                    }
+                });
+                
+                // StartWindow.I.ShowStartWindow(); // TODO: StartWindowを有効にする場合
             }
         }
 
