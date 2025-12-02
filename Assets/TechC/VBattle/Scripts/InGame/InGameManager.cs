@@ -1,3 +1,4 @@
+using System;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.InGame.Systems;
 using UnityEngine;
@@ -22,7 +23,9 @@ namespace TechC.VBattle.InGame
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
         private HitStopManager hitStopManager;//イベントを使用しているので保持しておく必要がある
-
+        private bool isPaused = false;          // ポーズ状態フラグ
+        public bool IsPaused => isPaused;       // 読み取り専用プロパティ
+        public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
 
         public override void Init()

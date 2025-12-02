@@ -86,17 +86,12 @@ namespace TechC.VBattle.InGame.UI
             float percentage = (float)currentHp / maxHp;
             targetHpPercentage = percentage;
             
-            // テキスト更新（即座に反映）
+            // テキスト更新
             if (hpText != null)
-            {
                 hpText.text = $"{currentHp}/{maxHp}";
-            }
-            
             // 色変更
             if (hpFillImage != null)
-            {
                 hpFillImage.color = percentage <= lowHpThreshold ? lowHpColor : normalHpColor;
-            }
         }
 
         private void SetCharacterIcon(CharaName charaName)
