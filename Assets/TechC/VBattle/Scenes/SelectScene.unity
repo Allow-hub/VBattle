@@ -198,6 +198,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1476566994356012766, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2047422319707162751, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -334,7 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectUIManager: {fileID: 466558080}
   startWindow: {fileID: 1111015400}
-  characterSelectManagerFix: {fileID: 1111015399}
+  CharacterSelectManager: {fileID: 1111015399}
 --- !u!114 &1128482081 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 245124407887088977, guid: 582dc708363adc345869b03647b3dcc7,

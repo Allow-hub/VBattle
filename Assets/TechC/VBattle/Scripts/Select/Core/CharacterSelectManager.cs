@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace TechC.VBattle.Select.Core
 {
-    public class CharacterSelectManagerFix : Singleton<CharacterSelectManagerFix>
+    public class CharacterSelectManager : Singleton<CharacterSelectManager>
     {
         private const float INITIALIZE_DELAY  = 0.5f;
 
