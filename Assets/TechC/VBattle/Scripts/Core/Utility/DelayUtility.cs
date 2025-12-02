@@ -1,179 +1,131 @@
 using System;
-using System.Collections;
-using UnityEngine;
-using Cysharp.Threading.Tasks;
 using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
-namespace TechC
+namespace TechC.VBattle.Core.Util
 {
+    /// <summary>
+    /// UniTaskを使用した遅延処理、ポーズに対応する
+    /// IEnumeratorは事前に生成してキャッシュしたほうが生成コストを抑えられるらしい 
+    ///  UniTaskは値型なので気にする必要ない 
+    ///  </summary>
     public static class DelayUtility
     {
         // ================================
-        // 非ポーズ対応：UniTask版
+        // 単発遅延：非ポーズ対応
         // ================================
 
-        public static async UniTask RunAfterDelay(float delaySeconds, Action callback)
+        /// <summary>
+        /// 指定秒数後にコールバックを実行（非ポーズ対応）
+        /// </summary>
+        public static async UniTask RunAfterDelay(float delaySeconds, Action callback, CancellationToken token = default)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds));
+            await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken: token);
             callback?.Invoke();
         }
 
-        public static async UniTask RunAfterDelay(float delaySeconds, Func<UniTask> asyncCallback)
+        /// <summary>
+        /// 指定秒数後にコールバックを実行（非ポーズ対応）のラッパー
+        /// </summary>
+        public static UniTask StartDelayedActionAsync(float delaySeconds, Action callback, CancellationToken token = default)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(delaySeconds));
-            if (asyncCallback != null)
-            {
-                await asyncCallback();
-            }
+            return RunAfterDelay(delaySeconds, callback, token);
         }
 
         // ================================
-        // 非ポーズ対応：Coroutine版
+        // 単発遅延：ポーズ対応
         // ================================
 
-        public static IEnumerator RunAfterDelayCoroutine(float delaySeconds, Action callback)
-        {
-            yield return new WaitForSeconds(delaySeconds);
-            callback?.Invoke();
-        }
-
-        public static IEnumerator RunAfterDelayCoroutine(float delaySeconds, Func<IEnumerator> coroutineCallback)
-        {
-            yield return new WaitForSeconds(delaySeconds);
-            if (coroutineCallback != null)
-            {
-                yield return coroutineCallback();
-            }
-        }
-
-        public static Coroutine StartDelayedAction(MonoBehaviour monoBehaviour, float delaySeconds, Action callback)
-        {
-            return monoBehaviour.StartCoroutine(RunAfterDelayCoroutine(delaySeconds, callback));
-        }
-
-        public static Coroutine StartDelayedCoroutine(MonoBehaviour monoBehaviour, float delaySeconds, Func<IEnumerator> coroutineCallback)
-        {
-            return monoBehaviour.StartCoroutine(RunAfterDelayCoroutine(delaySeconds, coroutineCallback));
-        }
-
-        // ================================
-        // ポーズ対応：UniTask版
-        // ================================
-
-        public static async UniTask RunAfterDelayWithPause(float delaySeconds, Action callback, Func<bool> isPausedFunc)
+        /// <summary>
+        /// 指定秒数後にコールバックを実行、ポーズ中は進めない
+        /// </summary>
+        public static async UniTask RunAfterDelayWithPause(float delaySeconds, Action callback, Func<bool> isPausedFunc, CancellationToken token = default)
         {
             float elapsed = 0f;
+
             while (elapsed < delaySeconds)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (isPausedFunc != null && isPausedFunc())
                 {
                     await UniTask.Yield();
                     continue;
                 }
+
                 elapsed += Time.deltaTime;
                 await UniTask.Yield();
             }
+
             callback?.Invoke();
         }
 
-        public static UniTask StartDelayedActionWithPauseAsync(float delaySeconds, Action callback, Func<bool> isPausedFunc)
+        /// <summary>
+        /// 指定秒数後にコールバックを実行、ポーズ中は進めないラッパー
+        /// </summary>
+        public static UniTask StartDelayedActionWithPauseAsync(float delaySeconds, Action callback, Func<bool> isPausedFunc, CancellationToken token = default)
         {
-            return RunAfterDelayWithPause(delaySeconds, callback, isPausedFunc);
+            return RunAfterDelayWithPause(delaySeconds, callback, isPausedFunc, token);
         }
 
         // ================================
-        // ポーズ対応：Coroutine版
+        // 一定間隔で繰り返し実行：非ポーズ対応
         // ================================
 
-        public static IEnumerator RunAfterDelayCoroutineWithPause(float delaySeconds, Action callback, Func<bool> isPausedFunc)
-        {
-            float elapsed = 0f;
-            while (elapsed < delaySeconds)
-            {
-                if (isPausedFunc != null && isPausedFunc())
-                {
-                    yield return null;
-                    continue;
-                }
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
-            callback?.Invoke();
-        }
-
-        public static Coroutine StartDelayedActionWithPause(MonoBehaviour monoBehaviour, float delaySeconds, Func<bool> isPausedFunc, Action callback)
-        {
-            return monoBehaviour.StartCoroutine(RunAfterDelayCoroutineWithPause(delaySeconds, callback, isPausedFunc));
-        }
-
-        // ================================
-        // 一定間隔で繰り返し実行（Coroutine）
-        // ================================
-
-        public static IEnumerator RunRepeatedly(float duration, float interval, Action callback)
-        {
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                callback?.Invoke();
-                yield return new WaitForSeconds(interval);
-                elapsed += interval;
-            }
-        }
-
-        public static Coroutine StartRepeatedAction(MonoBehaviour monoBehaviour, float duration, float interval, Action callback)
-        {
-            return monoBehaviour.StartCoroutine(RunRepeatedly(duration, interval, callback));
-        }
-
-        // ================================
-        // ポーズ対応：一定間隔で繰り返し実行（Coroutine）
-        // ================================
-
-        public static IEnumerator RunRepeatedlyWithPause(float duration, float interval, Action callback, Func<bool> isPausedFunc)
-        {
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                // ポーズ中は進めない
-                if (isPausedFunc != null && isPausedFunc())
-                {
-                    yield return null;
-                    continue;
-                }
-                callback?.Invoke();
-                float intervalElapsed = 0f;
-                while (intervalElapsed < interval)
-                {
-                    if (isPausedFunc != null && isPausedFunc())
-                    {
-                        yield return null;
-                        continue;
-                    }
-                    intervalElapsed += Time.deltaTime;
-                    yield return null;
-                }
-                elapsed += interval;
-            }
-        }
-        public static async UniTask RunRepeatedlyAsync(float duration, float interval, Func<bool> pauseFunc, Func<UniTask> callback, CancellationToken token = default)
+        /// <summary>
+        /// 指定時間の間、一定間隔で非同期コールバックを繰り返し実行
+        /// </summary>
+        public static async UniTask RunRepeatedly(float duration, float interval, Func<UniTask> callback, CancellationToken token = default)
         {
             float elapsed = 0f;
 
             while (elapsed < duration)
             {
-                if (token.IsCancellationRequested)
-                {
-                    Debug.Log("🔴 Cancel requested: elapsed loop");
-                    token.ThrowIfCancellationRequested(); // 例外を投げて止める
-                }
-                // token.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
 
-                //PauseFunc が true の間は止まる
-                while (pauseFunc?.Invoke() == true)
+                if (callback != null)
+                    await callback();
+
+                float t = 0f;
+                while (t < interval)
                 {
                     token.ThrowIfCancellationRequested();
-                    await UniTask.Yield(); // 毎フレーム様子見
+                    await UniTask.Yield();
+                    t += Time.deltaTime;
+                    elapsed += Time.deltaTime;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 指定時間の間、一定間隔で非同期コールバックを繰り返し実行するラッパー
+        /// </summary>
+        public static UniTask StartRepeatedActionAsync(float duration, float interval, Func<UniTask> callback, CancellationToken token = default)
+        {
+            return RunRepeatedly(duration, interval, callback, token);
+        }
+
+        // ================================
+        // 一定間隔で繰り返し実行：ポーズ対応
+        // ================================
+
+        /// <summary>
+        /// 指定時間の間、一定間隔で非同期コールバックを繰り返し実行
+        /// ポーズ中は処理を停止
+        /// </summary>
+        public static async UniTask RunRepeatedlyWithPause(float duration, float interval, Func<UniTask> callback, Func<bool> isPausedFunc, CancellationToken token = default)
+        {
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                token.ThrowIfCancellationRequested();
+
+                while (isPausedFunc?.Invoke() == true)
+                {
+                    token.ThrowIfCancellationRequested();
+                    await UniTask.Yield();
                 }
 
                 if (callback != null)
@@ -184,8 +136,7 @@ namespace TechC
                 {
                     token.ThrowIfCancellationRequested();
 
-                    //インターバル中もPauseFuncを見る
-                    while (pauseFunc?.Invoke() == true)
+                    while (isPausedFunc?.Invoke() == true)
                     {
                         token.ThrowIfCancellationRequested();
                         await UniTask.Yield();
@@ -198,64 +149,93 @@ namespace TechC
             }
         }
 
-
-        public static Coroutine StartRepeatedActionWithPause(MonoBehaviour monoBehaviour, float duration, float interval, Func<bool> isPausedFunc, Action callback)
+        /// <summary>
+        /// 指定時間の間、一定間隔で非同期コールバックを繰り返し実行（ポーズ対応）のラッパー
+        /// </summary>
+        public static UniTask StartRepeatedActionWithPauseAsync(float duration, float interval, Func<UniTask> callback, Func<bool> isPausedFunc, CancellationToken token = default)
         {
-            return monoBehaviour.StartCoroutine(RunRepeatedlyWithPause(duration, interval, callback, isPausedFunc));
+            return RunRepeatedlyWithPause(duration, interval, callback, isPausedFunc, token);
         }
+
         // ================================
-        // boolで繰り返し制御：Coroutine版（非ポーズ対応）
+        // 条件付き繰り返し：非ポーズ対応
         // ================================
 
-        public static IEnumerator RunRepeatedlyWhile(Func<bool> shouldContinueFunc, float interval, Action callback)
+        /// <summary>
+        /// 条件が true の間、一定間隔で非同期コールバックを繰り返し実行
+        /// </summary>
+        public static async UniTask RunRepeatedlyWhile(Func<bool> shouldContinueFunc, float interval, Func<UniTask> callback, CancellationToken token = default)
         {
             while (shouldContinueFunc == null || shouldContinueFunc())
             {
-                callback?.Invoke();
-                yield return new WaitForSeconds(interval);
+                token.ThrowIfCancellationRequested();
+                if (callback != null)
+                    await callback();
+
+                float t = 0f;
+                while (t < interval)
+                {
+                    token.ThrowIfCancellationRequested();
+                    await UniTask.Yield();
+                    t += Time.deltaTime;
+                }
             }
         }
 
-        public static Coroutine StartRepeatedActionWhile(MonoBehaviour monoBehaviour, Func<bool> shouldContinueFunc, float interval, Action callback)
+        /// <summary>
+        /// 条件が true の間、一定間隔で非同期コールバックを繰り返し実行するラッパー
+        /// </summary>
+        public static UniTask StartRepeatedActionWhileAsync(Func<bool> shouldContinueFunc, float interval, Func<UniTask> callback, CancellationToken token = default)
         {
-            return monoBehaviour.StartCoroutine(RunRepeatedlyWhile(shouldContinueFunc, interval, callback));
+            return RunRepeatedlyWhile(shouldContinueFunc, interval, callback, token);
         }
 
         // ================================
-        // boolで繰り返し制御：ポーズ対応版（Coroutine）
+        // 条件付き繰り返し：ポーズ対応
         // ================================
 
-        public static IEnumerator RunRepeatedlyWhileWithPause(Func<bool> shouldContinueFunc, float interval, Action callback, Func<bool> isPausedFunc)
+        /// <summary>
+        /// 条件が true の間、一定間隔で非同期コールバックを繰り返し実行
+        /// ポーズ中は処理を停止
+        /// </summary>
+        public static async UniTask RunRepeatedlyWhileWithPause(Func<bool> shouldContinueFunc, float interval, Func<UniTask> callback, Func<bool> isPausedFunc, CancellationToken token = default)
         {
             while (shouldContinueFunc == null || shouldContinueFunc())
             {
-                // ポーズしている間は処理しない
-                if (isPausedFunc != null && isPausedFunc())
+                token.ThrowIfCancellationRequested();
+
+                while (isPausedFunc?.Invoke() == true)
                 {
-                    yield return null;
-                    continue;
+                    token.ThrowIfCancellationRequested();
+                    await UniTask.Yield();
                 }
 
-                callback?.Invoke();
+                if (callback != null)
+                    await callback();
 
-                float intervalElapsed = 0f;
-                while (intervalElapsed < interval)
+                float t = 0f;
+                while (t < interval)
                 {
-                    if (isPausedFunc != null && isPausedFunc())
+                    token.ThrowIfCancellationRequested();
+
+                    while (isPausedFunc?.Invoke() == true)
                     {
-                        yield return null;
-                        continue;
+                        token.ThrowIfCancellationRequested();
+                        await UniTask.Yield();
                     }
 
-                    intervalElapsed += Time.deltaTime;
-                    yield return null;
+                    await UniTask.Yield();
+                    t += Time.deltaTime;
                 }
             }
         }
 
-        public static Coroutine StartRepeatedActionWhileWithPause(MonoBehaviour monoBehaviour, Func<bool> shouldContinueFunc, float interval, Func<bool> isPausedFunc, Action callback)
+        /// <summary>
+        /// 条件が true の間、一定間隔で非同期コールバックを繰り返し実行（ポーズ対応）
+        /// </summary>
+        public static UniTask StartRepeatedActionWhileWithPauseAsync(Func<bool> shouldContinueFunc, float interval, Func<UniTask> callback, Func<bool> isPausedFunc, CancellationToken token = default)
         {
-            return monoBehaviour.StartCoroutine(RunRepeatedlyWhileWithPause(shouldContinueFunc, interval, callback, isPausedFunc));
+            return RunRepeatedlyWhileWithPause(shouldContinueFunc, interval, callback, isPausedFunc, token);
         }
     }
 }

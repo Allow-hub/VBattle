@@ -1,10 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using TechC.VBattle.Core.Managers;
 using UnityEngine;
 
 namespace TechC.VBattle.Systems
 {
+    /// <summary>
+    /// キャラクターの攻撃エフェクト生成を管理するファクトリクラス
+    /// AttackObjectControllerを持つオブジェクトはここで生成する
+    /// </summary>
     public class CharaAttackFactory : Singleton<CharaAttackFactory>
     {
         [SerializeField] private ObjectPool objectPool;
@@ -20,7 +22,7 @@ namespace TechC.VBattle.Systems
         /// </summary>
         /// <param name="prefab">エフェクトのプレハブ</param>
         /// <returns></returns>
-        public GameObject GetEffectObj(GameObject prefab) => objectPool.GetObject(prefab);
+        public GameObject GetAttackObj(GameObject prefab) => objectPool.GetObject(prefab);
 
         /// <summary>
         /// エフェクトを位置と回転を指定したうえで取得
@@ -29,8 +31,8 @@ namespace TechC.VBattle.Systems
         /// <param name="position">生成位置</param>
         /// <param name="rotation">初期回転</param>
         /// <returns></returns>
-        public GameObject GetEffectObj(GameObject prefab, Vector3 position, Quaternion rotation) => objectPool.GetObject(prefab, position, rotation);
+        public GameObject GetAttackObj(GameObject prefab, Vector3 position, Quaternion rotation) => objectPool.GetObject(prefab, position, rotation);
 
-        public void ReturnEffectObj(GameObject obj) => objectPool.ReturnObject(obj);
+        public void ReturnAttackObj(GameObject obj) => objectPool.ReturnObject(obj);
     }
 }

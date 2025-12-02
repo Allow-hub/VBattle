@@ -1,21 +1,74 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-namespace TechC.VBattle
+namespace TechC.VBattle.InGame.Input
 {
-    public class PlayerInputManager : MonoBehaviour
+    /// <summary>
+    /// プレイヤー入力管理
+    /// </summary>
+    public class PlayerInputManager : BaseInputManager
     {
-        // Start is called before the first frame update
-        void Start()
+        public void OnMove(InputAction.CallbackContext ctx)
         {
-        
+            var value = ctx.ReadValue<Vector2>();
+            SetMove(value);
+            if (Mathf.Abs(value.x) > 0f) OnButtonDown(InputButton.Move);
+            else OnButtonUp(InputButton.Move);
+
+            // ジャンプをReleaseベースに
+            if (value.y > 0f)
+                holdButtons |= InputButton.Jump; // 押されてる状態だけ保持
+            else if ((holdButtons & InputButton.Jump) != 0)
+            {
+                // 離した瞬間
+                releasedButtons |= InputButton.Jump;
+                holdButtons &= ~InputButton.Jump;
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        /// <summary>
+        /// 下入力
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnDown(InputAction.CallbackContext ctx)
         {
-        
+            if (ctx.started) OnButtonDown(InputButton.Crouch);
+            if (ctx.performed) { holdY = -1f; SetMove(new Vector2(holdX, holdY)); }
+            if (ctx.canceled)
+            {
+                if (holdY < 0f) holdY = 0f; SetMove(new Vector2(holdX, holdY));
+                OnButtonUp(InputButton.Crouch);
+            }
+        }
+
+        /// <summary>
+        /// ガード
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnGuard(InputAction.CallbackContext ctx)
+        {
+            if (ctx.started) OnButtonDown(InputButton.Guard);
+            if (ctx.canceled) OnButtonUp(InputButton.Guard);
+        }
+
+        /// <summary>
+        /// 弱攻撃
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnWeakAttack(InputAction.CallbackContext ctx)
+        {
+            if (ctx.started) OnButtonDown(InputButton.WeakAttack);
+            if (ctx.canceled) OnButtonUp(InputButton.WeakAttack);
+        }
+
+        /// <summary>
+        /// 強攻撃
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnStrongAttack(InputAction.CallbackContext ctx)
+        {
+            if (ctx.started) OnButtonDown(InputButton.StrongAttack);
+            if (ctx.canceled) OnButtonUp(InputButton.StrongAttack);
         }
     }
 }

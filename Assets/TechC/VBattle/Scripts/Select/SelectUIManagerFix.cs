@@ -109,10 +109,10 @@ namespace TechC.Select
             hasPicked[id] = b;
             if (hasPicked[0] && hasPicked[1])
             {
-                DelayUtility.StartDelayedAction(this, startDelay, () =>
-                {
-                    startObj.SetActive(true);
-                });
+                // DelayUtility.StartDelayedAction(this, startDelay, () =>
+                // {
+                //     startObj.SetActive(true);
+                // });
                 // StartWindow.I.ShowStartWindow();
             }
         }

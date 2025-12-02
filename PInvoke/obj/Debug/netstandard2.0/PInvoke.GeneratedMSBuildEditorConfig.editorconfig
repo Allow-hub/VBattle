@@ -1,0 +1,10 @@
+is_global = true
+build_property.CsWin32InputMetadataPaths = C:\Users\student\.nuget\packages\microsoft.windows.sdk.win32metadata\61.0.15-preview\Windows.Win32.winmd|C:\Users\student\.nuget\packages\microsoft.windows.wdk.win32metadata\0.12.8-experimental\Windows.Wdk.winmd
+build_property.CsWin32InputDocPaths = C:\Users\student\.nuget\packages\microsoft.windows.sdk.win32docs\0.1.42-alpha\apidocs.msgpack
+build_property.RootNamespace = PInvoke
+build_property.ProjectDir = C:\Users\student\Documents\VBattle\PInvoke\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 
