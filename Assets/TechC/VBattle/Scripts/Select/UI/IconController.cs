@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select.UI
 {
     [System.Serializable]
     public class IconData

@@ -4,7 +4,7 @@ using TechC.VBattle.Core.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select.Core
 {
     public class CharacterSelectManagerFix : Singleton<CharacterSelectManagerFix>
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TechC
+namespace TechC.VBattle.Select.UI
 {
     public class SelectPickAnim : MonoBehaviour
     {

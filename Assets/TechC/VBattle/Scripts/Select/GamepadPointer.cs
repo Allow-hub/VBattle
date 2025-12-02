@@ -11,7 +11,7 @@ using UnityEngine.InputSystem.Utilities;
 using UnityEngine.InputSystem.UI;
 using System;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select
 {
     public class GamepadPointer : MonoBehaviour
     {

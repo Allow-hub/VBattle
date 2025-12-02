@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TechC
+namespace TechC.VBattle.Select
 {
     [Serializable]
     public class CommentCategory

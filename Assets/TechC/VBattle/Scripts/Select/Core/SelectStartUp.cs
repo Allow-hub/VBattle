@@ -1,7 +1,7 @@
 using TechC.VBattle.Core.Extensions;
 using UnityEngine;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select.Core
 {
     /// <summary>
     /// Selectシーンのシングルトン初期化順序を決める

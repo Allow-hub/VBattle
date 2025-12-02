@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace TechC
+namespace TechC.VBattle.Select.UI
 {
     /// <summary>
     /// 複数枚のプレイヤーパネル用

@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System.Collections;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Select.Core;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select.UI
 {
     /// <summary>
     /// キャラピックのイベントを送受信

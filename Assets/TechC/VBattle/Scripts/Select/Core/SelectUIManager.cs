@@ -1,10 +1,11 @@
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Select.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace TechC.Select
+namespace TechC.VBattle.Select.Core
 {
     public class SelectUIManager : Singleton<SelectUIManager>
     {
