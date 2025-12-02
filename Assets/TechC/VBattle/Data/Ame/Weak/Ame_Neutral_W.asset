@@ -27,7 +27,7 @@ MonoBehaviour:
   hitboxOffset: {x: 0, y: 0.7, z: 1}
   hitTiming: 0.2
   hitEffectPrefab: {fileID: 0}
-  damage: 5
+  damage: 100
   knockbackForce: 3
   isCounter: 0
   recoveryDuration: 0.05
