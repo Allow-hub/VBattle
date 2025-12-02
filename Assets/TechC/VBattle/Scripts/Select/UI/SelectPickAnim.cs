@@ -1,3 +1,4 @@
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 
 namespace TechC.VBattle.Select.UI
@@ -15,9 +16,9 @@ namespace TechC.VBattle.Select.UI
             GameObject obj = NameToObj(prefab.name);
             lastObj = obj;
             var anim = obj?.GetComponentInChildren<Animator>();
-            // DelayUtility.StartDelayedAction(this, appearDelay, () => obj?.SetActive(true));
-
-            // DelayUtility.StartDelayedAction(this, appearDelay + animDelay, () => anim?.SetBool(animName, true));
+            
+            _ = DelayUtility.StartDelayedActionAsync(appearDelay, () => obj?.SetActive(true));
+            _ = DelayUtility.StartDelayedActionAsync(appearDelay + animDelay, () => anim?.SetBool(animName, true));
         }
 
         private GameObject NameToObj(string name)
