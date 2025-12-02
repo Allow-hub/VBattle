@@ -9,70 +9,70 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 133d51a2a1c84a4409b5ef5c95ca25d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 42008407ed8c6a04fa98a9b88c3592ea, type: 3}
   m_Name: AmeSE
   m_EditorClassIdentifier: 
-  characterType: 1
+  characterType: 0
   seList:
   - seType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 1
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 3
     clip: {fileID: 8300000, guid: 649975e5c359aea43b1ffc801f0dfc35, type: 3}
-    volume: 0.2
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 4
     clip: {fileID: 8300000, guid: 2327370c8165afb49b3476e86a101d86, type: 3}
     volume: 0.2
-    pitch: 0.67
+    pitch: 1
     loop: 0
   - seType: 5
     clip: {fileID: 8300000, guid: afa4c368aaa560848a899fe3c5799c1d, type: 3}
-    volume: 1
-    pitch: 1
+    volume: 0.2
+    pitch: 0.67
     loop: 0
   - seType: 6
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 7
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 8
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 9
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 10
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 11
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 12
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 13
     clip: {fileID: 8300000, guid: 0a29246bb1a0cee4b94d725115b94e64, type: 3}
@@ -81,8 +81,8 @@ MonoBehaviour:
     loop: 0
   - seType: 14
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 15
     clip: {fileID: 8300000, guid: e0b7d5c4cf6f9b04387132988f3a7338, type: 3}
@@ -91,38 +91,38 @@ MonoBehaviour:
     loop: 0
   - seType: 16
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 17
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 18
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 19
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 20
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 21
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 22
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
     loop: 0
   - seType: 23
     clip: {fileID: 8300000, guid: 3f7da6a4ac96d344d908c3c795625f0c, type: 3}
@@ -142,81 +142,81 @@ MonoBehaviour:
   voiceList:
   - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 1
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 2
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 3
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 4
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 5
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 6
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 7
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 8
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 9
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 10
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 11
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 12
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 13
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 14
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 15
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 16
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 17
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 18
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
   - voiceType: 19
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0

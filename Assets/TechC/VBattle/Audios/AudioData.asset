@@ -9,83 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc53c18851d8e854694c101d719259de, type: 3}
+  m_Script: {fileID: 11500000, guid: 22da58d4fe56f1e48b0be27980bd3f88, type: 3}
   m_Name: AudioData
   m_EditorClassIdentifier: 
-  bgmList:
-  - id: 0
-    clip: {fileID: 8300000, guid: 667cf6990881f44428cdd77321472bff, type: 3}
-    volume: 0.1
-    pitch: 1
-    loop: 1
-    fadeInTime: 1
-    fadeOutTime: 1
-  - id: 1
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    fadeInTime: 0
-    fadeOutTime: 0
-  - id: 2
-    clip: {fileID: 8300000, guid: 55f0c4aec7b15c545bf4c6af0917e481, type: 3}
-    volume: 0.15
-    pitch: 1
-    loop: 1
-    fadeInTime: 0
-    fadeOutTime: 0
-  - id: 3
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    fadeInTime: 0
-    fadeOutTime: 0
-  - id: 4
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    fadeInTime: 0
-    fadeOutTime: 0
-  seList:
-  - id: 0
-    clip: {fileID: 8300000, guid: bcb66339f3d1de34eadf2a9e8bd20200, type: 3}
-    volume: 0.4
-    pitch: 1
-    loop: 0
-  - id: 1
-    clip: {fileID: 8300000, guid: bf1a8e79972dc4e4193e9a5a08a49646, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-  - id: 2
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-  - id: 3
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-  - id: 5
-    clip: {fileID: 8300000, guid: ab59f6ae000645d4087caccde091bfbd, type: 3}
-    volume: 0.1
-    pitch: 0.8
-    loop: 0
-  - id: 6
-    clip: {fileID: 8300000, guid: e6a67033a783c4547ba5bc17b0406d66, type: 3}
-    volume: 0.53
-    pitch: 0.61
-    loop: 0
-  - id: 8
-    clip: {fileID: 8300000, guid: c65ca657b660c204abaefe3ba89bbae9, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-  - id: 7
-    clip: {fileID: 8300000, guid: 78e1777e7b32f1d4c8d98119fbbb3143, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
+  bgmList: []
+  seList: []
