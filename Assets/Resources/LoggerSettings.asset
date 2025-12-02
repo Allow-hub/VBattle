@@ -49,16 +49,16 @@ MonoBehaviour:
   - categoryId: window
     displayName: Window
     color: {r: 0.9433962, g: 0.48504806, b: 0.546987, a: 1}
-    enabledByDefault: 1
+    enabledByDefault: 0
   defaultCategory:
     categoryId: default
     displayName: Default
     color: {r: 1, g: 1, b: 1, a: 1}
     enabledByDefault: 1
-  _enabledCategoryIds:
-  - window
+  _enabledCategoryIds: []
   _disabledCategoryIds:
   - icon
   - attack
   - state
   - event
+  - window
