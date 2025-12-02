@@ -182,7 +182,13 @@ namespace TechC.VBattle.InGame.Character
         {
             Vector3 origin = transform.position;
             Vector3 dir = Vector3.down;
-            return Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
+            // Raycast 判定
+            bool grounded = Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
+
+            // デバッグ描画
+            Color rayColor = grounded ? Color.green : Color.red;
+            Debug.DrawRay(origin, dir * groundCheckDistance, rayColor);
+            return grounded;
         }
 
         public void SetGuardPower(float amount) => currentGuardPower = amount;
