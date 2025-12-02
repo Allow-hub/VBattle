@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38aa63540ac5bff44938f7b6da0f2d22, type: 3}
+  m_Name: AttackSet_Ame
+  m_EditorClassIdentifier: 
+  charaName: 0
+  attacks:
+  - attackName: "\u30CB\u30E5\u30FC\u30C8\u30E9\u30EB\u5F31"
+    type: 0
+    direction: 0
+    attackData: {fileID: 11400000, guid: 976cf2fc90886ac4f88004e4cf3d841d, type: 2}
+  - attackName: "\u5DE6\u5F31"
+    type: 0
+    direction: 1
+    attackData: {fileID: 11400000, guid: 5b6007dd31612d740ba0a512cab65e90, type: 2}
+  - attackName: "\u53F3\u5F31"
+    type: 0
+    direction: 2
+    attackData: {fileID: 11400000, guid: d1339eaab323f2d41bbf6f809f61f576, type: 2}
+  - attackName: "\u4E0A\u5F31"
+    type: 0
+    direction: 3
+    attackData: {fileID: 11400000, guid: f3624993031602c41bf06e3580622c33, type: 2}
+  - attackName: "\u4E0B\u5F31"
+    type: 0
+    direction: 4
+    attackData: {fileID: 11400000, guid: 22c0167e7ef38b241b63cfbaf43bedcf, type: 2}
+  - attackName: "\u30CB\u30E5\u30FC\u30C8\u30E9\u30EB\u5F37"
+    type: 1
+    direction: 0
+    attackData: {fileID: 11400000, guid: 0b946dd1e7e3a2b4f888850f8f3eeebf, type: 2}
+  - attackName: "\u5DE6\u5F37"
+    type: 1
+    direction: 1
+    attackData: {fileID: 11400000, guid: ef36d3cc186a6654c91ee9f79fd0b070, type: 2}
+  - attackName: "\u53F3\u5F37"
+    type: 1
+    direction: 2
+    attackData: {fileID: 11400000, guid: ea15c537e8a5dfb4688cb772b4a1666c, type: 2}
+  - attackName: "\u4E0A\u5F37"
+    type: 1
+    direction: 3
+    attackData: {fileID: 11400000, guid: 009f5493977d9064d96eba7b1fa67ec6, type: 2}
+  - attackName: "\u4E0B\u5F37"
+    type: 1
+    direction: 4
+    attackData: {fileID: 11400000, guid: 795f7f8af40278647bb1ab46dbb0d53a, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 0
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 1
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 2
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 3
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u7A7A\u4E2D\u653B\u6483"
+    type: 2
+    direction: 4
+    attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}

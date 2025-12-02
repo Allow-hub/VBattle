@@ -15,9 +15,9 @@ namespace TechC
             GameObject obj = NameToObj(prefab.name);
             lastObj = obj;
             var anim = obj?.GetComponentInChildren<Animator>();
-            DelayUtility.StartDelayedAction(this, appearDelay, () => obj?.SetActive(true));
+            // DelayUtility.StartDelayedAction(this, appearDelay, () => obj?.SetActive(true));
 
-            DelayUtility.StartDelayedAction(this, appearDelay + animDelay, () => anim?.SetBool(animName, true));
+            // DelayUtility.StartDelayedAction(this, appearDelay + animDelay, () => anim?.SetBool(animName, true));
         }
 
         private GameObject NameToObj(string name)

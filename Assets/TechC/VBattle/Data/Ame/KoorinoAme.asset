@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: KoorinoAme
   m_EditorClassIdentifier: 
   CharacterName: 0
-  MoveSpeed: 0
-  DashMoveSpeed: 0
-  JumpPower: 0
-  DoubleJumpPower: 0
+  MoveSpeed: 2
+  DashMoveSpeed: 8
+  JumpPower: 6
+  DoubleJumpPower: 7.5
   AirControlMultiplier: 0.7
   FastFallSpeed: 15
   MaxHP: 500
   GuardPower: 100
-  GuardDecreasePower: 0.1
-  GuardRecoverySpeed: 0.3
+  GuardDecreasePower: 10
+  GuardRecoverySpeed: 20
   GuardRecoveryInterval: 2
   GuardBreakDuration: 2
