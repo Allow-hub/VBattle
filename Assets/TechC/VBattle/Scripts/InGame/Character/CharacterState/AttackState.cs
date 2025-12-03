@@ -166,7 +166,8 @@ namespace TechC.VBattle.InGame.Character
                 Quaternion spawnRot = controller.transform.rotation *
                     Quaternion.Euler(currentAttackData.prefabRotation);
                 // 攻撃オブジェクトを取得
-                CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
+                var obj = CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
+                obj.GetComponent<AttackObjectController>()?.SetPlayer(controller.PlayerIndex, controller.gameObject);
             }
         }
     }

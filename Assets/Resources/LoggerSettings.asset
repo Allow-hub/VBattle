@@ -59,6 +59,7 @@ MonoBehaviour:
   _disabledCategoryIds:
   - icon
   - attack
-  - state
   - event
   - window
+  - command
+  - state
