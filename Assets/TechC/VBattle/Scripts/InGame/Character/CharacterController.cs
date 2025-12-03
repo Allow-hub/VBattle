@@ -119,12 +119,9 @@ namespace TechC.VBattle.InGame.Character
 
         private void FixedUpdate()
         {
-            if(!IsGrounded())
-            {
-                if (stateMachine.CurrentState == GetState<AirState>()) return;
-                stateMachine.ChangeState(GetState<AirState>());
-            }
             commandInvoker.FixedUpdate();
+            if (!IsGrounded() && stateMachine.CurrentState != GetState<AirState>())
+                stateMachine.ChangeState(GetState<AirState>());
         }
 
         /// <summary>
