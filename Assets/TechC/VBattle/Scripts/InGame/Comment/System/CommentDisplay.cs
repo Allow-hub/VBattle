@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
+using Cysharp.Threading.Tasks;
 
 namespace TechC.CommentSystem
 {
@@ -41,15 +44,15 @@ namespace TechC.CommentSystem
 
         protected override bool UseDontDestroyOnLoad => false;
 
-        void Start()
+        private async void Start()
         {
-            DelayUtility.StartDelayedAction(this, 0f, () =>
+            await DelayUtility.StartDelayedActionAsync(0f, () =>
             {
                 StartCommentSpawning();
             });
         }
 
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             isPausedFunc = () => BattleJudge.I.IsPaused;
@@ -66,30 +69,28 @@ namespace TechC.CommentSystem
             if (!isSpawning)
             {
                 isSpawning = true;
-                StartCoroutine(SpawnCommentWithInterval());
+                SpawnCommentWithInterval();
             }
         }
 
         /// <summary>
         /// 指定したインターバルでコメントを生成
         /// </summary>
-        private IEnumerator SpawnCommentWithInterval()
+        private async void SpawnCommentWithInterval()
         {
-            if (IsCommentFrozen) yield break;
+            if (IsCommentFrozen) return;
 
-            DelayUtility.StartRepeatedActionWhileWithPause(
-                this,
+            await DelayUtility.StartRepeatedActionWhileWithPauseAsync(
                 () => isSpawning,
                 commentInterval,
-                isPausedFunc,
-                () =>
+                async () =>
                 {
                     GameObject spawnedComment = commentSpawner.SpawnComment();
                     ApplyMaterialToSpawnedComment(spawnedComment);
-                }
+                    await UniTask.Yield();
+                },
+                isPausedFunc
             );
-
-            yield break;
         }
 
         /// <summary>
@@ -125,15 +126,14 @@ namespace TechC.CommentSystem
             {
                 IsCommentFrozen = true;
                 ApplyFreezeEffectToAllComments();
-                DelayUtility.StartDelayedActionWithPause(
-                    this,
+                _ = DelayUtility.StartDelayedActionWithPauseAsync(
                     freezeTime,
-                    () => BattleJudge.I.IsPaused,
                     () =>
                     {
                         IsCommentFrozen = false;
                         RestoreOriginalMaterials();
-                    });
+                    },
+                    () => BattleJudge.I.IsPaused);
             }
         }
 
