@@ -21,9 +21,7 @@ namespace TechC.VBattle.InGame.Character
                 float moveSpeed = isDashing ? characterData.DashMoveSpeed : characterData.MoveSpeed;
                 // 空中では制御係数を適用
                 if (!isGrounded)
-                {
                     moveSpeed *= characterData.AirControlMultiplier;
-                }
 
                 // 移動方向を計算
                 Vector3 moveDirection = new Vector3(direction.x, 0, 0).normalized;
