@@ -5,6 +5,7 @@ using TechC.VBattle.Core;
 using TechC.VBattle.Core.Util;
 using UnityEngine.InputSystem;
 using TechC.VBattle.InGame.Events;
+using TechC.CommentSystem;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -55,6 +56,13 @@ namespace TechC.VBattle.InGame.Character
         public bool IsInvincible => isInvincible;
         private bool isGuarding = false;
         public bool IsGuarding => isGuarding;
+
+        // ===== コメントアイテム関連 =====
+        public GameObject HoldItem { get; private set; }
+        private System.Action commentEventAction;
+
+        // ===== バフ倍率管理 =====
+        private Dictionary<BuffType, Dictionary<int, float>> buffMultipliers = new Dictionary<BuffType, Dictionary<int, float>>();
 
         // ===== ジャンプ関連 =====
         private int currentJumpCount = 0;
@@ -198,11 +206,35 @@ namespace TechC.VBattle.InGame.Character
             rb.velocity = velocity;
             currentJumpCount = 0;
         }
-        
+
         private void OnCollisionExit(Collision collision)
         {
             if (stateMachine.CurrentState == GetState<AirState>()) return;
             stateMachine.ChangeState(GetState<AirState>());
+        }
+
+        // ===== コメントアイテム関連メソッド =====
+        /// <summary>
+        /// 持っているアイテムを設定する
+        /// </summary>
+        /// <param name="item">持つアイテム（nullで解除）</param>
+        public void SetHoldItem(GameObject item)
+        {
+            HoldItem = item;
+        }
+
+        /// <summary>
+        /// コメントイベントを登録する
+        /// </summary>
+        /// <param name="action">実行するアクション</param>
+        // TODO:Eventに関しては一時的にこのクラスに配置しているだけで、今後Handler的な中間クラスを用意する
+
+        public void RegisterCommentEvent(System.Action action)
+        {
+            commentEventAction = action;
+            // 即座に実行（元の実装に合わせて）
+            commentEventAction?.Invoke();
+            commentEventAction = null;
         }
 
         private void OnDestroy()
