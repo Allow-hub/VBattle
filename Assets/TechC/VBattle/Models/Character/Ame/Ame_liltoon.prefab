@@ -4519,6 +4519,7 @@ GameObject:
   - component: {fileID: 8557948213218000388}
   - component: {fileID: 6430671472851994430}
   - component: {fileID: 5744909647566925583}
+  - component: {fileID: 7358987510641279814}
   m_Layer: 0
   m_Name: secondary
   m_TagString: Untagged
@@ -4555,10 +4556,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Hair_bangs
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.6702241
-  m_gravityPower: 0
+  m_stiffnessForce: 4
+  m_gravityPower: 2
   m_gravityDir: {x: 0, y: 0, z: 0}
-  m_dragForce: 0.4
+  m_dragForce: 0.23
   m_center: {fileID: 0}
   RootBones:
   - {fileID: 7973396973684196995}
@@ -4586,10 +4587,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Hair_pony
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.39701173
-  m_gravityPower: 0.5912487
+  m_stiffnessForce: 4
+  m_gravityPower: 2
   m_gravityDir: {x: 0, y: -1, z: 0}
-  m_dragForce: 0.4
+  m_dragForce: 0.19
   m_center: {fileID: 0}
   RootBones:
   - {fileID: 5904774138301919674}
@@ -4613,8 +4614,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Hair
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.08964781
-  m_gravityPower: 0.4802561
+  m_stiffnessForce: 4
+  m_gravityPower: 2
   m_gravityDir: {x: 0, y: 0, z: 0}
   m_dragForce: 0.4
   m_center: {fileID: 0}
@@ -4644,8 +4645,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Ear
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.6360726
-  m_gravityPower: 0
+  m_stiffnessForce: 4
+  m_gravityPower: 2
   m_gravityDir: {x: 0, y: 0, z: 0}
   m_dragForce: 0.4
   m_center: {fileID: 0}
@@ -4669,10 +4670,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Robe
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.46531484
+  m_stiffnessForce: 4
   m_gravityPower: 2
-  m_gravityDir: {x: 0, y: -0.1, z: 0}
-  m_dragForce: 0.4
+  m_gravityDir: {x: 0, y: -100, z: 0}
+  m_dragForce: 1
   m_center: {fileID: 0}
   RootBones:
   - {fileID: 6697153755328931645}
@@ -4704,10 +4705,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_comment: Sleeve
   m_gizmoColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  m_stiffnessForce: 0.58484524
-  m_gravityPower: 1.4108858
-  m_gravityDir: {x: 0, y: -0.1, z: 0}
-  m_dragForce: 0.4
+  m_stiffnessForce: 4
+  m_gravityPower: 2
+  m_gravityDir: {x: 0, y: -0.5, z: 0}
+  m_dragForce: 1
   m_center: {fileID: 0}
   RootBones:
   - {fileID: 1646903977975534926}
@@ -4722,6 +4723,18 @@ MonoBehaviour:
   - {fileID: 3832439608349788289}
   - {fileID: 5233648744237832617}
   m_updateType: 0
+--- !u!114 &7358987510641279814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5356648256556699743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48720a495200cc4698bbc7339c4a94f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5398255646860579998
 GameObject:
   m_ObjectHideFlags: 0
@@ -7146,7 +7159,7 @@ Animator:
   m_GameObject: {fileID: 7079368333751177568}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2aaa55d6c69cd5c4f8c256c043fb47f4, type: 2}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 21d97aaf125dac345bafc5d5895acb78, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
