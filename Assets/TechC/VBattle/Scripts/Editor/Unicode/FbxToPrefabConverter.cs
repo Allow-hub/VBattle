@@ -6,8 +6,8 @@ namespace TechC.VBattle.Editor.Unicode
 {
     public class FbxToPrefabConverter : EditorWindow
     {
-        private string fbxFolderPath = "Assets/Models"; // FBXが入っているフォルダ
-        private string prefabOutputPath = "Assets/Prefabs"; // 出力先Prefabフォルダ
+        private string fbxFolderPath = "Assets/TechC/VBattle/Models/3DText/Unicode"; // FBXが入っているフォルダ
+        private string prefabOutputPath = "Assets/TechC/VBattle/Prefabs/Comments/Unicode"; // 出力先Prefabフォルダ
 
         [MenuItem("Tools/Unicode/FBX to Prefab Converter")]
         public static void ShowWindow()
