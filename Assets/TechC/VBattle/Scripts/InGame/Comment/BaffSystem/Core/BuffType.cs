@@ -8,7 +8,6 @@ namespace TechC.CommentSystem
         Speed,
         Attack,
         Jump,
-        MapChange,
     }
 
 }

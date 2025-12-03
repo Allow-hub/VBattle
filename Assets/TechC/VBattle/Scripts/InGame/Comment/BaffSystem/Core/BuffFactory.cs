@@ -17,9 +17,8 @@ namespace TechC.CommentSystem
             buffDictionary = new Dictionary<BuffType, System.Func<BuffBase>>()
             {
                 { BuffType.Speed, () => new SpeedBuff()},
-                { BuffType.Attack, () => new AttackBuff()},
+                { BuffType.Attack, () => new AttackBuff()}
                 // { BuffType.Jump, () => new JumpBuff()},
-                { BuffType.MapChange,() => new MapChangeBuff()}
             };
         }
 

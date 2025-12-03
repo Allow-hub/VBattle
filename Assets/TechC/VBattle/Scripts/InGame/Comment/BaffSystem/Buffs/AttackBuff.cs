@@ -23,7 +23,7 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Apply(GameObject target)
         {
-            TechC.VBattle.InGame.Character.CharacterController characterController = target.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
+            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
             if (characterController != null)
                 characterController.AddMultiplier(BuffType.Attack, id, attackMultiplier);
         }
@@ -34,7 +34,7 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Remove(GameObject target)
         {
-            TechC.VBattle.InGame.Character.CharacterController characterController = target.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
+            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
             if (characterController != null)
                 characterController.RemoveMultiplier(BuffType.Attack, id, attackMultiplier);
         }

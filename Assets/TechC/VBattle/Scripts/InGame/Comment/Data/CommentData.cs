@@ -8,7 +8,6 @@ namespace TechC.CommentSystem
         Normal,
         SpeedBuff,
         AttackBuff,
-        MapChange,
         Grass,
         Freeze
     }

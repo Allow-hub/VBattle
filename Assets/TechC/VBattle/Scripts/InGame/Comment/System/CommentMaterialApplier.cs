@@ -14,8 +14,7 @@ namespace TechC.CommentSystem
         [SerializeField] private Material normalCommentMaterial;
         [SerializeField] private Material speedBuffCommentMaterial;
         [SerializeField] private Material attackBuffCommentMaterial;
-        [SerializeField] private Material mapChangeCommentMaterial;
-        [SerializeField] private Material freezeCommentMaterial;
+        [SerializeField] private Material grassCommentMaterial;
 
         private MaterialPropertyBlock propertyBlock;
         private static readonly int ColorPropertyId = Shader.PropertyToID("_Color");
@@ -44,8 +43,7 @@ namespace TechC.CommentSystem
                 normalCommentMaterial,
                 speedBuffCommentMaterial,
                 attackBuffCommentMaterial,
-                mapChangeCommentMaterial,
-                freezeCommentMaterial
+                grassCommentMaterial,
             };
 
             foreach (var material in materials)
@@ -75,8 +73,6 @@ namespace TechC.CommentSystem
                         return attackBuffCommentMaterial;
                     case CommentType.SpeedBuff:
                         return speedBuffCommentMaterial;
-                    case CommentType.MapChange:
-                        return mapChangeCommentMaterial;
                     case CommentType.Freeze:
                         return freezeCommentMaterial;
                     case CommentType.Normal:

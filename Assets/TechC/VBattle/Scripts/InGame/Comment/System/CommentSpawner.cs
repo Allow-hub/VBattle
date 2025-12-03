@@ -13,8 +13,7 @@ namespace TechC.CommentSystem
         [SerializeField] private GameObject commentPrefab;
         [SerializeField] private GameObject speedBuffPrefab;
         [SerializeField] private GameObject attackBuffPrefab;
-        [SerializeField] private GameObject mapChangePrefab;
-        [SerializeField] private GameObject grassPrefab;
+        [SerializeField] private GameObject grassCommentPrefab;
         [SerializeField] private GameObject freezePrefab;
 
         [Header("コメントが出現する場所")]
@@ -93,9 +92,7 @@ namespace TechC.CommentSystem
                     return commentPrefab;
                 case CommentType.AttackBuff:
                     return attackBuffPrefab;
-                case CommentType.MapChange:
-                    return mapChangePrefab;
-                case CommentType.SpeedBuff:
+                case CommentType.Grass:
                     return speedBuffPrefab;
                 case CommentType.Grass:
                     return grassPrefab;

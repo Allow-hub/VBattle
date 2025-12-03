@@ -10,9 +10,6 @@ namespace TechC.CommentSystem
     public class SpeedBuff : BuffBase
     {
         [SerializeField] private float speedMultiplier = 1.5f;
-
-        [SerializeField] private GameObject effectInstance; /* 実際にInstantiateで生成されたエフェクトのインスタンス */
-
         public SpeedBuff()
         {
             buffName = "SpeedBuff";
@@ -27,18 +24,10 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Apply(GameObject target)
         {
-            Player.CharacterController characterController = target.GetComponent<Player.CharacterController>();
+            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
 
-            /* 速度上昇のバフを適用 */
             if (characterController != null)
-            {
-                // Debug.Log($"<color=orange>[Apply前]</color>攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-                characterController.AddMultiplier(BuffType.Speed, id,speedMultiplier);
-
-
-                // Debug.Log($"<color=orange>[Apply後]</color>:攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-
-            }
+                characterController.AddMultiplier(BuffType.Speed, id, speedMultiplier);
         }
 
         /// <summary>
@@ -47,13 +36,10 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Remove(GameObject target)
         {
-            Player.CharacterController characterController = target.GetComponent<Player.CharacterController>();
+            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
 
-            /* 速度上昇のバフを解除 */
             if (characterController != null)
-            {
-                characterController.RemoveMultiplier(BuffType.Speed, id,speedMultiplier);
-            }
+                characterController.RemoveMultiplier(BuffType.Speed, id, speedMultiplier);
         }
     }
 }

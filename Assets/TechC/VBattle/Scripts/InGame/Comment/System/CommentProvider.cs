@@ -17,13 +17,11 @@ namespace TechC.CommentSystem
         [SerializeField, Range(0f, 1f)] private float normalChance = 0.7f;
         [SerializeField, Range(0f, 1f)] private float speedBuffChance = 0.2f;
         [SerializeField, Range(0f, 1f)] private float attackBuffChance = 0.2f;
-        [SerializeField, Range(0f, 1f)] private float mapChangeChance = 0.1f;
         [SerializeField, Range(0f, 1f)] private float grassCommentChance = 0.1f;
         [SerializeField, Range(0f, 1f)] private float freezeCommentChance = 0.1f;
 
         private List<BuffCommentData> speedBuffs;
         private List<BuffCommentData> attackBuffs;
-        private List<BuffCommentData> mapChangeBuffs;
         private List<SpecialCommentData> specialCommentList;
         private float totalChance;
         private List<SpecialCommentData.SpecialCommentEntry> grassEntries = new List<SpecialCommentData.SpecialCommentEntry>();
@@ -31,7 +29,7 @@ namespace TechC.CommentSystem
 
         private void Awake()
         {
-            totalChance = normalChance + speedBuffChance + attackBuffChance + mapChangeChance + grassCommentChance + freezeCommentChance;
+            totalChance = normalChance + speedBuffChance + attackBuffChance + grassCommentChance + freezeCommentChance;
 
             // 確率が0またはマイナスならデフォルト値に設定
             if (totalChance <= 0f)
@@ -39,7 +37,6 @@ namespace TechC.CommentSystem
                 normalChance = 0.7f;
                 speedBuffChance = 0.1f;
                 attackBuffChance = 0.1f;
-                mapChangeChance = 0.05f;
                 grassCommentChance = 0.05f;
                 freezeCommentChance = 0.05f;
                 totalChance = 1.0f;
@@ -48,16 +45,11 @@ namespace TechC.CommentSystem
             // buffCommentsを事前にフィルタリングして分類
             speedBuffs = new List<BuffCommentData>();
             attackBuffs = new List<BuffCommentData>();
-            mapChangeBuffs = new List<BuffCommentData>();
             specialCommentList = new List<SpecialCommentData>();
 
             foreach (var buff in buffComments)
             {
-                if (buff.buffType == BuffType.MapChange)
-                {
-                    mapChangeBuffs.Add(buff);
-                }
-                else if (buff.buffType == BuffType.Speed)
+                if (buff.buffType == BuffType.Speed)
                 {
                     speedBuffs.Add(buff);
                 }
@@ -133,18 +125,6 @@ namespace TechC.CommentSystem
                 }
             }
 
-            // マップ変更コメント
-            threshold += mapChangeChance;
-            if (randomValue < threshold)
-            {
-                if (mapChangeBuffs.Count > 0)
-                {
-                    var buff = mapChangeBuffs[Random.Range(0, mapChangeBuffs.Count)];
-                    string text = buff.comments[Random.Range(0, buff.comments.Length)];
-                    return new CommentData(CommentType.MapChange, text, buff.buffType);
-                }
-            }
-
             // Grassコメント
             threshold += grassCommentChance;
             if (randomValue < threshold)
@@ -179,7 +159,6 @@ namespace TechC.CommentSystem
             normalChance = 0f;
             speedBuffChance = 0f;
             attackBuffChance = 0f;
-            mapChangeChance = 0f;
             grassCommentChance = 0f;
             freezeCommentChance = 0f;
             UnityEditor.EditorUtility.SetDirty(this);
