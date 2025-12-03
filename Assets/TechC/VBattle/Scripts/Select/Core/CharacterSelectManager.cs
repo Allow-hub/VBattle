@@ -14,6 +14,10 @@ namespace TechC.VBattle.Select.Core
         public override void Init()
         {
             base.Init();
+        }
+
+        private void Start()
+        {
             InitializeSelectSystem();
         }
 
