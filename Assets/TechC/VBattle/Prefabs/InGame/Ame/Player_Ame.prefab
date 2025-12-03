@@ -132,6 +132,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  playerIndex: 0
   idleAnimSpeed: 1.1
 --- !u!54 &1628242938499199573
 Rigidbody:
@@ -141,7 +142,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2916867313761328699}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 1.2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -295,10 +296,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.2452414
+  m_Height: 1.8527745
   m_Direction: 1
-  m_Center: {x: 0, y: 0.97, z: 0}
+  m_Center: {x: 0, y: 0.8963875, z: -0.020687819}
 --- !u!1001 &217520268115137976
 PrefabInstance:
   m_ObjectHideFlags: 0
