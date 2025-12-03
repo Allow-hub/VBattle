@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Editor
 {
@@ -30,7 +32,7 @@ namespace TechC.VBattle.Editor
                 }
                 else
                 {
-                    Debug.LogWarning("Please select a script to search for.");
+                    CustomLogger.Warning("Please select a script to search for.", LogTagUtil.TagEditor);
                 }
             }
 
@@ -59,7 +61,7 @@ namespace TechC.VBattle.Editor
             System.Type scriptType = targetScript.GetClass();
             if (scriptType == null || !typeof(MonoBehaviour).IsAssignableFrom(scriptType))
             {
-                Debug.LogError("Selected script is not a MonoBehaviour.");
+                CustomLogger.Error("Selected script is not a MonoBehaviour.", LogTagUtil.TagEditor);
                 return;
             }
 
@@ -74,7 +76,7 @@ namespace TechC.VBattle.Editor
                 }
             }
 
-            Debug.Log($"Found {foundObjects.Count} objects with the script {targetScript.name}.");
+            CustomLogger.Info($"Found {foundObjects.Count} objects with the script {targetScript.name}.", LogTagUtil.TagEditor);
         }
     }
 }

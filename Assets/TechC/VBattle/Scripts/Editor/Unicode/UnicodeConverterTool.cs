@@ -2,11 +2,14 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Text;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Editor.Unicode
 {
     /// <summary>
-    /// Unicode変換ツール
+    /// 文字列をUnicode形式に変換し、CSファイルに出力するエディターツール
+    /// 入力された文字をUnicodeコードポイントに変換し、指定されたCSファイルに書き込みます
     /// </summary>
     public class UnicodeConverterTool : EditorWindow
     {
@@ -73,13 +76,13 @@ namespace TechC.VBattle.Editor.Unicode
             {
                 if (string.IsNullOrEmpty(inputText))
                 {
-                    Debug.LogError("入力テキストが空です。");
+                    CustomLogger.Error("入力テキストが空です。", LogTagUtil.TagUnicode);
                     return;
                 }
 
                 if (targetScript == null)
                 {
-                    Debug.LogError("出力先のCSファイルが選択されていません。");
+                    CustomLogger.Error("出力先のCSファイルが選択されていません。", LogTagUtil.TagUnicode);
                     return;
                 }
 
@@ -88,7 +91,7 @@ namespace TechC.VBattle.Editor.Unicode
 
                 if (string.IsNullOrEmpty(scriptPath) || !scriptPath.EndsWith(".cs"))
                 {
-                    Debug.LogError("選択されたファイルが有効なCSファイルではありません。");
+                    CustomLogger.Error("選択されたファイルが有効なCSファイルではありません。", LogTagUtil.TagUnicode);
                     return;
                 }
 
@@ -122,7 +125,7 @@ namespace TechC.VBattle.Editor.Unicode
 
                 if (charCount == 0)
                 {
-                    Debug.LogWarning("変換可能な文字が見つかりませんでした。");
+                    CustomLogger.Warning("変換可能な文字が見つかりませんでした。", LogTagUtil.TagUnicode);
                     return;
                 }
 
@@ -146,14 +149,14 @@ namespace TechC.VBattle.Editor.Unicode
                 AssetDatabase.ImportAsset(scriptPath);
                 AssetDatabase.Refresh();
 
-                Debug.Log($"Unicode変換完了: {charCount}文字を変換し、{scriptPath}に出力しました。");
+                CustomLogger.Info($"Unicode変換完了: {charCount}文字を変換し、{scriptPath}に出力しました。", LogTagUtil.TagUnicode);
 
                 // 入力テキストをクリア
                 inputText = "";
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Unicode変換中にエラーが発生しました: {ex.Message}");
+                CustomLogger.Error($"Unicode変換中にエラーが発生しました: {ex.Message}", LogTagUtil.TagUnicode);
             }
         }
 

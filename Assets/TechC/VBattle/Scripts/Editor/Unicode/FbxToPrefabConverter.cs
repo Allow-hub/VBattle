@@ -1,9 +1,15 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Editor.Unicode
 {
+    /// <summary>
+    /// FBXファイルからPrefabを一括作成するエディターツール
+    /// 指定されたフォルダ内のFBXファイルをすべてPrefabに変換し、出力先フォルダに保存します
+    /// </summary>
     public class FbxToPrefabConverter : EditorWindow
     {
         private string fbxFolderPath = "Assets/TechC/VBattle/Models/3DText/Unicode"; // FBXが入っているフォルダ
@@ -32,7 +38,7 @@ namespace TechC.VBattle.Editor.Unicode
         {
             if (!AssetDatabase.IsValidFolder(fbxPath))
             {
-                Debug.LogError($"無効なFBXフォルダ: {fbxPath}");
+                CustomLogger.Error($"無効なFBXフォルダ: {fbxPath}", LogTagUtil.TagUnicode);
                 return;
             }
 
@@ -55,7 +61,7 @@ namespace TechC.VBattle.Editor.Unicode
                 string outputPath = Path.Combine(prefabPath, prefabName + ".prefab");
 
                 GameObject prefab = PrefabUtility.SaveAsPrefabAsset(fbx, outputPath);
-                Debug.Log($"Prefabを作成: {outputPath}");
+                CustomLogger.Info($"Prefabを作成: {outputPath}", LogTagUtil.TagUnicode);
             }
 
             AssetDatabase.SaveAssets();
