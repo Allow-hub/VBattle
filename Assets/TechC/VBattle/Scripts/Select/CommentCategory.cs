@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TechC
+namespace TechC.VBattle.Select
 {
+    /// <summary>
+    /// コメント表示用のカテゴリ設定データクラス
+    /// </summary>
     [Serializable]
     public class CommentCategory
     {
