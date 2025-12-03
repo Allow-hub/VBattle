@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
-using TechC.VBattle.InGame;
 using Cysharp.Threading.Tasks;
 
 namespace TechC.VBattle.InGame.Comment
@@ -56,6 +54,9 @@ namespace TechC.VBattle.InGame.Comment
         public override void Init()
         {
             base.Init();
+
+            if (InGameManager.I == null) Debug.LogError("InGameManager.Iがnull");
+
             isPausedFunc = () => InGameManager.I.IsPaused;
             commentSpawner.Init();
             commentMover.Init();

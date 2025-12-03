@@ -15,6 +15,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private CharaAttackFactory charaAttackFactory;
         [SerializeField] private EffectFactory effectFactory;
         [SerializeField] private AttackVisualizer attackVisualizer;
+        [SerializeField] private CommentFactory commentFactory;
         [SerializeField] private CommentDisplay commentDisplay;
 
         private void Awake()
@@ -23,6 +24,7 @@ namespace TechC.VBattle.InGame
             charaAttackFactory.Init();
             effectFactory.Init();
             attackVisualizer.Init();
+            commentFactory.Init();
             commentDisplay.Init();
         }
     }
