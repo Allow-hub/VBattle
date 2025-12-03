@@ -17,7 +17,7 @@ MonoBehaviour:
   DashMoveSpeed: 8
   JumpPower: 6
   DoubleJumpPower: 7.5
-  AirControlMultiplier: 0.7
+  AirControlMultiplier: 1
   FastFallSpeed: 15
   MaxHP: 500
   GuardPower: 100
