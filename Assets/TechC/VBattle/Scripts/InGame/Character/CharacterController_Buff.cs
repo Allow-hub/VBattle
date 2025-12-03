@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using TechC.CommentSystem;
+using TechC.VBattle.InGame.Comment;
 
 namespace TechC.VBattle.InGame.Character
 {

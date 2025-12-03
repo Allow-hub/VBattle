@@ -1,7 +1,7 @@
 using UnityEngine;
 using TechC.VBattle.Systems;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// バフコメントがプレイヤーと衝突した際にバフを適用するトリガークラス

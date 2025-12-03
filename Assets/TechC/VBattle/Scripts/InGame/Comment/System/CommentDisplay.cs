@@ -7,7 +7,7 @@ using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame;
 using Cysharp.Threading.Tasks;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// コメントの表示管理とフリーズ機能を担当

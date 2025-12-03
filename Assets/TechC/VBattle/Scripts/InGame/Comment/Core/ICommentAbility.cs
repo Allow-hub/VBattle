@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// 特殊コメントの能力を表すインターフェース。

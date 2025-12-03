@@ -1,4 +1,4 @@
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
    /// <summary>
     /// コメントタイプを定義

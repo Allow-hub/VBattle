@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// コメントのマテリアル適用処理を担当
@@ -15,6 +15,7 @@ namespace TechC.CommentSystem
         [SerializeField] private Material speedBuffCommentMaterial;
         [SerializeField] private Material attackBuffCommentMaterial;
         [SerializeField] private Material grassCommentMaterial;
+        [SerializeField] private Material freezeCommentMaterial;
 
         private MaterialPropertyBlock propertyBlock;
         private static readonly int ColorPropertyId = Shader.PropertyToID("_Color");
@@ -44,6 +45,7 @@ namespace TechC.CommentSystem
                 speedBuffCommentMaterial,
                 attackBuffCommentMaterial,
                 grassCommentMaterial,
+                freezeCommentMaterial,
             };
 
             foreach (var material in materials)

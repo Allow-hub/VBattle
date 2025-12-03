@@ -4,7 +4,7 @@ using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame;
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// コメントの移動処理を担当

@@ -1,6 +1,6 @@
 using TechC.VBattle.InGame.Character;
 using TechC.VBattle.Systems;
-using TechC.CommentSystem;
+using TechC.VBattle.InGame.Comment;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame

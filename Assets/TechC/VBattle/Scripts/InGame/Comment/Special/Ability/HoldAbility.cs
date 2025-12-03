@@ -2,7 +2,7 @@ using TechC.VBattle.Systems;
 using UnityEngine;
 using TechC.VBattle.InGame.Character;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// オブジェクトを手に持つアビリティ

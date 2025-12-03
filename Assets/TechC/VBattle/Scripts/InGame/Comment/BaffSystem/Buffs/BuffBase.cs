@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
 
     /// <summary>

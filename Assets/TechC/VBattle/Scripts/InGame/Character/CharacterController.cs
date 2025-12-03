@@ -5,7 +5,7 @@ using TechC.VBattle.Core;
 using TechC.VBattle.Core.Util;
 using UnityEngine.InputSystem;
 using TechC.VBattle.InGame.Events;
-using TechC.CommentSystem;
+using TechC.VBattle.InGame.Comment;
 
 namespace TechC.VBattle.InGame.Character
 {

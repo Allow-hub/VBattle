@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// オブジェクトを投げるアビリティ

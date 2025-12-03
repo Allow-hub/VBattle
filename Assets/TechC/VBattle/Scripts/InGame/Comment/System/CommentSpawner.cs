@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     [Serializable]
     public class CommentSpawner
@@ -92,10 +92,10 @@ namespace TechC.CommentSystem
                     return commentPrefab;
                 case CommentType.AttackBuff:
                     return attackBuffPrefab;
-                case CommentType.Grass:
+                case CommentType.SpeedBuff:
                     return speedBuffPrefab;
                 case CommentType.Grass:
-                    return grassPrefab;
+                    return grassCommentPrefab;
                 case CommentType.Freeze:
                     return freezePrefab;
                 default:

@@ -4,7 +4,7 @@ using TechC.VBattle.Core.Util;
 using TechC.VBattle.Systems;
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     public class GrassCollider : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TechC.CommentSystem
+namespace TechC.VBattle.InGame.Comment
 {
     /// <summary>
     /// Playerの移動速度を上昇させるバフ
