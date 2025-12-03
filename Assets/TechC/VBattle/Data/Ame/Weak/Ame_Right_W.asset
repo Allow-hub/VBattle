@@ -16,7 +16,7 @@ MonoBehaviour:
   attackName: Right_W
   attackPrefab: {fileID: 1683792544504208174, guid: 46e07cbaf6401a54eadc74e66cb0ecee,
     type: 3}
-  prefabOffset: {x: 0, y: 0, z: 0}
+  prefabOffset: {x: 0, y: 0.5, z: 0}
   prefabRotation: {x: 0, y: -90, z: 0}
   animationSpeed: 1.4
   attackDuration: 0.6
@@ -25,7 +25,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   radius: 0
-  hitboxOffset: {x: 0, y: 0, z: 0}
+  hitboxOffset: {x: 0, y: 0.5, z: 0}
   hitTiming: 0
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}

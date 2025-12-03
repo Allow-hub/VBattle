@@ -16,6 +16,7 @@ namespace TechC.VBattle.InGame.Character
         // 追従関連
         [SerializeField] private bool followCharacter = false;
         private Transform characterTransform;
+        
         public void Initialize(GameObject owner)
         {
         }

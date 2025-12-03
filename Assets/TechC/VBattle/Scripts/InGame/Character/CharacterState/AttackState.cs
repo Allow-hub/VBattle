@@ -153,22 +153,20 @@ namespace TechC.VBattle.InGame.Character
                 hitTargets = hits
             });
         }
-        
+
         /// <summary>
         /// 攻撃Prefabの生成
         /// </summary>
         private void CreateAttackObject()
         {
-            if (currentAttackData.attackPrefab != null)
-            {
-                Vector3 spawnPos = controller.transform.position +
-                    controller.transform.TransformDirection(currentAttackData.prefabOffset);
-                Quaternion spawnRot = controller.transform.rotation *
-                    Quaternion.Euler(currentAttackData.prefabRotation);
-                // 攻撃オブジェクトを取得
-                var obj = CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
-                obj.GetComponent<AttackObjectController>()?.SetPlayer(controller.PlayerIndex, controller.gameObject);
-            }
+            if (currentAttackData.attackPrefab == null) return;
+            Vector3 spawnPos = controller.transform.position +
+                controller.transform.TransformDirection(currentAttackData.prefabOffset);
+            Quaternion spawnRot = controller.transform.rotation *
+                Quaternion.Euler(currentAttackData.prefabRotation);
+            // 攻撃オブジェクトを取得
+            var obj = CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
+            obj.GetComponent<AttackObjectController>()?.SetPlayer(controller.PlayerIndex, controller.gameObject);
         }
     }
 }

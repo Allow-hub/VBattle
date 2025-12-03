@@ -16,6 +16,7 @@ namespace TechC.VBattle.InGame.Character
         public string PlayerTag => playerTag;
         private string playerTag = "Player";
         private GameObject character;
+
         private void Start()
         {
             if (behaviours == null) return;
@@ -60,6 +61,11 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
+        /// <summary>
+        /// プレイヤーを登録
+        /// </summary>
+        /// <param name="id">プレイヤーのID</param>
+        /// <param name="characterObj">キャラクターのオブジェクト</param>
         public void SetPlayer(int id, GameObject characterObj)
         {
             if (id < 0) return; // 無効なIDは無視

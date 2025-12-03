@@ -22,6 +22,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
         [SerializeField, ReadOnly] private int playerIndex;
+        [SerializeField,ReadOnly] private string playerTag = "Player";
 
         // ===== 公開プロパティ =====
         public int PlayerIndex => playerIndex;
@@ -30,6 +31,7 @@ namespace TechC.VBattle.InGame.Character
         public int CurrentHP { get; private set; }
         [SerializeField, ReadOnly] private float idleAnimSpeed = 1.1f;
         public float IdleAnimSpeed => idleAnimSpeed;
+        public string PlayerTag => playerTag;
 
         // 攻撃情報
         public AttackType CurrentAttackType { get; private set; }
@@ -62,7 +64,7 @@ namespace TechC.VBattle.InGame.Character
         private int maxJumpCount = 2;
 
         // ===== IAttacker実装 =====
-        GameObject IAttacker.GameObject => gameObject;
+        GameObject IAttacker.AttackerObj => gameObject;
         Transform IAttacker.Transform => transform;
         CharacterController IAttacker.Owner => this; // 自分自身が所有者
 

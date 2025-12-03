@@ -1,32 +1,37 @@
 using System.Threading;
+using TechC.VBattle.InGame.Events;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-    public class AttackDamageDetector : IAttackBehaviour
+    /// <summary>
+    /// 飛び道具の当たり判定とダメージ判定
+    /// </summary>
+    public class AttackDamageDetector : IAttackBehaviour, IAttacker
     {
         [SerializeField] private AttackData attackData;
         [SerializeField] private Collider col;
         private float currnetTime;
-        private GameObject ownerObj;
-        private GameObject character;
         private CancellationTokenSource attackCTS;
-        private AttackObjectController attackObjectController;
+
+        // --- IAttackerの継承　--- ///
+        public GameObject AttackerObj { get; private set; }
+        public Transform Transform => AttackerObj.transform;
+        public CharacterController Owner { get; private set; }
 
         public void Initialize(GameObject owner)
         {
-            ownerObj = owner;
+            AttackerObj = owner;
             col.enabled = false;
-            attackObjectController = owner.GetComponent<AttackObjectController>();
         }
+
         public void Activate(GameObject character)
         {
             if (col == null) return;
+            Owner = character.gameObject.transform.root.GetComponent<CharacterController>();
             col.enabled = false;
-            this.character = character;
             currnetTime = 0f;
             attackCTS = new CancellationTokenSource();
-
         }
 
         public void OnRelease()
@@ -48,13 +53,20 @@ namespace TechC.VBattle.InGame.Character
             }
             currnetTime += deltaTime;
         }
+
         public void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag(attackObjectController.PlayerTag)) return;
+            if (!other.gameObject.CompareTag(Owner.PlayerTag)) return;
             var characterController = other.transform.root.GetComponent<CharacterController>();
             if (characterController == null) return;
-            // if (characterController.PlayerID == attackObjectController.PlayerID) return;// 自分自身への接触は無視
-            // AttackProcessor_Refacta.ProcessAttack(attackData, character.GetComponent<CharacterController>(), ownerObj, attackCTS.Token);
+            // BattleJudgeに判定を依頼
+            InGameManager.I.BattleBus.Publish(new AttackRequestEvent
+            {
+                attacker = this,
+                attackData = attackData,
+                hitPosition = other.gameObject.transform.position,
+                hitTargets = new[] { other }
+            });
         }
     }
 }

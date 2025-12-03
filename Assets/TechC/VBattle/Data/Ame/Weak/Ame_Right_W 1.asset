@@ -24,13 +24,13 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
-  radius: 1
+  radius: 1.5
   hitboxOffset: {x: 0, y: 1, z: 0}
   hitTiming: 0.1
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 5
-  knockbackForce: 3
+  knockbackForce: 4
   isCounter: 0
   recoveryDuration: 0.25
   cancelStartTime: 0.3
@@ -41,7 +41,7 @@ MonoBehaviour:
   isChainPos: 0
   hitStopDuration: 0.9
   hitStopTimeScale: 0.8
-  knockbackDirection: {x: 0, y: 1, z: 1}
+  knockbackDirection: {x: 1, y: 1, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
