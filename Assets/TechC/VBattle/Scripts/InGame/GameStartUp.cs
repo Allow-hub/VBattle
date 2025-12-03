@@ -23,7 +23,7 @@ namespace TechC.VBattle.InGame
             charaAttackFactory.Init();
             effectFactory.Init();
             attackVisualizer.Init();
-            commentDisplay.InitializeSingleton();
+            commentDisplay.Init();
         }
     }
 }
