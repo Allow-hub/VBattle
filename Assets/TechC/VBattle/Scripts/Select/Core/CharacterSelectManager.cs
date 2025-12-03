@@ -9,15 +9,12 @@ namespace TechC.VBattle.Select.Core
     /// </summary>
     public class CharacterSelectManager : Singleton<CharacterSelectManager>
     {
-        private const float INITIALIZE_DELAY = 0.5f;
-
         protected override bool UseDontDestroyOnLoad => false;
 
         public override void Init()
         {
             base.Init();
-
-            _ = DelayUtility.StartDelayedActionAsync(INITIALIZE_DELAY, InitializeSelectSystem);
+            InitializeSelectSystem();
         }
 
         /// <summary>
