@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charaName: 0
   attackName: NormalWeakAttack_1
-  attackPrefab: {fileID: 0}
-  prefabOffset: {x: 0, y: 0, z: 0}
-  prefabRotation: {x: 0, y: 0, z: 0}
+  attackPrefab: {fileID: 7930082209967865745, guid: d2b6121c45f1a854f86daa7bc4c5104f,
+    type: 3}
+  prefabOffset: {x: 1, y: 2, z: 0}
+  prefabRotation: {x: 0, y: -90, z: 0}
   animationSpeed: 2.5
   attackDuration: 0.5
   hitDetectionMode: 1

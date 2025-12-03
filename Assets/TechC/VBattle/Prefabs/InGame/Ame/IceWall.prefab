@@ -122,7 +122,6 @@ GameObject:
   - component: {fileID: 7200790065969586540}
   - component: {fileID: -6650507377659744894}
   - component: {fileID: 7389394034874562337}
-  - component: {fileID: 4130349948823534867}
   m_Layer: 10
   m_Name: IceWall
   m_TagString: Untagged
@@ -193,31 +192,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 2, y: 4, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4130349948823534867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7050212149494774861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d7ad11a5f7cfd469f2f19aeb17b38f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  behaviours:
-  - rid: 7471900165207490561
-  - rid: 7471900165207490560
-  references:
-    version: 2
-    RefIds:
-    - rid: 7471900165207490560
-      type: {class: AttackDamageDetector, ns: TechC.Player.Attack, asm: Assembly-CSharp}
-      data:
-        attackData: {fileID: 11400000, guid: 48926b1474b7a414cb0b69b666761e83, type: 2}
-        col: {fileID: 7389394034874562337}
-    - rid: 7471900165207490561
-      type: {class: AttackLifeTime, ns: TechC.Player.Attack, asm: Assembly-CSharp}
-      data:
-        lifeTime: 2
+  m_Center: {x: 0, y: 2, z: 0}
