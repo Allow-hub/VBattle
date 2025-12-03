@@ -19,7 +19,7 @@ MonoBehaviour:
   prefabOffset: {x: 0, y: 0.5, z: 0}
   prefabRotation: {x: 0, y: -90, z: 0}
   animationSpeed: 1.4
-  attackDuration: 0.6
+  attackDuration: 0.5
   hitDetectionMode: 2
   targetLayers:
     serializedVersion: 2
@@ -34,7 +34,7 @@ MonoBehaviour:
   isCounter: 0
   recoveryDuration: 0.25
   cancelStartTime: 0.5
-  cancelEndTime: 0.6
+  cancelEndTime: 0.5
   hitStunDuration: 0.25
   nextChain: {fileID: 0}
   canChain: 0

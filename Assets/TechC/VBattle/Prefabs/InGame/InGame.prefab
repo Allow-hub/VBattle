@@ -124,7 +124,7 @@ MonoBehaviour:
     prefab: {fileID: 2289341869409332591, guid: 767a4079ac0c4dc4fa4d0d405ffb1340,
       type: 3}
     parent: {fileID: 7400195789338504115}
-    initialSize: 0
+    initialSize: 5
   - name: Ame_IceRose
     prefab: {fileID: 4058644630426437312, guid: 207e38cfedc654b4c9ffb1df098100cb,
       type: 3}
@@ -149,12 +149,22 @@ MonoBehaviour:
     prefab: {fileID: 6231325556846580197, guid: b5177424dcc76cd419a85dd1f143a7b4,
       type: 3}
     parent: {fileID: 2706469545101483545}
-    initialSize: 0
+    initialSize: 5
   - name: Ame_Air
     prefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
       type: 3}
     parent: {fileID: 730895178116788481}
     initialSize: 0
+  - name: Ame_BladeStorm
+    prefab: {fileID: 8908877454680378044, guid: df9a3b5c1a79a7b4eb134f3975f331fe,
+      type: 3}
+    parent: {fileID: 1213936482021178550}
+    initialSize: 5
+  - name: Ame_IceWall
+    prefab: {fileID: 7050212149494774861, guid: de5f91acb2e93ef4bb9d6b10077131e1,
+      type: 3}
+    parent: {fileID: 3712460111668028359}
+    initialSize: 5
   autoExpand: 1
   expandSize: 5
 --- !u!114 &8042099456699637893
@@ -170,6 +180,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPool: {fileID: 2123120922309505320}
+--- !u!1 &1213936482021178550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2293874262062991376}
+  m_Layer: 0
+  m_Name: Ame_BladeStorm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &2293874262062991376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213936482021178550}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5544606765567526978}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1532814840011775981
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +773,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4880679695495569093}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3712460111668028359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7130664932593720383}
+  m_Layer: 0
+  m_Name: Ame_IceWall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &7130664932593720383
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712460111668028359}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5544606765567526978}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3978014935182374707
 GameObject:
@@ -2131,6 +2203,8 @@ Transform:
   - {fileID: 476562051063574499}
   - {fileID: 6442872107780652722}
   - {fileID: 6322920330446491361}
+  - {fileID: 2293874262062991376}
+  - {fileID: 7130664932593720383}
   m_Father: {fileID: 5182385105509535813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7777035410166910222
