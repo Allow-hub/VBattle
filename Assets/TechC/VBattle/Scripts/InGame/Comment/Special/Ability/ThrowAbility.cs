@@ -23,7 +23,7 @@ namespace TechC.CommentSystem
         {
             if (CommentDisplay.I.IsCommentFrozen) return;
 
-            var characterController = collider.transform.root.GetComponent<Player.CharacterController>();
+            var characterController = collider.transform.root.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController == null) return;
             if (characterController.HoldItem == null) return;
 
@@ -34,7 +34,7 @@ namespace TechC.CommentSystem
         /// <summary>
         /// 投げるイベントを登録する
         /// </summary>
-        private void RegisterThrowEvent(Player.CharacterController characterController)
+        private void RegisterThrowEvent(TechC.VBattle.InGame.Character.CharacterController characterController)
         {
             characterController.RegisterCommentEvent(() =>
             {
@@ -55,7 +55,7 @@ namespace TechC.CommentSystem
             commentObj.transform.SetParent(null);
             rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
-            var characterController = character.GetComponent<Player.CharacterController>();
+            var characterController = character.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController == null) return;
             characterController.SetHoldItem(null);
 

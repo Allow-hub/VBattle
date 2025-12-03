@@ -1,4 +1,6 @@
+using TechC.VBattle.Systems;
 using UnityEngine;
+using TechC.VBattle.InGame.Character;
 
 namespace TechC.CommentSystem
 {
@@ -15,7 +17,7 @@ namespace TechC.CommentSystem
 
         public void OnTriggerEnter(Collider collider)
         {
-            var characterController = collider.GetComponentInParent<Player.CharacterController>();
+            var characterController = collider.GetComponentInParent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController.HoldItem != null) return;
 
             GameObject obj = EffectFactory.I.GetEffectObj(

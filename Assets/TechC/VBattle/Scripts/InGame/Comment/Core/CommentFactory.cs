@@ -1,4 +1,6 @@
 using UnityEngine;
+using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Systems;
 
 namespace TechC.CommentSystem
 {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame;
 using Cysharp.Threading.Tasks;
 
 namespace TechC.CommentSystem
@@ -55,7 +56,7 @@ namespace TechC.CommentSystem
         public override void Init()
         {
             base.Init();
-            isPausedFunc = () => BattleJudge.I.IsPaused;
+            isPausedFunc = () => InGameManager.I.IsPaused;
             commentSpawner.Init();
             commentMover.Init();
             commentMaterialApplier.Init();
@@ -133,7 +134,7 @@ namespace TechC.CommentSystem
                         IsCommentFrozen = false;
                         RestoreOriginalMaterials();
                     },
-                    () => BattleJudge.I.IsPaused);
+                    () => InGameManager.I.IsPaused);
             }
         }
 

@@ -23,16 +23,9 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Apply(GameObject target)
         {
-            Player.CharacterController characterController = target.GetComponent<Player.CharacterController>();
+            TechC.VBattle.InGame.Character.CharacterController characterController = target.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController != null)
-            {
-                // Debug.Log($"<color=orange>[Apply前]</color>攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-                // public float GetCurrentAttackMultiplier() => GetMultipiler(BuffType.Attack); これをcharacterControllerに書く
-
                 characterController.AddMultiplier(BuffType.Attack, id, attackMultiplier);
-
-                // Debug.Log($"<color=orange>[Apply後]</color>:攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-            }
         }
 
         /// <summary>
@@ -41,14 +34,9 @@ namespace TechC.CommentSystem
         /// <param name="target"></param>
         public override void Remove(GameObject target)
         {
-            Player.CharacterController characterController = target.GetComponent<Player.CharacterController>();
+            TechC.VBattle.InGame.Character.CharacterController characterController = target.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController != null)
-            {
-                // Debug.Log($"<color=blue>[Remove後]</color>:攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-
                 characterController.RemoveMultiplier(BuffType.Attack, id, attackMultiplier);
-                // Debug.Log($"<color=blue>[Remove後]</color>:攻撃の倍率は{characterController.GetCurrentAttackMultiplier()}");
-            }
         }
     }
 }

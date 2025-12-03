@@ -22,6 +22,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
+        [SerializeField] private Transform handPos;
 
         // ===== 公開プロパティ =====
         public int PlayerIndex { get; private set; }
@@ -61,8 +62,7 @@ namespace TechC.VBattle.InGame.Character
         public GameObject HoldItem { get; private set; }
         private System.Action commentEventAction;
 
-        // ===== バフ倍率管理 =====
-        private Dictionary<BuffType, Dictionary<int, float>> buffMultipliers = new Dictionary<BuffType, Dictionary<int, float>>();
+        public Transform HandPos => handPos;
 
         // ===== ジャンプ関連 =====
         private int currentJumpCount = 0;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using TechC.VBattle.Systems;
 
 namespace TechC.CommentSystem
 {
@@ -47,21 +48,18 @@ namespace TechC.CommentSystem
                 }
 
 
-                var controller = other.transform.parent.GetComponent<Player.CharacterController>();
-                int id = controller.PlayerID;
+                var controller = other.transform.parent.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
+                int id = controller.PlayerIndex;
 
                 float effectTime = buff.remainingTime; /*バフのエフェクトの継続時間にバフの効果の時間を代入 */
 
-                /* バフの種類ごとに適用するエフェクトを変える */
                 switch (buffType)
                 {
                     case BuffType.Speed:
                         EffectFactory.I.PlayEffect("SpeedComment", id, Quaternion.identity, effectTime);
-                        // Debug.Log("SpeedBuffが適用");
                         break;
                     case BuffType.Attack:
                         EffectFactory.I.PlayEffect("AttackComment", id, Quaternion.identity, effectTime);
-                        // Debug.Log("AttackBuffが適用");
 
                         break;
                     default:

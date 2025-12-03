@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame;
 using UnityEngine;
 
 namespace TechC.CommentSystem
@@ -21,7 +23,7 @@ namespace TechC.CommentSystem
         /// </summary>
         public void Init()
         {
-            isPausedFunc = () => BattleJudge.I.IsPaused;
+            isPausedFunc = () => InGameManager.I.IsPaused;
             despawnPosX = topLeftDespawn.transform.position.x;
         }
 
@@ -30,12 +32,11 @@ namespace TechC.CommentSystem
         /// </summary>
         public void StartMoving(Transform trans, List<GameObject> chars, SpecialCommentTrigger specialCommentTrigger, Material originalMaterial)
         {
-            DelayUtility.StartRepeatedActionWhileWithPause(
-                CommentDisplay.I,
+            DelayUtility.StartRepeatedActionWhileWithPauseAsync(
                 () => trans.gameObject.activeInHierarchy && trans.position.x > despawnPosX,
                 Time.fixedDeltaTime,
-                isPausedFunc,
-                () => MoveCommentFrame(trans, chars, specialCommentTrigger, originalMaterial)
+                async () => MoveCommentFrame(trans, chars, specialCommentTrigger, originalMaterial),
+                isPausedFunc
             );
         }
 
@@ -68,14 +69,15 @@ namespace TechC.CommentSystem
                 if (obj != null && obj.activeInHierarchy)
                 {
                     obj.SetActive(false);
-                    CommentFactory.I.ReturnChar(obj);
+                    // ReturnCharに相当する処理を実装する必要があります
+                    UnityEngine.Object.Destroy(obj);
                 }
             }
 
             if (comment.activeInHierarchy)
             {
                 comment.SetActive(false);
-                CommentFactory.I.ReturnComment(comment);
+                CommentDisplay.I.OnCommentReturned(comment);
             }
         }
     }

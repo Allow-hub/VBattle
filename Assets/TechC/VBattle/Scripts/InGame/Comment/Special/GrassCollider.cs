@@ -1,3 +1,7 @@
+using TechC.VBattle.Audio;
+using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
+using TechC.VBattle.Systems;
 using UnityEngine;
 
 namespace TechC.CommentSystem
@@ -18,7 +22,7 @@ namespace TechC.CommentSystem
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
-        public void OnTriggerEnter(Collider other)
+        public async void OnTriggerEnter(Collider other)
         {
             string layerName = LayerMask.LayerToName(other.gameObject.layer);
             if (layerName == "Ground" || layerName == "Wall")
@@ -50,7 +54,7 @@ namespace TechC.CommentSystem
                 if (!isReturning)
                 {
                     isReturning = true;
-                    DelayUtility.StartDelayedAction(this, returnDelay, () =>
+                    await DelayUtility.StartDelayedActionAsync(returnDelay, () =>
                     {
                         EffectFactory.I.ReturnEffect(gameObject);
                         isReturning = false;
