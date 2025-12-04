@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: KoorinoAme
   m_EditorClassIdentifier: 
   CharacterName: 0
+  CharaPrefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
+    type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8
   JumpPower: 6
