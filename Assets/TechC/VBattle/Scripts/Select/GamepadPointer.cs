@@ -37,9 +37,8 @@ namespace TechC.VBattle.Select
         {
             StopAllCoroutines();
             foreach (var w in nativeWindows)
-            {
                 WindowFactory.I.ReturnWindow(w.Value);
-            }
+
             currentListener?.Dispose();
             currentListener = null;
 
@@ -142,9 +141,7 @@ namespace TechC.VBattle.Select
             EventSystem.current.RaycastAll(pointerData, results);
 
             foreach (var result in results)
-            {
                 ExecuteEvents.Execute(result.gameObject, pointerData, ExecuteEvents.pointerClickHandler);
-            }
         }
 
         private IEnumerator WaitForNextDevice()
@@ -163,9 +160,7 @@ namespace TechC.VBattle.Select
                 }
 
                 if (nativeWindows.Count >= pointerSprite.Count)
-                {
                     return;
-                }
 
                 if (nativeWindows.ContainsKey(device))
                 {
