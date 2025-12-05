@@ -40,7 +40,7 @@ namespace TechC.VBattle.Core.Managers
 
         public void SetupPlayer(int playerIndex, PlayerSetupData data)
         {
-            if (playerIndex == 0) Player_1Setup = data;
+            if (playerIndex == 1) Player_1Setup = data;
             else Player_2Setup = data;
         }
     }

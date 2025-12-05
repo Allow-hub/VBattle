@@ -356,10 +356,8 @@ MonoBehaviour:
   selectPickAnim_2p: {fileID: 1728903014}
   p1DisplayImage: {fileID: 746015261}
   p2DisplayImage: {fileID: 1819472878}
-  npcAmePrefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
-    type: 3}
-  npcTeramiPrefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
-    type: 3}
+  npcAmeData: {fileID: 11400000, guid: 66d4ea968f6b41845a4ec5201d11310a, type: 2}
+  npcTeramiData: {fileID: 11400000, guid: 91b5a04615b5f4c499d1b9a04648deed, type: 2}
 --- !u!1 &480155902 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7079368333751177568, guid: f0d2f52e1a5c3e141aa4c578a9abbdf0,
@@ -477,6 +475,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2849010042783789141, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
+      propertyPath: pickCharaData
+      value: 
+      objectReference: {fileID: 11400000, guid: be491b5c6ce52f648b023c6b378bd04e,
+        type: 2}
+    - target: {fileID: 2849010042783789141, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
       propertyPath: pickCharaPrefab
       value: 
       objectReference: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
@@ -571,6 +575,12 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6030587290021251706, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: pickCharaData
+      value: 
+      objectReference: {fileID: 11400000, guid: ced6e05b69db1ca49817e13e786da4fa,
+        type: 2}
     - target: {fileID: 6030587290021251706, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       propertyPath: pickCharaPrefab

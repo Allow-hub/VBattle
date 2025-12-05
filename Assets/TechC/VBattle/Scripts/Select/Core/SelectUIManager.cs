@@ -1,6 +1,8 @@
+using TechC.VBattle.Audio;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame.Character;
 using TechC.VBattle.Select.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +18,7 @@ namespace TechC.VBattle.Select.Core
         public struct CharacterPick
         {
             public int playerId;
-            public GameObject characterObject;
+            public CharacterData characterData;
             public InputDevice inputDevice;
         }
 
@@ -33,8 +35,8 @@ namespace TechC.VBattle.Select.Core
         [SerializeField] private SelectPickAnim selectPickAnim_2p;
         [SerializeField] private Image p1DisplayImage;
         [SerializeField] private Image p2DisplayImage;
-        [SerializeField] private GameObject npcAmePrefab;
-        [SerializeField] private GameObject npcTeramiPrefab;
+        [SerializeField] private CharacterData npcAmeData;
+        [SerializeField] private CharacterData npcTeramiData;
 
         // ==============================
         // 公開プロパティ / コールバック
@@ -70,12 +72,12 @@ namespace TechC.VBattle.Select.Core
         /// <param name="inputDevice">入力が加えられたデバイス</param>
         /// <param name="pickChara">ピックされたキャラ</param>
         /// <returns>1->1p,2->2p,0->無効なデバイス</returns>
-        public int SetCharacterPick(InputDevice inputDevice, GameObject pickChara)
+        public int SetCharacterPick(InputDevice inputDevice, CharacterData pickChara)
         {
             // --- 1Pがこのデバイスを持っている場合
             if (iconController_1p.GetCurrentDevice() == inputDevice)
             {
-                currentPicks[0].characterObject = pickChara;
+                currentPicks[0].characterData = pickChara;
                 currentPicks[0].inputDevice = inputDevice;
                 return 1;
             }
@@ -83,7 +85,7 @@ namespace TechC.VBattle.Select.Core
             // --- 2Pがこのデバイスを持っている場合
             if (iconController_2p.GetCurrentDevice() == inputDevice)
             {
-                currentPicks[1].characterObject = pickChara;
+                currentPicks[1].characterData = pickChara;
                 currentPicks[1].inputDevice = inputDevice;
                 return 2;
             }
@@ -95,11 +97,11 @@ namespace TechC.VBattle.Select.Core
                 if (CheckPicked(1))
                 {
                     if (pickChara.name.Contains("Ame"))
-                        currentPicks[1].characterObject = npcAmePrefab;
+                        currentPicks[1].characterData = npcAmeData;
                     else if (pickChara.name.Contains("Terami"))
-                        currentPicks[1].characterObject = npcTeramiPrefab;
+                        currentPicks[1].characterData = npcTeramiData;
                     else
-                        currentPicks[1].characterObject = pickChara;
+                        currentPicks[1].characterData = pickChara;
 
                     currentPicks[1].inputDevice = null;
                     return 2;
@@ -132,7 +134,7 @@ namespace TechC.VBattle.Select.Core
 
         private void StartGame()
         {
-            // AudioManager.I.PlaySE(SEID.ButtonClick); // TODO：AudioManagerを入れたら解除する
+            // AudioManager.I.PlaySE(SEID.ButtonClick);
             OnStartGamePicked?.Invoke();
         }
 
@@ -141,8 +143,8 @@ namespace TechC.VBattle.Select.Core
             startObj.SetActive(false);
             hasPicked[0] = false;
             hasPicked[1] = false;
-            currentPicks[0].characterObject = null;
-            currentPicks[1].characterObject = null;
+            currentPicks[0].characterData = null;
+            currentPicks[1].characterData = null;
             iconController_1p.InitIcon();
             iconController_2p.InitIcon();
             selectPickAnim_1p.ResetAnim();

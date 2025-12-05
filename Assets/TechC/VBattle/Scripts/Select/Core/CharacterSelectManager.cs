@@ -25,8 +25,8 @@ namespace TechC.VBattle.Select.Core
         /// </summary>
         private void InitializeSelectSystem()
         {
-            GameDataBridge.I.SetupPlayer(0, null);
             GameDataBridge.I.SetupPlayer(1, null);
+            GameDataBridge.I.SetupPlayer(2, null);
 
             // イベント購読
             SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
@@ -48,9 +48,9 @@ namespace TechC.VBattle.Select.Core
                 PlayerIndex = 1,
                 DeviceName = picks[0].inputDevice,
                 IsNPC = picks[0].inputDevice == null,
-                SelectedCharacter = null // TODO: CharacterDataの適切な取得方法を実装
+                SelectedCharacter = picks[0].characterData // TODO: CharacterDataの適切な取得方法を実装
             };
-            GameDataBridge.I.SetupPlayer(0, player1Data);
+            GameDataBridge.I.SetupPlayer(1, player1Data);
 
             // Player 2 の設定
             var player2Data = new GameDataBridge.PlayerSetupData
@@ -58,9 +58,9 @@ namespace TechC.VBattle.Select.Core
                 PlayerIndex = 2,
                 DeviceName = picks[1].inputDevice,
                 IsNPC = picks[1].inputDevice == null,
-                SelectedCharacter = null // TODO: CharacterDataの適切な取得方法を実装
+                SelectedCharacter = picks[1].characterData // TODO: CharacterDataの適切な取得方法を実装
             };
-            GameDataBridge.I.SetupPlayer(1, player2Data);
+            GameDataBridge.I.SetupPlayer(2, player2Data);
 
             // シーン遷移
             SceneLoader.I.LoadBattleSceneAsync().Forget();

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Select.Core;
+using TechC.VBattle.InGame.Character;
 
 namespace TechC.VBattle.Select.UI
 {
@@ -27,7 +28,7 @@ namespace TechC.VBattle.Select.UI
 
         [SerializeField] private Sprite p1CharaSprite;       // このボタンで選べるキャラのサムネ
         [SerializeField] private Sprite p2CharaSprite;       // このボタンで選べるキャラのサムネ
-        [SerializeField] private GameObject pickCharaPrefab; // このボタンで選べるキャラ
+        [SerializeField] private CharacterData pickCharaData; // このボタンで選べるキャラ
 
         [Header("爆散用マテリアル")]
         [SerializeField] private Material explodeMaterial;
@@ -54,14 +55,14 @@ namespace TechC.VBattle.Select.UI
                 return;
             }
             
-            if (pickCharaPrefab == null)
+            if (pickCharaData == null)
             {
-                CustomLogger.Error("pickCharaPrefab is null in OnPointerEnter!");
+                CustomLogger.Error("pickCharaData is null in OnPointerEnter!");
                 return;
             }
             
             var (device, deviceName) = ResolveDevice(eventData);
-            int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
+            int id = SelectUIManager.I.SetCharacterPick(device, pickCharaData);
             ChangePickThumbnail(id);
         }
 
@@ -78,7 +79,7 @@ namespace TechC.VBattle.Select.UI
                 return;
             }
             
-            if (pickCharaPrefab == null)
+            if (pickCharaData == null)
             {
                 CustomLogger.Error("pickCharaPrefab is null in OnPointerClick!");
                 return;
@@ -88,7 +89,7 @@ namespace TechC.VBattle.Select.UI
 
             if (device != null)
             {
-                int id = SelectUIManager.I.SetCharacterPick(device, pickCharaPrefab);
+                int id = SelectUIManager.I.SetCharacterPick(device, pickCharaData);
                 DicidePick(id);
             }
         }
@@ -187,18 +188,12 @@ namespace TechC.VBattle.Select.UI
             float time = 0f;
             float duration = 1.2f;
             if (id == 1 && p1SelectPickAnim != null)
-            {
-                p1SelectPickAnim.PlayAnim(pickCharaPrefab);
-            }
+                p1SelectPickAnim.PlayAnim(pickCharaData.CharaPrefab);
             else if (id == 2 && p2SelectPickAnim != null)
-            {
-                p2SelectPickAnim.PlayAnim(pickCharaPrefab);
-            }
+                p2SelectPickAnim.PlayAnim(pickCharaData.CharaPrefab);
             
             if (SelectUIManager.I != null)
-            {
                 SelectUIManager.I.SetPicked(id, true);
-            }
 
             while (time < duration)
             {
