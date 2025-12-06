@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 133d51a2a1c84a4409b5ef5c95ca25d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 42008407ed8c6a04fa98a9b88c3592ea, type: 3}
   m_Name: TeramiSE
   m_EditorClassIdentifier: 
-  characterType: 2
+  characterType: 1
   seList:
   - seType: 0
     clip: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
     pitch: 1
     loop: 0
   - seType: 5
-    clip: {fileID: 8300000, guid: c6ba291537560ec4ca76c85f558b3582, type: 3}
+    clip: {fileID: 8300000, guid: faad9070e55aad2419c6415f4a1c98d3, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -137,81 +137,81 @@ MonoBehaviour:
   voiceList:
   - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 1
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 2
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 3
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 4
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 5
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 6
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 7
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 8
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 9
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 10
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 11
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 12
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 13
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 14
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 15
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 16
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 17
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 18
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-  - voiceType: 19
+    volume: 0
+    pitch: 0
+  - voiceType: 0
     clip: {fileID: 0}
-    volume: 1
-    pitch: 1
+    volume: 0
+    pitch: 0
