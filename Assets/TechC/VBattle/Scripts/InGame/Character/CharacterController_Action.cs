@@ -21,9 +21,7 @@ namespace TechC.VBattle.InGame.Character
                 float moveSpeed = isDashing ? characterData.DashMoveSpeed : characterData.MoveSpeed;
                 // 空中では制御係数を適用
                 if (!isGrounded)
-                {
                     moveSpeed *= characterData.AirControlMultiplier;
-                }
 
                 // 移動方向を計算
                 Vector3 moveDirection = new Vector3(direction.x, 0, 0).normalized;
@@ -71,12 +69,11 @@ namespace TechC.VBattle.InGame.Character
                 else
                     rb.AddForce(Vector3.up * characterData.DoubleJumpPower, ForceMode.Impulse);
 
-                if(stateMachine.CurrentState == GetState<AirState>())return;
+                if (stateMachine.CurrentState == GetState<AirState>()) return;
                 // 空中状態へ遷移
                 stateMachine.ChangeState(GetState<AirState>());
             }
         }
-
 
         /// <summary>
         /// 攻撃、SOから構築
@@ -131,7 +128,7 @@ namespace TechC.VBattle.InGame.Character
             // ターゲットが自分でない場合
             if (e.target != this) return;
 
-            TakeDamage(e.attackData, e.attacker.Transform.position,e.damage);
+            TakeDamage(e.attackData, e.attacker.Transform.position, e.damage);
         }
 
         /// <summary>
@@ -149,7 +146,7 @@ namespace TechC.VBattle.InGame.Character
         /// <summary>
         /// 個別パラメータでダメージを受ける。環境ダメージやアイテムなど簡易的な用途向け
         /// </summary>
-        public void TakeDamage(int damage,Vector3 attackerPosition ,Vector3 knockbackDirection, float knockbackForce, float stunDuration = 0.3f)
+        public void TakeDamage(int damage, Vector3 attackerPosition, Vector3 knockbackDirection, float knockbackForce, float stunDuration = 0.3f)
         {
             var damageState = GetState<DamageState>();
             CurrentHP -= damage;

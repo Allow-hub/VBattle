@@ -7,6 +7,8 @@ namespace TechC.VBattle.InGame.Character
     {
         [Tooltip("キャラクター名（内部識別用）")]
         public CharaName CharacterName;
+
+        public GameObject CharaPrefab;
         
         [Header("移動関連")]
         [Tooltip("通常の移動速度")]

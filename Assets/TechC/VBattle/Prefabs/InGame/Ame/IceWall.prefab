@@ -26,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4205830294896978508}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7200790065969586540}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!2083052967 &2896945430815236229
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 7200790065969586540}
   - component: {fileID: -6650507377659744894}
   - component: {fileID: 7389394034874562337}
-  - component: {fileID: 4130349948823534867}
+  - component: {fileID: 1120282508713958246}
   m_Layer: 10
   m_Name: IceWall
   m_TagString: Untagged
@@ -183,18 +183,18 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 44470
+    m_Bits: 1335
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 4, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4130349948823534867
+  m_Size: {x: 2, y: 5, z: 3}
+  m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!114 &1120282508713958246
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,21 +203,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7050212149494774861}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d7ad11a5f7cfd469f2f19aeb17b38f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4576b7ad142573f429ce864f88ed57ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   behaviours:
-  - rid: 7471900165207490561
-  - rid: 7471900165207490560
+  - rid: 3207819760628400133
+  - rid: 3207819760628400134
   references:
     version: 2
     RefIds:
-    - rid: 7471900165207490560
-      type: {class: AttackDamageDetector, ns: TechC.Player.Attack, asm: Assembly-CSharp}
-      data:
-        attackData: {fileID: 11400000, guid: 48926b1474b7a414cb0b69b666761e83, type: 2}
-        col: {fileID: 7389394034874562337}
-    - rid: 7471900165207490561
-      type: {class: AttackLifeTime, ns: TechC.Player.Attack, asm: Assembly-CSharp}
+    - rid: 3207819760628400133
+      type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         lifeTime: 2
+    - rid: 3207819760628400134
+      type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: a371408442116404ab55562de2b9d608, type: 2}
+        col: {fileID: 7389394034874562337}

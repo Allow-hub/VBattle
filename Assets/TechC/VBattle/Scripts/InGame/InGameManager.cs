@@ -1,3 +1,4 @@
+using System;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.InGame.Systems;
 using UnityEngine;
@@ -22,7 +23,9 @@ namespace TechC.VBattle.InGame
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
         private HitStopManager hitStopManager;//イベントを使用しているので保持しておく必要がある
-
+        private bool isPaused = false;          // ポーズ状態フラグ
+        public bool IsPaused => isPaused;       // 読み取り専用プロパティ
+        public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
 
         public override void Init()
@@ -42,7 +45,14 @@ namespace TechC.VBattle.InGame
                 battleJudge = new BattleJudge(p1,p2,BattleBus);
             }
             else
-                Debug.LogError($"まだDebug状態しか対応していません");
+            {
+                var p1 = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                var p2 = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab,p2Pos,Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+
+                p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                Debug.Log($"{GameDataBridge.I.Player_1Setup.PlayerIndex},{GameDataBridge.I.Player_2Setup.PlayerIndex}");
+            }
         }
 
         private void Update()

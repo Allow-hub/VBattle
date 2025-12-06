@@ -50,15 +50,21 @@ MonoBehaviour:
     displayName: Window
     color: {r: 0.9433962, g: 0.48504806, b: 0.546987, a: 1}
     enabledByDefault: 1
+  - categoryId: scene
+    displayName: Scene
+    color: {r: 1, g: 0.7164262, b: 0.5707547, a: 1}
+    enabledByDefault: 1
   defaultCategory:
     categoryId: default
     displayName: Default
     color: {r: 1, g: 1, b: 1, a: 1}
     enabledByDefault: 1
-  _enabledCategoryIds:
-  - window
+  _enabledCategoryIds: []
   _disabledCategoryIds:
   - icon
   - attack
+  - window
+  - command
   - state
   - event
+  - scene

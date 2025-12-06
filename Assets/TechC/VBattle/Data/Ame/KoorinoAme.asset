@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: KoorinoAme
   m_EditorClassIdentifier: 
   CharacterName: 0
+  CharaPrefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
+    type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8
   JumpPower: 6
   DoubleJumpPower: 7.5
-  AirControlMultiplier: 0.7
+  AirControlMultiplier: 1
   FastFallSpeed: 15
   MaxHP: 500
   GuardPower: 100

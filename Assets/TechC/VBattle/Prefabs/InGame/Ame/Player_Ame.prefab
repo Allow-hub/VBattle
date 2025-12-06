@@ -92,7 +92,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7177925502258237743}
@@ -127,11 +127,12 @@ MonoBehaviour:
   characterData: {fileID: 11400000, guid: be491b5c6ce52f648b023c6b378bd04e, type: 2}
   anim: {fileID: 7138977834368204243}
   attackSet: {fileID: 11400000, guid: 1a3f3f7efd9f16349b37ebf135d75577, type: 2}
-  groundCheckDistance: 0.07
+  groundCheckDistance: 0.1
   guardObj: {fileID: 1009183316038204525}
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  playerIndex: 0
   idleAnimSpeed: 1.1
 --- !u!54 &1628242938499199573
 Rigidbody:
@@ -141,7 +142,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2916867313761328699}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 1.2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -295,10 +296,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.2452414
+  m_Height: 1.8527745
   m_Direction: 1
-  m_Center: {x: 0, y: 0.97, z: 0}
+  m_Center: {x: 0, y: 0.8963875, z: -0.020687819}
 --- !u!1001 &217520268115137976
 PrefabInstance:
   m_ObjectHideFlags: 0
