@@ -5,7 +5,6 @@ using Windows.Win32;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.Core.Util;
 using Cysharp.Threading.Tasks;
-using UnityEngine.UI;
 
 namespace TechC.VBattle.Core.Managers
 {
@@ -17,7 +16,6 @@ namespace TechC.VBattle.Core.Managers
         [SerializeField] private Sprite image;
         private List<NativeWindow> normalWindows = new();
         private List<NativeWindow> colliderWindows = new();
-
         private Dictionary<NativeWindow, GameObject> windowColliders = new();
 
         private bool allreadyPopup = false;
@@ -29,27 +27,23 @@ namespace TechC.VBattle.Core.Managers
         public override void Init()
         {
             base.Init();
-            // DelayUtility.StartDelayedActionAsync(0.1f, () =>
-            // {
-            //     var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
-            //     WindowUtility.MoveWindow((HWND)w.Hwnd, 500, 500);
-            //     if(w is ImageWindow imageWindow)
-            //         imageWindow.SetImage(image.texture);
-                
-            // });
+            DelayUtility.StartDelayedActionAsync(0.1f, () =>
+            {
+                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Basic);
+                normalWindows.Add(w);
+                WindowUtility.ResizeWindow((HWND)w.Hwnd, 1200, 1200);
+                WindowUtility.MoveWindow((HWND)w.Hwnd, 100, 100);
+                // if (w is ImageWindow imageWindow)
+                //     imageWindow.SetTextureToBitmap(image.texture);
+            });
         }
 
         void Update()
         {
             foreach (var w in colliderWindows)
-            {
                 if (windowColliders.TryGetValue(w, out var colliderObj) && colliderObj != null)
-                {
                     UpdateColliderTransform(w, colliderObj);
-                }   
-            }
         }
-
 
         private void UpdateColliderTransform(NativeWindow window, GameObject colliderObj)
         {
@@ -81,7 +75,6 @@ namespace TechC.VBattle.Core.Managers
             Vector3 worldSize = GetWindowSizeInWorldUnits(nativeRect.Width, nativeRect.Height, Camera.main);
             colliderObj.transform.localScale = worldSize;
         }
-
 
         private Vector3 ClampToAllowedArea(Vector3 worldPos)
         {
@@ -125,7 +118,7 @@ namespace TechC.VBattle.Core.Managers
             Gizmos.DrawWireCube(new Vector3(areaCenter.x, areaCenter.y, -5.3f), new Vector3(areaSize.x, areaSize.y, 0.1f));
         }
 
-        public void PopupWindowWindow(WindowFactory.WindowType type, int maxSize = 500, float duration = 1f, Sprite tex = null)
+        public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float duration = 1f, Sprite tex = null)
         {
             // 画面サイズ取得
             var unityRect = GameViewUtils.ToWin32Rect(GameViewUtils.GetGameViewScreenRect());
@@ -134,7 +127,6 @@ namespace TechC.VBattle.Core.Managers
             int unityScreenWidth = unityRect.right - unityRect.left;
             int unityScreenHeight = unityRect.bottom - unityRect.top;
             int tileSize = unityScreenHeight / 6;
-
 
             // Windowで隙間なく覆うための分割数を計算
             var rnd = new System.Random();
@@ -200,8 +192,9 @@ namespace TechC.VBattle.Core.Managers
                 return UniTask.CompletedTask;
             });
         }
+
         public void ResetAllreasyPopup() => allreadyPopup = false;
-        
+
         /// <summary>
         /// すべてのウィンドウとコライダーをリリース・破棄する
         /// </summary>
@@ -209,19 +202,15 @@ namespace TechC.VBattle.Core.Managers
         {
             // 通常ウィンドウをリリース
             foreach (var window in normalWindows)
-            {
                 WindowFactory.I.ReturnWindow(window);
-            }
+
             normalWindows.Clear();
 
             // コライダーウィンドウをリリース
             foreach (var window in colliderWindows)
-            {
                 if (windowColliders.TryGetValue(window, out var obj))
-                {
                     WindowColliderFactory.I.ReturnWindowCollider(obj);
-                }
-            }
+            
             colliderWindows.Clear();
             windowColliders.Clear();
 
@@ -259,10 +248,8 @@ namespace TechC.VBattle.Core.Managers
         private int GetLayerFromMask(int mask)
         {
             for (int i = 0; i < 32; i++)
-            {
                 if ((mask & (1 << i)) != 0)
                     return i;
-            }
             Debug.LogWarning("No valid layer found in mask. Defaulting to 0.");
             return 0;
         }
@@ -300,14 +287,10 @@ namespace TechC.VBattle.Core.Managers
         public void ResetWindow(bool returnAllWindow, NativeWindow nativeWindow = null)
         {
             if (returnAllWindow)
-            {
                 foreach (var window in normalWindows)
                     WindowFactory.I.ReturnWindow(window);
-            }
             else
-            {
                 WindowFactory.I.ReturnWindow(nativeWindow);
-            }
         }
 
         protected override void OnRelease()

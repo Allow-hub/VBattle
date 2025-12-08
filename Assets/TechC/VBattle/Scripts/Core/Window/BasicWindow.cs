@@ -29,6 +29,7 @@ namespace TechC.VBattle.Core.Window
             base.SetRect();
             CustomLogger.Info($"[SetRect] hwnd: {Hwnd}, Width: {Width}, Height: {Height}", LOGTAG);
         }
+        
         public void ResizeWindow(int width, int height, int delay = 0)
         {
             base.ResizeWindow(width, height, delay);

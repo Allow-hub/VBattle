@@ -61,10 +61,8 @@ namespace TechC.VBattle.Core.Window
                         // GDIは上下反転なのでさらに反転
                         int gdiY = srcHeight - 1 - srcY;
                         if (orientation == ImageOrientation.FlipVertical)
-                        {
-                            // 反転済みなのでそのまま
-                            gdiY = srcY;
-                        }
+                            gdiY = srcY;// 反転済みなのでそのまま
+                        
                         var pixel = pixels[srcY * srcWidth + srcX];
                         int idx = (gdiY * srcWidth + x) * 4;
                         bmpData[idx] = pixel.b;
@@ -104,6 +102,7 @@ namespace TechC.VBattle.Core.Window
                 PInvoke.ReleaseDC(hwnd, hdc);
             }
         }
+        
         public static void SetLayeredTexture(HWND hwnd, Texture2D tex)
         {
             int texWidth = tex.width;

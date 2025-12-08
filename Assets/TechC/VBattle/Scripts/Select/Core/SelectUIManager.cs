@@ -93,6 +93,8 @@ namespace TechC.VBattle.Select.Core
             // --- 特別処理: 2PがNPCなら1Pのデバイスで2Pのキャラを選べる
             if (iconController_2p.GetCurrentDevice() == null)
             {
+                    Debug.Log("AA");
+
                 // 1Pがもうキャラを決定済みか確認
                 if (CheckPicked(1))
                 {

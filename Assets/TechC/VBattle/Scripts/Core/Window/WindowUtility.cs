@@ -312,6 +312,17 @@ namespace TechC.VBattle.Core.Window
         #endregion
 
         #region アニメーション用メソッド
+
+        /// <summary>
+        /// ウィンドウを目標位置にアニメーションで移動
+        /// </summary>
+        /// <param name="nativeWindow"></param>
+        /// <param name="targetX"></param>
+        /// <param name="targetY"></param>
+        /// <param name="moveSpeedPerFrame"></param>
+        /// <param name="intervalMs"></param>
+        /// <param name="texture"></param>
+        /// <returns></returns>
         public static async UniTask MoveWindowToTargetAsync(
             NativeWindow nativeWindow,
             int targetX,

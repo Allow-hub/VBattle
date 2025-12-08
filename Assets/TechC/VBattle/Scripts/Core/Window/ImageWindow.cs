@@ -27,7 +27,6 @@ namespace TechC.VBattle.Core.Window
             }
         }
 
-
         /// <summary>
         /// 引数を省略した場合このウィンドウのサイズを用いる
         /// </summary>
@@ -44,6 +43,7 @@ namespace TechC.VBattle.Core.Window
             h -= heightMargin; // ウィンドウの枠を考慮
             DrawWindowUtility.DrawTextureToWindow(Hwnd, image, w, h, ImageOrientation.FlipVertical);
         }
+
         /// <summary>
         /// テクスチャをリドローしない
         /// </summary>

@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
+using UnityEngine;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -60,6 +61,7 @@ namespace TechC.VBattle.Select.Core
                 IsNPC = picks[1].inputDevice == null,
                 SelectedCharacter = picks[1].characterData // TODO: CharacterDataの適切な取得方法を実装
             };
+            Debug.Log(player2Data.SelectedCharacter);
             GameDataBridge.I.SetupPlayer(2, player2Data);
 
             // シーン遷移

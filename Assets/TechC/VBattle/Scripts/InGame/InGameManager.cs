@@ -47,7 +47,7 @@ namespace TechC.VBattle.InGame
                 p2.GetComponent<PlayerInput>().enabled = false;
 
                 battleJudge = new BattleJudge(p1, p2, BattleBus);
-                ChangeState(InGameState.Battle);
+                ChangeState(InGameState.Start);
             }
             else
             {
@@ -139,13 +139,7 @@ namespace TechC.VBattle.InGame
             {
                 for (int i = countdownTimer; i > 0; i--)
                 {
-                    // ここに1秒ごとの処理を記述
-                    Debug.Log($"カウントダウン: {i}");
-                    // 例: UIの更新、サウンド再生など
-                    // BattleBus.Publish(new CountdownEvent(i));
-
-                    // 1秒待機
-                    await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                    await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);// 1秒待機
                 }
 
                 // カウントダウン終了後、Battleステートへ遷移

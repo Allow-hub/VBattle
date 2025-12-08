@@ -1,8 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
+using UnityEngine;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -141,7 +141,6 @@ namespace TechC.VBattle.Core.Window
                 fixed (char* cName = className)
                 fixed (char* titleName = title)
                 {
-
                     hwnd = PInvoke.CreateWindowEx(
                         (WINDOW_EX_STYLE)exStyle,
                         new PCWSTR(cName),
@@ -155,6 +154,7 @@ namespace TechC.VBattle.Core.Window
                     );
                 }
             }
+
             if (hwnd == HWND.Null)
                 CustomLogger.Error($"CreateWindowEx failed, error: {Marshal.GetLastWin32Error()}", LogTagUtil.TagWidnow);
             else
@@ -163,6 +163,14 @@ namespace TechC.VBattle.Core.Window
             return hwnd;
         }
 
+        /// <summary>
+        /// 基本ウィンドウプロシージャ
+        /// </summary>
+        /// <param name="hwnd">ウィンドウハンドル</param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         private static LRESULT BasicWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg)
@@ -195,7 +203,6 @@ namespace TechC.VBattle.Core.Window
                     // PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
                     // var text = "クラシック風ウィンドウ";
                     // PInvoke.TextOut(hdc, 10, 10, text, text.Length);
-
                     PInvoke.EndPaint(hwnd, ps);
                     return new LRESULT(0);
                 case PInvoke.WM_SIZE:

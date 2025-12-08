@@ -100,17 +100,11 @@ namespace TechC.VBattle.Select.UI
             {
                 var device = extended.device;
                 if (device is Mouse)
-                {
                     return (Keyboard.current, "Keyboard");
-                }
                 else if (device != null)
-                {
                     return (device, device.displayName);
-                }
                 else
-                {
                     return (null, "不明");
-                }
             }
             return (null, "旧InputSystem");
         }
