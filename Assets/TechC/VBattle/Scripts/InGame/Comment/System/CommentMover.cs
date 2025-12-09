@@ -13,8 +13,7 @@ namespace TechC.VBattle.InGame.Comment
     public class CommentMover
     {
         [Header("コメントを非表示にする場所")]
-        [SerializeField] private Transform topLeftDespawn;
-        [SerializeField] private Transform buttonLeftDespawn;
+        [SerializeField] private Transform LeftDespawnPos;
         private float despawnPosX;
 
         /// <summary>
@@ -22,7 +21,7 @@ namespace TechC.VBattle.InGame.Comment
         /// </summary>
         public void Init()
         {
-            despawnPosX = topLeftDespawn.transform.position.x;
+            despawnPosX = LeftDespawnPos.transform.position.x;
         }
 
         /// <summary>

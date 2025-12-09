@@ -22,8 +22,7 @@ namespace TechC.VBattle.InGame.Comment
         private float topRightSpawnPosY = 5.0f;
         private float bottomRightSpawnPosY = -5.0f;
         private float spawnPosX = 10.0f;
-
-        private const float PLAYER_TOP_OFFSET = -5.3f;
+        private float spawnPosZ = 0.0f;
         private bool isInitialized = false;
 
         // 最後に生成されたコメントのデータを保持
@@ -35,6 +34,7 @@ namespace TechC.VBattle.InGame.Comment
             topRightSpawnPosY = topRightSpawnPos.position.y;
             bottomRightSpawnPosY = bottomRightSpawnPos.position.y;
             spawnPosX = topRightSpawnPos.position.x;
+            spawnPosZ = topRightSpawnPos.position.z;
             isInitialized = true;
         }
 
@@ -59,7 +59,7 @@ namespace TechC.VBattle.InGame.Comment
 
             // 位置を設定
             float randomY = UnityEngine.Random.Range(bottomRightSpawnPosY, topRightSpawnPosY);
-            comment.transform.position = new Vector3(spawnPosX, randomY, PLAYER_TOP_OFFSET);
+            comment.transform.position = new Vector3(spawnPosX, randomY, spawnPosZ);
 
             // 最後に生成されたデータを保存
             lastCommentData = commentData;

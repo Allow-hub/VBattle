@@ -1,5 +1,6 @@
 using UnityEngine;
 using TechC.VBattle.Systems;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Comment
 {
@@ -40,18 +41,15 @@ namespace TechC.VBattle.InGame.Comment
 
                 if (buff != null)
                 {
-                    BuffManager buffManager = other.GetComponentInParent<BuffManager>();
+                    BuffManager buffManager = other.GetComponent<BuffManager>();
                     if (buffManager != null)
-                    {
                         buffManager.ApplyBuff(buff);
-                    }
                 }
 
-
-                var controller = other.transform.parent.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
+                var controller = other.transform.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
                 int id = controller.PlayerIndex;
 
-                float effectTime = buff.remainingTime; /*バフのエフェクトの継続時間にバフの効果の時間を代入 */
+                float effectTime = buff.remainingTime; // バフのエフェクトの継続時間にバフの効果の時間を代入
 
                 switch (buffType)
                 {
@@ -60,12 +58,9 @@ namespace TechC.VBattle.InGame.Comment
                         break;
                     case BuffType.Attack:
                         EffectFactory.I.PlayEffect("AttackComment", id, Quaternion.identity, effectTime);
-
                         break;
                     default:
-                        // Debug.LogWarning($"未対応のバフタイプ: {buffType}");
                         break;
-                        // ここでバフを追加可能
                 }
 
                 alreadyApplied = true;
