@@ -95,18 +95,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilities:
-  - rid: 2246200602243104768
-  - rid: 2246200602243104769
+  - rid: -2
   references:
     version: 2
     RefIds:
-    - rid: 2246200602243104768
-      type: {class: HoldAbility, ns: TechC.CommentSystem, asm: Assembly-CSharp}
-      data:
-        gameObject: {fileID: 5430594490214581435, guid: 0c9123c38a160af498190ece76658ec9,
-          type: 3}
-    - rid: 2246200602243104769
-      type: {class: ThrowAbility, ns: TechC.CommentSystem, asm: Assembly-CSharp}
-      data:
-        throwPower: 10
-        throwUpwardPower: {x: 0.5, y: 1}
+    - rid: -2
+      type: {class: , ns: , asm: }
