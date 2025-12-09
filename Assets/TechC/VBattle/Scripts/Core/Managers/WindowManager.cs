@@ -31,8 +31,10 @@ namespace TechC.VBattle.Core.Managers
             {
                 var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Basic);
                 normalWindows.Add(w);
-                WindowUtility.ResizeWindow((HWND)w.Hwnd, 1200, 1200);
-                WindowUtility.MoveWindow((HWND)w.Hwnd, 100, 100);
+                WindowUtility.ResizeWindow((HWND)w.Hwnd, 300, 300);
+                var editorRect = GameViewUtils.GetGameViewScreenRectInEditorSpace();
+                var win32Rect = GameViewUtils.ToWin32Rect(editorRect);
+                WindowUtility.MoveWindow((HWND)w.Hwnd, win32Rect.left, win32Rect.top);
                 // if (w is ImageWindow imageWindow)
                 //     imageWindow.SetTextureToBitmap(image.texture);
             });
@@ -45,6 +47,11 @@ namespace TechC.VBattle.Core.Managers
                     UpdateColliderTransform(w, colliderObj);
         }
 
+        /// <summary>
+        /// ウィンドウに対応するコライダーのTransformを更新する
+        /// </summary>
+        /// <param name="window">ウィンドウ</param>
+        /// <param name="colliderObj">コライダーオブジェクト</param>
         private void UpdateColliderTransform(NativeWindow window, GameObject colliderObj)
         {
             window.SetRect();
@@ -76,6 +83,11 @@ namespace TechC.VBattle.Core.Managers
             colliderObj.transform.localScale = worldSize;
         }
 
+        /// <summary>
+        /// 指定したワールド座標を許可されたエリア内にクランプ
+        /// </summary>
+        /// <param name="worldPos">ワールド座標</param>
+        /// <returns></returns>
         private Vector3 ClampToAllowedArea(Vector3 worldPos)
         {
             float halfWidth = areaSize.x * 0.5f;
@@ -87,6 +99,13 @@ namespace TechC.VBattle.Core.Managers
             return new Vector3(clampedX, clampedY, worldPos.z);
         }
 
+        /// <summary>
+        /// ウィンドウのピクセルサイズからワールド単位のサイズを取得
+        /// </summary>
+        /// <param name="pixelWidth"></param>
+        /// <param name="pixelHeight"></param>
+        /// <param name="camera"></param>
+        /// <returns></returns>
         private Vector3 GetWindowSizeInWorldUnits(float pixelWidth, float pixelHeight, Camera camera)
         {
             if (camera == null)
@@ -121,11 +140,12 @@ namespace TechC.VBattle.Core.Managers
         public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float duration = 1f, Sprite tex = null)
         {
             // 画面サイズ取得
-            var unityRect = GameViewUtils.ToWin32Rect(GameViewUtils.GetGameViewScreenRect());
-            int unityScreenX = unityRect.left;
-            int unityScreenY = unityRect.top;
-            int unityScreenWidth = unityRect.right - unityRect.left;
-            int unityScreenHeight = unityRect.bottom - unityRect.top;
+            var editorRect = GameViewUtils.GetGameViewScreenRectInEditorSpace();
+            var win32Rect = GameViewUtils.ToWin32Rect(editorRect);
+            int unityScreenX = win32Rect.left;
+            int unityScreenY = win32Rect.top;
+            int unityScreenWidth = win32Rect.right - win32Rect.left;
+            int unityScreenHeight = win32Rect.bottom - win32Rect.top;
             int tileSize = unityScreenHeight / 6;
 
             // Windowで隙間なく覆うための分割数を計算
@@ -210,7 +230,7 @@ namespace TechC.VBattle.Core.Managers
             foreach (var window in colliderWindows)
                 if (windowColliders.TryGetValue(window, out var obj))
                     WindowColliderFactory.I.ReturnWindowCollider(obj);
-            
+
             colliderWindows.Clear();
             windowColliders.Clear();
 

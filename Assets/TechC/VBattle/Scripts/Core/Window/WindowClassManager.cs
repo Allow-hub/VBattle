@@ -199,10 +199,10 @@ namespace TechC.VBattle.Core.Window
                     PInvoke.DeleteObject(hFrameBrush);
 
                     // テキスト描画
-                    // PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);     // TRANSPARENT
-                    // PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
-                    // var text = "クラシック風ウィンドウ";
-                    // PInvoke.TextOut(hdc, 10, 10, text, text.Length);
+                    PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);     // TRANSPARENT
+                    PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
+                    var text = "クラシック風ウィンドウ";
+                    PInvoke.TextOut(hdc, 10, 10, text, text.Length);
                     PInvoke.EndPaint(hwnd, ps);
                     return new LRESULT(0);
                 case PInvoke.WM_SIZE:
