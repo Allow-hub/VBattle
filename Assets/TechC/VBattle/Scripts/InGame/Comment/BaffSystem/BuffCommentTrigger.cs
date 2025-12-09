@@ -1,6 +1,5 @@
 using UnityEngine;
 using TechC.VBattle.Systems;
-using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Comment
 {

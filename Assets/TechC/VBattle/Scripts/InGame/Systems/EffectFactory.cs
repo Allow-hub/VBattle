@@ -73,25 +73,8 @@ namespace TechC.VBattle.Systems
         }
         
         public GameObject GetEffectObj(GameObject prefab) 
-        {
-            if (effectPool == null)
-            {
-                Debug.LogError("EffectFactory: effectPool is not assigned!");
-                return null;
-            }
-            
-            if (prefab == null)
-            {
-                Debug.LogError("EffectFactory: prefab is null!");
-                return null;
-            }
-            
-            GameObject result = effectPool.GetObject(prefab);
-            if (result == null)
-            {
-                Debug.LogWarning($"EffectFactory: Failed to get object from pool for prefab '{prefab.name}'. Make sure the prefab is registered in ObjectPool.");
-            }
-            
+        {  
+            GameObject result = effectPool.GetObject(prefab);    
             return result;
         }
         /// <summary>
