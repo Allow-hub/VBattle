@@ -29613,8 +29613,7 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[1].prefab
       value: 
-      objectReference: {fileID: 5998226615820575651, guid: 70f9bbca17414f84cbdf093514fe1e65,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[2].parent
@@ -29624,8 +29623,7 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[2].prefab
       value: 
-      objectReference: {fileID: 5998226615820575651, guid: 70f9bbca17414f84cbdf093514fe1e65,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[3].parent
@@ -29635,8 +29633,7 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[3].prefab
       value: 
-      objectReference: {fileID: 5998226615820575651, guid: 70f9bbca17414f84cbdf093514fe1e65,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[4].parent

@@ -131,7 +131,15 @@ namespace TechC.VBattle.InGame.Character
             // ターゲットが自分でない場合
             if (e.target != this) return;
 
-            TakeDamage(e.attackData, e.attacker.Transform.position, e.damage);
+            // AttackBuffの倍率を適用したダメージを計算
+            int buffAppliedDamage = e.damage;
+            if (e.attacker?.Owner != null)
+            {
+                float attackMultiplier = e.attacker.Owner.GetCurrentAttackMultiplier();
+                buffAppliedDamage = Mathf.RoundToInt(e.damage * attackMultiplier);
+            }
+
+            TakeDamage(e.attackData, e.attacker.Transform.position, buffAppliedDamage);
         }
 
         /// <summary>

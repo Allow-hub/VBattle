@@ -4,9 +4,11 @@
 
 - [x] モデルの移行
 - [x] スクリプトの移動
-- [ ] 参照エラーの修正
-- [ ] CommentPoolの設定
-- [ ] CommentSystemのPrefabの設定
+- [x] 参照エラーの修正
+- [x] CommentPoolの設定
+- [x] CommentSystemのPrefabの設定
+- [ ] EffectPool内にBuffなどのコメントのPrefabを移植してアタッチする
+- [ ] コメントの見やすさを修正（彩度を下げるなど）
 - [ ] リファクタリング
 
 ### その他やること
