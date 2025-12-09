@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6087454331358133089}
   - component: {fileID: 9013664039201927772}
   - component: {fileID: 7180426139814054024}
-  - component: {fileID: 6518046064594183107}
+  - component: {fileID: -3324177319017134063}
   m_Layer: 0
   m_Name: GrassComment
   m_TagString: Untagged
@@ -82,7 +82,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6518046064594183107
+--- !u!114 &-3324177319017134063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,9 +95,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilities:
-  - rid: -2
+  - rid: 3641600322251259904
+  - rid: 3641600322251259905
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 3641600322251259904
+      type: {class: HoldAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
+      data:
+        gameObject: {fileID: 5430594490214581435, guid: 0c9123c38a160af498190ece76658ec9,
+          type: 3}
+    - rid: 3641600322251259905
+      type: {class: ThrowAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
+      data:
+        throwPower: 10
+        throwUpwardPower: {x: 0.5, y: 1}

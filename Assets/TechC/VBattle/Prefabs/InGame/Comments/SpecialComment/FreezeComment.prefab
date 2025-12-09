@@ -95,10 +95,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilities:
-  - rid: 7307716687651405825
+  - rid: 3641600322251259906
   references:
     version: 2
     RefIds:
-    - rid: 7307716687651405825
-      type: {class: FreezeAbility, ns: TechC.CommentSystem, asm: Assembly-CSharp}
+    - rid: 3641600322251259906
+      type: {class: FreezeAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
       data: 

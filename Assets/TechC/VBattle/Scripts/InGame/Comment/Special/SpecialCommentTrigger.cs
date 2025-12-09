@@ -9,7 +9,8 @@ namespace TechC.VBattle.InGame.Comment
     public class SpecialCommentTrigger : MonoBehaviour
     {
         [SerializeReference]
-        public List<ICommentAbility> abilities = new();
+        [Tooltip("コメントが持つ特殊能力のリスト")]
+        public List<ICommentAbility> abilities = new List<ICommentAbility>();
 
         private void Awake()
         {
