@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 1628242938499199573}
   - component: {fileID: 56687697727940031}
   - component: {fileID: 16701765163562529}
+  - component: {fileID: -1060130164276711022}
   m_Layer: 7
   m_Name: Player_Ame
   m_TagString: Player
@@ -132,7 +133,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  handPos: {fileID: 0}
   playerIndex: 0
+  playerTag: Player
   idleAnimSpeed: 1.1
 --- !u!54 &1628242938499199573
 Rigidbody:
@@ -300,6 +303,18 @@ CapsuleCollider:
   m_Height: 1.8527745
   m_Direction: 1
   m_Center: {x: 0, y: 0.8963875, z: -0.020687819}
+--- !u!114 &-1060130164276711022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916867313761328699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a42e09dcf65ed7547ac3bb9829f46fd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &217520268115137976
 PrefabInstance:
   m_ObjectHideFlags: 0
