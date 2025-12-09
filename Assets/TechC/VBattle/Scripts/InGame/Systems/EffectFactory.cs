@@ -49,8 +49,51 @@ namespace TechC.VBattle.Systems
             // }
         }
 
-        public GameObject GetEffectObj(GameObject prefab, Vector3 position, Quaternion rotation) => effectPool.GetObject(prefab, position, rotation);
-        public GameObject GetEffectObj(GameObject prefab) => effectPool.GetObject(prefab);
+        public GameObject GetEffectObj(GameObject prefab, Vector3 position, Quaternion rotation)
+        {
+            if (effectPool == null)
+            {
+                Debug.LogError("EffectFactory: effectPool is not assigned!");
+                return null;
+            }
+            
+            if (prefab == null)
+            {
+                Debug.LogError("EffectFactory: prefab is null!");
+                return null;
+            }
+            
+            GameObject result = effectPool.GetObject(prefab, position, rotation);
+            if (result == null)
+            {
+                Debug.LogWarning($"EffectFactory: Failed to get object from pool for prefab '{prefab.name}'. Make sure the prefab is registered in ObjectPool.");
+            }
+            
+            return result;
+        }
+        
+        public GameObject GetEffectObj(GameObject prefab) 
+        {
+            if (effectPool == null)
+            {
+                Debug.LogError("EffectFactory: effectPool is not assigned!");
+                return null;
+            }
+            
+            if (prefab == null)
+            {
+                Debug.LogError("EffectFactory: prefab is null!");
+                return null;
+            }
+            
+            GameObject result = effectPool.GetObject(prefab);
+            if (result == null)
+            {
+                Debug.LogWarning($"EffectFactory: Failed to get object from pool for prefab '{prefab.name}'. Make sure the prefab is registered in ObjectPool.");
+            }
+            
+            return result;
+        }
         /// <summary>
         /// 指定時間後にエフェクトをプールに返却する
         /// </summary>

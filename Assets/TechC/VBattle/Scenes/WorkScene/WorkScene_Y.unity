@@ -122,6 +122,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &204071514 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7812680236923317830, guid: de551b8e8565c92489c9ebc3cb126d65,
+    type: 3}
+  m_PrefabInstance: {fileID: 1593272302}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &548463452
 GameObject:
   m_ObjectHideFlags: 0
@@ -29623,7 +29629,7 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[1].prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 204071514}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[2].parent
@@ -29633,7 +29639,7 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[2].prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 204071514}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[3].parent
@@ -29643,7 +29649,8 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[3].prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5430594490214581435, guid: 0c9123c38a160af498190ece76658ec9,
+        type: 3}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[4].parent

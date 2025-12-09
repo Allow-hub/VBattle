@@ -49,7 +49,7 @@ namespace TechC.VBattle.InGame.Comment
                 if (rb != null) rb.constraints = RigidbodyConstraints.FreezeAll;
                 if (grassChar != null) grassChar.SetActive(false);
                 if (grassEffect != null) grassEffect.SetActive(true);
-                AudioManager.I.PlaySE(SEID.Grass);
+                // AudioManager.I.PlaySE(SEID.Grass); // TODO: 音を入れ終わったらコメントアウトを外す
 
                 if (!isReturning)
                 {
