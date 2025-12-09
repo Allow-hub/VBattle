@@ -4,6 +4,7 @@ using UnityEngine;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Comment
 {
@@ -26,8 +27,7 @@ namespace TechC.VBattle.InGame.Comment
         public bool IsCommentFrozen { get; private set; } = false;
 
         private bool isSpawning = false;
-        private Func<bool> isPausedFunc;
-
+        
         private List<CommentInfo> activeComments = new List<CommentInfo>();
 
         /// <summary>
@@ -55,9 +55,8 @@ namespace TechC.VBattle.InGame.Comment
         {
             base.Init();
 
-            if (InGameManager.I == null) Debug.LogError("InGameManager.Iがnull");
+            if(InGameManager.I == null) CustomLogger.Info("InGameManager.Iがnull");
 
-            isPausedFunc = () => InGameManager.I.IsPaused;
             commentSpawner.Init();
             commentMover.Init();
             commentMaterialApplier.Init();
@@ -91,7 +90,7 @@ namespace TechC.VBattle.InGame.Comment
                     ApplyMaterialToSpawnedComment(spawnedComment);
                     await UniTask.Yield();
                 },
-                isPausedFunc
+                InGameManager.I.GetPauseStateFunc
             );
         }
 

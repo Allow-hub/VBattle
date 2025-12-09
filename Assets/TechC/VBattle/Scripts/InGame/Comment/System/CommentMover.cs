@@ -16,14 +16,12 @@ namespace TechC.VBattle.InGame.Comment
         [SerializeField] private Transform topLeftDespawn;
         [SerializeField] private Transform buttonLeftDespawn;
         private float despawnPosX;
-        private Func<bool> isPausedFunc;
 
         /// <summary>
         /// 初期化
         /// </summary>
         public void Init()
         {
-            isPausedFunc = () => InGameManager.I.IsPaused;
             despawnPosX = topLeftDespawn.transform.position.x;
         }
 
@@ -36,7 +34,7 @@ namespace TechC.VBattle.InGame.Comment
                 () => trans.gameObject.activeInHierarchy && trans.position.x > despawnPosX,
                 Time.fixedDeltaTime,
                 async () => MoveCommentFrame(trans, chars, specialCommentTrigger, originalMaterial),
-                isPausedFunc
+                InGameManager.I.GetPauseStateFunc
             );
         }
 
