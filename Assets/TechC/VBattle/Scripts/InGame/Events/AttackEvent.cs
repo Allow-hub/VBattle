@@ -3,19 +3,22 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Events
 {
+    /// <summary>
+    /// 攻撃判定モード
+    /// </summary>
     public enum HitDetectionMode
     {
-        UseSelf,
-        OverlapSphere,
+        UseSelf,//自分自身のコライダーに判定がある
+        OverlapSphere,//指定位置を中心とした球形範囲に判定がある
         None
     }
 
     /// <summary>
     /// 攻撃リクエスト
     /// </summary>
-    public struct AttackRequestEvent : IBattleEvent
+    public class AttackRequestEvent : IBattleEvent
     {
-        public IAttacker attacker;                // 攻撃者（インターフェース化）
+        public IAttacker attacker;                // 攻撃者
         public AttackData attackData;             // 使用された攻撃データ
         public Vector3 hitPosition;               // 攻撃判定位置
         public Collider[] hitTargets;             // 攻撃判定にヒットしたコライダー群
@@ -24,9 +27,9 @@ namespace TechC.VBattle.InGame.Events
     /// <summary>
     /// 攻撃判定結果
     /// </summary>
-    public struct AttackResultEvent : IBattleEvent
+    public class AttackResultEvent : IBattleEvent
     {
-        public IAttacker attacker;                // 攻撃者（インターフェース化）
+        public IAttacker attacker;                // 攻撃者
         public Character.CharacterController target;        // 被攻撃者（現状はCharacterControllerのみ）
         public AttackData attackData;             // 使用された攻撃データ
         public bool isHit;                        // ヒットしたか

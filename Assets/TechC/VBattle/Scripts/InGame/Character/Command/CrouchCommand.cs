@@ -3,7 +3,7 @@ namespace TechC.VBattle.InGame.Character
     /// <summary>
     /// しゃがみコマンド
     /// </summary>
-    public struct CrouchCommand : ICommand
+    public readonly struct CrouchCommand : ICommand
     {
         public CommandType Type => CommandType.Crouch;
 
