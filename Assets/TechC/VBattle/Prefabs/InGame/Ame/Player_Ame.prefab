@@ -133,7 +133,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
-  handPos: {fileID: 0}
+  handPos: {fileID: 7553835414419270921}
   playerIndex: 0
   playerTag: Player
   idleAnimSpeed: 1.1
