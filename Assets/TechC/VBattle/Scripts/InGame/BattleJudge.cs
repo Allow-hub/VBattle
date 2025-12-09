@@ -1,6 +1,8 @@
 using TechC.VBattle.InGame.Events;
 using TechC.VBattle.InGame.Character;
 using System.Linq;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.InGame.Systems
 {
@@ -120,6 +122,8 @@ namespace TechC.VBattle.InGame.Systems
                 isGuard = isGuard,
                 damage = damage
             };
+
+            CustomLogger.Info($"攻撃判定の通知：{resultEvent.isHit}", LogTagUtil.TagEvent);
             eventBus.Publish(resultEvent);
         }
 

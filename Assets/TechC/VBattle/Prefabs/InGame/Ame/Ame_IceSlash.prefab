@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4699854023912662562}
+  - component: {fileID: 6796319988241772342}
   m_Layer: 10
   m_Name: Ame_IceSlash
   m_TagString: Untagged
@@ -32,6 +33,27 @@ Transform:
   - {fileID: 7820954948174546579}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6796319988241772342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930082209967865745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4576b7ad142573f429ce864f88ed57ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviours:
+  - rid: 5312645644256542750
+  references:
+    version: 2
+    RefIds:
+    - rid: 5312645644256542750
+      type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        lifeTime: 1
 --- !u!1 &8355897307427429964
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,7 +82,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4699854023912662562}

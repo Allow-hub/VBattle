@@ -113,7 +113,7 @@ namespace TechC.VBattle.InGame.Character
             // ノックバック適用
             rb.velocity = finalDirection * knockbackForce;
 
-            CustomLogger.Info($"Knockback: attackerPos={attackerPosition}, dir={finalDirection}, force={knockbackForce}", LogTagUtil.TagState);
+            // CustomLogger.Info($"Knockback: attackerPos={attackerPosition}, dir={finalDirection}, force={knockbackForce}", LogTagUtil.TagState);
         }
     }
 }

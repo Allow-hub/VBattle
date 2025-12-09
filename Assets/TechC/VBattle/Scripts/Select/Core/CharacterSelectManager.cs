@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
-using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -46,7 +45,7 @@ namespace TechC.VBattle.Select.Core
             // Player 1 の設定
             var player1Data = new GameDataBridge.PlayerSetupData
             {
-                PlayerIndex = 0,
+                PlayerIndex = 1,
                 DeviceName = picks[0].inputDevice,
                 IsNPC = picks[0].inputDevice == null,
                 SelectedCharacter = null // TODO: CharacterDataの適切な取得方法を実装
@@ -56,7 +55,7 @@ namespace TechC.VBattle.Select.Core
             // Player 2 の設定
             var player2Data = new GameDataBridge.PlayerSetupData
             {
-                PlayerIndex = 1,
+                PlayerIndex = 2,
                 DeviceName = picks[1].inputDevice,
                 IsNPC = picks[1].inputDevice == null,
                 SelectedCharacter = null // TODO: CharacterDataの適切な取得方法を実装

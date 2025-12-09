@@ -12,7 +12,7 @@ namespace TechC.VBattle.InGame.Character
         /// 攻撃者のGameObject
         /// </summary>
         /// <value></value>
-        GameObject GameObject { get; }
+        GameObject AttackerObj { get; }
 
         /// <summary>
         /// 攻撃者のTransform

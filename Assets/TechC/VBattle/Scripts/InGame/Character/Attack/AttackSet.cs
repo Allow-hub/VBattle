@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-    // 攻撃セットScriptableObject - 複数の攻撃をグループ化
+    /// <summary>
+    /// 攻撃セットScriptableObject - 複数の攻撃をグループ化
+    /// </summary>
     [CreateAssetMenu(fileName = "AttackSet", menuName = "TechC/Combat/Attack Set")]
     public class AttackSet : ScriptableObject
     {
@@ -20,13 +22,9 @@ namespace TechC.VBattle.InGame.Character
             {
                 var key = (entry.direction, entry.type);
                 if (!attackDataMap.ContainsKey(key))
-                {
                     attackDataMap.Add(key, entry.attackData);
-                }
                 else
-                {
                     Debug.LogWarning($"Duplicate key in AttackSet: {key}");
-                }
             }
         }
 

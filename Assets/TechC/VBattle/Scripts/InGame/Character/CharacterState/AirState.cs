@@ -32,9 +32,7 @@ namespace TechC.VBattle.InGame.Character
         public override void OnCommandExecuted<T>(T command)
         {
             if (command.Type == CommandType.Attack)
-            {
                 hasUsedAirAction = true;
-            }
         }
 
         public override void OnEnter(CharacterState prevState)
@@ -52,9 +50,7 @@ namespace TechC.VBattle.InGame.Character
 
                 // 地面に接地したらNeutralへ
                 if (controller.IsGrounded())
-                {
                     return controller.GetState<NeutralState>();
-                }
             }
             return this;
         }

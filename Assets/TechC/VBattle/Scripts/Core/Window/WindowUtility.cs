@@ -22,6 +22,22 @@ namespace TechC.VBattle.Core.Window
         #region ウィンドウ作成・取得
 
         /// <summary>
+        /// !UNITY_EDITORで使用中
+        /// </summary>
+        /// <returns></returns>
+        public static HWND GetUnityWindowHandle()
+        {
+#if UNITY_EDITOR
+            // Editor時は0固定でOK
+            return HWND.Null;
+#else
+            // クラス名でUnityウィンドウのみ取得
+            int pid = System.Diagnostics.Process.GetCurrentProcess().Id;
+            return GetWindowByProcessId(pid, "UnityWndClass");
+#endif
+        }
+
+        /// <summary>
         /// Unityのゲームビューの矩形を取得
         /// </summary>
         /// <returns>ゲームビューの矩形</returns>
@@ -108,9 +124,7 @@ namespace TechC.VBattle.Core.Window
                         unsafe
                         {
                             fixed (char* pBuffer = buffer)
-                            {
                                 len = PInvoke.GetClassName(hwnd, new PWSTR(pBuffer), buffer.Length);
-                            }
                         }
                         string winClass = new string(buffer, 0, len);
                         if (winClass == className)
@@ -128,6 +142,23 @@ namespace TechC.VBattle.Core.Window
                 return true; // continue enumeration
             }, 0);
             return found;
+        }
+
+        //!UNITY_EDITORで使用中
+        public static void GetClientRect(HWND hwnd, out RECT rect)
+        {
+            if (hwnd.IsNull)
+            {
+                CustomLogger.Warning("GetClientRect: hwnd is null.", LogTagUtil.TagWidnow);
+                rect = new RECT();
+                return;
+            }
+
+            if (!PInvoke.GetClientRect(hwnd, out rect))
+            {
+                int error = Marshal.GetLastWin32Error();
+                CustomLogger.Error($"GetClientRect failed with error code {error}", LogTagUtil.TagWidnow);
+            }
         }
 
         #endregion
@@ -198,6 +229,7 @@ namespace TechC.VBattle.Core.Window
         #endregion
 
         #region WindowManager用の追加メソッド
+
         /// <summary>
         /// ウィンドウの表示状態を設定
         /// </summary>

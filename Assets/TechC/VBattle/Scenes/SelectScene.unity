@@ -496,6 +496,51 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288652230786692331, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4580471191595598413, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       propertyPath: m_IsActive
@@ -511,12 +556,57 @@ PrefabInstance:
       propertyPath: teramiObj
       value: 
       objectReference: {fileID: 1595698894}
+    - target: {fileID: 5354883870181878652, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354883870181878652, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354883870181878652, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6030587290021251706, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       propertyPath: pickCharaPrefab
       value: 
       objectReference: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
         type: 3}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6554009770473587024, guid: 582dc708363adc345869b03647b3dcc7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7192284568526288974, guid: 582dc708363adc345869b03647b3dcc7,
         type: 3}
       propertyPath: m_IsActive

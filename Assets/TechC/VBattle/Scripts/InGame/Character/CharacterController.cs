@@ -23,14 +23,17 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
         [SerializeField] private Transform handPos;
+        [SerializeField, ReadOnly] private int playerIndex;
+        [SerializeField,ReadOnly] private string playerTag = "Player";
 
         // ===== 公開プロパティ =====
-        public int PlayerIndex { get; private set; }
+        public int PlayerIndex => playerIndex;
         public InputDevice DeviceName { get; private set; }
         public bool IsNPC { get; private set; }
         public int CurrentHP { get; private set; }
         [SerializeField, ReadOnly] private float idleAnimSpeed = 1.1f;
         public float IdleAnimSpeed => idleAnimSpeed;
+        public string PlayerTag => playerTag;
 
         // 攻撃情報
         public AttackType CurrentAttackType { get; private set; }
@@ -69,7 +72,7 @@ namespace TechC.VBattle.InGame.Character
         private int maxJumpCount = 2;
 
         // ===== IAttacker実装 =====
-        GameObject IAttacker.GameObject => gameObject;
+        GameObject IAttacker.AttackerObj => gameObject;
         Transform IAttacker.Transform => transform;
         CharacterController IAttacker.Owner => this; // 自分自身が所有者
 
@@ -103,7 +106,7 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="isNPC">NPCかどうか</param>
         public void Init(int playerIndex, InputDevice deviceName, bool isNPC)
         {
-            PlayerIndex = playerIndex;
+            this.playerIndex = playerIndex;
             DeviceName = deviceName;
             IsNPC = isNPC;
             CurrentHP = characterData.MaxHP;
@@ -120,13 +123,15 @@ namespace TechC.VBattle.InGame.Character
         private void Update()
         {
             commandInvoker.Update();
-            CustomLogger.Info($"{stateMachine.CurrentState}", LogTagUtil.TagState);
+            if (PlayerIndex == 1)
+                CustomLogger.Info($"{stateMachine.CurrentState}", LogTagUtil.TagState);
         }
 
         private void FixedUpdate()
         {
-            IsGrounded();
             commandInvoker.FixedUpdate();
+            if (!IsGrounded() && stateMachine.CurrentState != GetState<AirState>())
+                stateMachine.ChangeState(GetState<AirState>());
         }
 
         /// <summary>
@@ -190,7 +195,13 @@ namespace TechC.VBattle.InGame.Character
         {
             Vector3 origin = transform.position;
             Vector3 dir = Vector3.down;
-            return Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
+            // Raycast 判定
+            bool grounded = Physics.Raycast(origin, dir, out RaycastHit hit, groundCheckDistance, groundMask);
+
+            // デバッグ描画
+            // Color rayColor = grounded ? Color.green : Color.red;
+            // Debug.DrawRay(origin, dir * groundCheckDistance, rayColor);
+            return grounded;
         }
 
         public void SetGuardPower(float amount) => currentGuardPower = amount;

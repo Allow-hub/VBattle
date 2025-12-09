@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,7 +29,7 @@ namespace TechC.VBattle.Core.Managers
 
         #region Loading Scene Management
         [SerializeField] private bool preloadLoadingScene = true;
-        
+
         private Scene? cachedLoadingScene = null;
         private bool isLoading = false;
 
@@ -42,14 +44,12 @@ namespace TechC.VBattle.Core.Managers
             if (preloadLoadingScene)
                 PreloadLoadingSceneAsync().Forget();
         }
-        
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                LoadBattleSceneAsync().Forget();
-            }
-        }
+
+        // public void Update()
+        // {
+        //     if (Input.GetKeyDown(KeyCode.Tab))
+        //         LoadBattleSceneAsync().Forget();
+        // }
 
         /// <summary>
         /// Loading画面を事前に読み込んで非アクティブ状態でキャッシュ
@@ -173,32 +173,20 @@ namespace TechC.VBattle.Core.Managers
 
                 // LoadingManagerでプログレス更新
                 if (loadingManager != null)
-                {
                     await loadingManager.UpdateProgressAsync(loadTargetOp);
-                }
                 else
-                {
-                    // LoadingManagerが見つからない場合は待機のみ
-                    await UniTask.WaitUntil(() => loadTargetOp.isDone);
-                }
+                    await UniTask.WaitUntil(() => loadTargetOp.isDone);// LoadingManagerが見つからない場合は待機のみ
 
                 // === シーン切り替え ===
                 var targetScene = SceneManager.GetSceneByBuildIndex(targetSceneIndex);
                 if (targetScene.IsValid())
-                {
                     SceneManager.SetActiveScene(targetScene);
-                }
                 else
-                {
                     throw new Exception($"Loaded scene is invalid: {sceneName}");
-                }
 
                 // === LoadingSceneの処理 ===
                 if (preloadLoadingScene)
-                {
-                    // 事前読み込みモード：非アクティブ化して保持
-                    SetSceneActive(LOADING_SCENE, false);
-                }
+                    SetSceneActive(LOADING_SCENE, false);// 事前読み込みモード：非アクティブ化して保持
                 else
                 {
                     // 通常モード：アンロード
@@ -210,7 +198,7 @@ namespace TechC.VBattle.Core.Managers
                 await ExecuteAfterSceneTransition(previousScene.name, sceneName);
 
                 OnSceneLoadCompleted?.Invoke(sceneName);
-                Debug.Log($"[SceneLoader] Scene loaded successfully: {sceneName}");
+                CustomLogger.Info($"[SceneLoader] Scene loaded successfully: {sceneName}", LogTagUtil.TagScene);
             }
             catch (Exception e)
             {
@@ -225,7 +213,7 @@ namespace TechC.VBattle.Core.Managers
         #endregion
 
         #region Loading Manager Access
-        
+
         /// <summary>
         /// LoadingManagerを効率的に取得
         /// </summary>
@@ -283,7 +271,7 @@ namespace TechC.VBattle.Core.Managers
         /// </summary>
         private async UniTask ExecuteAfterSceneTransition(string fromScene, string toScene)
         {
-            Debug.Log($"[SceneLoader] After transition: {fromScene} → {toScene}");
+            CustomLogger.Info($"[SceneLoader] After transition: {fromScene} → {toScene}", LogTagUtil.TagScene);
 
             // シーン別の後処理
             switch (toScene)
@@ -318,13 +306,9 @@ namespace TechC.VBattle.Core.Managers
         private void SetSceneActive(string sceneName, bool active)
         {
             var scene = SceneManager.GetSceneByName(sceneName);
-            if (scene.isLoaded)
-            {
-                foreach (GameObject obj in scene.GetRootGameObjects())
-                {
-                    obj.SetActive(active);
-                }
-            }
+            if (!scene.isLoaded) return;
+            foreach (GameObject obj in scene.GetRootGameObjects())
+                obj.SetActive(active);
         }
 
         /// <summary>
