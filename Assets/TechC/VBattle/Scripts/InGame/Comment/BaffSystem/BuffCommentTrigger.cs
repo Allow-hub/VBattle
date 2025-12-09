@@ -34,7 +34,6 @@ namespace TechC.VBattle.InGame.Comment
             if (alreadyApplied) return;
             if (CommentDisplay.I.IsCommentFrozen) return;
 
-
             if (other.CompareTag("Player"))
             {
                 BuffBase buff = BuffFactory.CreateBuff(buffType);
@@ -54,10 +53,10 @@ namespace TechC.VBattle.InGame.Comment
                 switch (buffType)
                 {
                     case BuffType.Speed:
-                        EffectFactory.I.PlayEffect("SpeedComment", id, Quaternion.identity, effectTime);
+                        EffectFactory.I.PlayEffect("SpeedBuff", id, Quaternion.identity, effectTime);
                         break;
                     case BuffType.Attack:
-                        EffectFactory.I.PlayEffect("AttackComment", id, Quaternion.identity, effectTime);
+                        EffectFactory.I.PlayEffect("AttackBuff", id, Quaternion.identity, effectTime);
                         break;
                     default:
                         break;

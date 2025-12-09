@@ -23,6 +23,9 @@ namespace TechC.VBattle.InGame.Character
                 if (!isGrounded)
                     moveSpeed *= characterData.AirControlMultiplier;
 
+                // バフの速度倍率を取得し、適用
+                moveSpeed *= GetCurrentSpeedMultiplier();
+
                 // 移動方向を計算
                 Vector3 moveDirection = new Vector3(direction.x, 0, 0).normalized;
                 Vector3 targetVelocity = moveDirection * moveSpeed;
