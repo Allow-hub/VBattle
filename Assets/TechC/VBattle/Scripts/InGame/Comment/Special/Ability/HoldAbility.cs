@@ -1,6 +1,8 @@
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 using TechC.VBattle.Systems;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace TechC.VBattle.InGame.Comment
 {
@@ -24,7 +26,7 @@ namespace TechC.VBattle.InGame.Comment
                 characterController.HandPos.position,
                 Quaternion.identity
             );
-          
+
             characterController.SetHoldItem(obj);
             AttachToHand(obj, characterController.HandPos);
         }
@@ -32,11 +34,16 @@ namespace TechC.VBattle.InGame.Comment
         /// <summary>
         /// オブジェクトを手に装着する
         /// </summary>
-        private void AttachToHand(GameObject obj, Transform handTransform)
+        private async void AttachToHand(GameObject obj, Transform handTransform)
         {
             obj.transform.SetParent(handTransform);
+            CustomLogger.Info($"SetParentで親を設定 / {handTransform}");
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
+
+            // 1フレーム待機してログ出力
+            await UniTask.Yield();
+            CustomLogger.Info($"1フレーム後 / 親: {(obj.transform.parent != null ? obj.transform.parent.name : "null")} / アクティブ: {obj.activeInHierarchy}");
         }
     }
 }

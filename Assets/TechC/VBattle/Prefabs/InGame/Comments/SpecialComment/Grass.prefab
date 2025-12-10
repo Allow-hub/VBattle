@@ -265,6 +265,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5365922092070006767, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
+      propertyPath: m_Asset
+      value: 
+      objectReference: {fileID: 8926484042661614526, guid: cf67a2efe25dbc342be4fa3cf85ce040,
+        type: 3}
+    - target: {fileID: 5365922092070006767, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
+        type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
       value: 3
       objectReference: {fileID: 0}
