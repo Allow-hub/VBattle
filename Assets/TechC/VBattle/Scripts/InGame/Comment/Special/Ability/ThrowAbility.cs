@@ -21,7 +21,7 @@ namespace TechC.VBattle.InGame.Comment
         {
             if (CommentDisplay.I.IsCommentFrozen) return;
 
-            var characterController = collider.transform.root.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
+            var characterController = collider.transform.root.GetComponent<Character.CharacterController>();
             if (characterController == null) return;
 
             // CommentAbilityHandlerを経由してアビリティを登録
@@ -31,7 +31,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <summary>
         /// 投げるアビリティを登録する
         /// </summary>
-        private void RegisterThrowAbility(CommentAbilityHandler abilityHandler, TechC.VBattle.InGame.Character.CharacterController characterController)
+        private void RegisterThrowAbility(CommentAbilityHandler abilityHandler, Character.CharacterController characterController)
         {
             var holdItem = characterController.HoldItem;
             if (holdItem == null) return;
@@ -42,7 +42,7 @@ namespace TechC.VBattle.InGame.Comment
             });
         }
 
-        private void ThrowItem(GameObject item, TechC.VBattle.InGame.Character.CharacterController character)
+        private void ThrowItem(GameObject item, Character.CharacterController character)
         {
             if (item == null || character == null) return;
 

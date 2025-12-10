@@ -94,7 +94,7 @@ namespace TechC.VBattle.InGame.Comment
                     colliderLength = spacing + COLLIDER_WIDTH_MARGIN;
                 }
 
-                if (parent.gameObject.TryGetComponent<BoxCollider>(out BoxCollider box))
+                if (parent.gameObject.TryGetComponent(out BoxCollider box))
                 {
                     // BoxColliderサイズの調整値
                     const float COLLIDER_HEIGHT = 1.7f;    // BoxColliderの高さ

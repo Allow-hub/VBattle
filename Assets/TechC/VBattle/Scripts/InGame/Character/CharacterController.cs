@@ -63,7 +63,7 @@ namespace TechC.VBattle.InGame.Character
 
         // ===== コメントアイテム関連 =====
         public GameObject HoldItem { get; private set; }
-        public TechC.VBattle.InGame.Comment.CommentAbilityHandler CommentAbilityHandler { get; private set; }
+        public CommentAbilityHandler CommentAbilityHandler { get; private set; }
 
         public Transform HandPos => handPos;
 
@@ -85,7 +85,7 @@ namespace TechC.VBattle.InGame.Character
         {
             rb = GetComponent<Rigidbody>();
 
-            CommentAbilityHandler = new TechC.VBattle.InGame.Comment.CommentAbilityHandler(this);
+            CommentAbilityHandler = new CommentAbilityHandler(this);
 
             // すべての状態を登録してキャッシュ
             RegisterState(new NeutralState(this));

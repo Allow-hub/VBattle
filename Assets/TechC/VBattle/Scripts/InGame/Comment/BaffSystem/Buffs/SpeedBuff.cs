@@ -24,7 +24,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <param name="target"></param>
         public override void Apply(GameObject target)
         {
-            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
+            Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
 
             if (characterController != null)
                 characterController.AddMultiplier(BuffType.Speed, id, speedMultiplier);
@@ -36,7 +36,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <param name="target"></param>
         public override void Remove(GameObject target)
         {
-            VBattle.InGame.Character.CharacterController characterController = target.GetComponent<VBattle.InGame.Character.CharacterController>();
+            Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
 
             if (characterController != null)
                 characterController.RemoveMultiplier(BuffType.Speed, id, speedMultiplier);
