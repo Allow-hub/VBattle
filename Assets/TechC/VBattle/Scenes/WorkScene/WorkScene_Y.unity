@@ -29316,12 +29316,12 @@ PrefabInstance:
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: speedBuffChance
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: attackBuffChance
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
@@ -29331,7 +29331,7 @@ PrefabInstance:
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: freezeCommentChance
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
