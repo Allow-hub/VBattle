@@ -201,7 +201,7 @@ PrefabInstance:
     - target: {fileID: 1817163365811606162, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4479452455951467426, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
@@ -261,14 +261,19 @@ PrefabInstance:
     - target: {fileID: 5190995549446183045, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5365922092070006767, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
       propertyPath: m_Asset
       value: 
-      objectReference: {fileID: 8926484042661614526, guid: cf67a2efe25dbc342be4fa3cf85ce040,
+      objectReference: {fileID: 8926484042661614526, guid: 235a875aef105de43a626e9db61347e7,
         type: 3}
+    - target: {fileID: 5365922092070006767, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
+        type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5365922092070006767, guid: e06bc20c6e1981a4cb6ea083cb8d3914,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
