@@ -27,6 +27,8 @@ namespace TechC.VBattle.InGame.Comment
             string layerName = LayerMask.LayerToName(other.gameObject.layer);
             if (layerName == "Ground" || layerName == "Wall")
             {
+                // TODO:Playerが草コメントを持った状態で壁に当ると草コメント保持しながら戦闘し、再度草コメントを拾えなくなる
+
                 Vector3 contactPoint = other.ClosestPoint(transform.position);
                 Vector3 direction = (transform.position - contactPoint).normalized;
                 Quaternion targetRotation = Quaternion.identity;
