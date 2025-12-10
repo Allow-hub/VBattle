@@ -9,12 +9,15 @@ namespace TechC.VBattle.InGame.Comment
     [Serializable]
     public class SpeedBuff : BuffBase
     {
-        [SerializeField] private float speedMultiplier = 1.5f;
+        private const float DEFAULT_SPEED_MULTIPLIER = 1.5f;
+        private const float DEFAULT_BUFF_DURATION = 5.0f;
+        
+        [SerializeField] private float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
         public SpeedBuff()
         {
             buffName = "SpeedBuff";
             description = "移動速度が上昇する";
-            buffDuration = 5.0f;
+            buffDuration = DEFAULT_BUFF_DURATION;
             remainingTime = buffDuration;
         }
 

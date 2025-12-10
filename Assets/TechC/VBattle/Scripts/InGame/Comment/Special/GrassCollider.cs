@@ -8,11 +8,18 @@ namespace TechC.VBattle.InGame.Comment
 {
     public class GrassCollider : MonoBehaviour
     {
+        // 定数定義
+        private const float DEFAULT_RETURN_DELAY = 3f;
+        private const float ROTATION_0_DEGREES = 0f;
+        private const float ROTATION_90_DEGREES = 90f;
+        private const float ROTATION_180_DEGREES = 180f;
+        private const float ROTATION_NEGATIVE_90_DEGREES = -90f;
+        
         [SerializeField] private GameObject grassChar;
         [SerializeField] private GameObject grassEffect;
         [SerializeField] Rigidbody rb;
         private bool isReturning = false;
-        [SerializeField] private float returnDelay = 3f;
+        [SerializeField] private float returnDelay = DEFAULT_RETURN_DELAY;
 
         private void OnEnable()
         {
@@ -35,16 +42,16 @@ namespace TechC.VBattle.InGame.Comment
                 if (Mathf.Abs(direction.y) > Mathf.Abs(direction.x))
                 {
                     if (direction.y > 0)
-                        targetRotation = Quaternion.Euler(0, 0, 0f);
+                        targetRotation = Quaternion.Euler(0, 0, ROTATION_0_DEGREES);
                     else
-                        targetRotation = Quaternion.Euler(0, 0, 180f);
+                        targetRotation = Quaternion.Euler(0, 0, ROTATION_180_DEGREES);
                 }
                 else
                 {
                     if (direction.x > 0)
-                        targetRotation = Quaternion.Euler(0, 0, -90f);
+                        targetRotation = Quaternion.Euler(0, 0, ROTATION_NEGATIVE_90_DEGREES);
                     else
-                        targetRotation = Quaternion.Euler(0, 0, 90f);
+                        targetRotation = Quaternion.Euler(0, 0, ROTATION_90_DEGREES);
                 }
                 transform.position = contactPoint;
                 transform.rotation = targetRotation;

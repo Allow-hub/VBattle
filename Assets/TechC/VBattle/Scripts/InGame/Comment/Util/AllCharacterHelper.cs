@@ -6,18 +6,24 @@ namespace TechC.VBattle.InGame.Comment
 {
     public static class AllCharacterHelper
     {
+        // 定数定義
+        private const float CHARACTER_SPACING = 1.3f; // 文字の間隔
+        private const float ROTATE_X_DEGREE = 90f;
+        private const float ROTATE_Y_DEGREE = 180f;
+        private const float SCALE_MULTIPLIER = 2f; // 文字Prefabの大きさの倍率
+        private const float COLLIDER_CENTER_X_OFFSET = 0.3f; // BoxColliderを右方向にずらす量
+        private const float COLLIDER_CENTER_Y_OFFSET = 0.4f; // BoxColliderを上方向にずらす量
+        private const float COLLIDER_WIDTH_MARGIN = 1.5f; // BoxCollider横幅の余白
+        private const float COLLIDER_HEIGHT = 1.7f; // BoxColliderの高さ
+        private const float COLLIDER_DEPTH = 0.5f; // BoxColliderの奥行き
+        private const float CENTER_CALCULATION_DIVISOR = 2f; // 中央位置計算用の除数
+        
         /// <summary>
         /// 各文字を対応するPrefabを生成する処理
         /// </summary>
         public static List<GameObject> ProcessCommentText(string text, Transform parent, Color color)
         {
-            float spacing = 1.3f; // 文字の間隔
             float xOffset = 0f;
-
-            const float ROTATE_X_DEGREE = 90f;
-            const float ROTATE_Y_DEGREE = 180f;
-
-            const float SCALE_MULTIPLIER = 2f;  // ここに文字のPrefabの大きさの倍率を定義
 
             List<GameObject> spawnedChars = new List<GameObject>(); // 返却用に記録
 
@@ -46,7 +52,7 @@ namespace TechC.VBattle.InGame.Comment
 
                     // 位置設定
                     obj.transform.localPosition = new Vector3(xOffset, 0f, 0f);
-                    xOffset += spacing;
+                    xOffset += CHARACTER_SPACING;
 
                     // Y,Z座標調整
                     Vector3 pos = obj.transform.position;
@@ -73,33 +79,23 @@ namespace TechC.VBattle.InGame.Comment
                 Vector3 lastLocalPos = spawnedChars[spawnedChars.Count - 1].transform.localPosition;
 
                 // ローカル座標での中央位置
-                Vector3 localCenter = (firstLocalPos + lastLocalPos) / 2f;
+                Vector3 localCenter = (firstLocalPos + lastLocalPos) / CENTER_CALCULATION_DIVISOR;
 
-                // BoxCollider位置調整用の定数
-                const float COLLIDER_CENTER_X_OFFSET = 0.3f;  // BoxColliderを右方向にずらす量
-                const float COLLIDER_CENTER_Y_OFFSET = 0.4f;    // BoxColliderを上方向にずらす量
                 localCenter.x += COLLIDER_CENTER_X_OFFSET;
                 localCenter.y += COLLIDER_CENTER_Y_OFFSET;
 
                 // ローカル座標での長さ
                 float localLength = Mathf.Abs(lastLocalPos.x - firstLocalPos.x);
-
-                // BoxCollider横幅の余白
-                const float COLLIDER_WIDTH_MARGIN = 1.5f;
                 float colliderLength = localLength + COLLIDER_WIDTH_MARGIN;
 
                 // 文字が1つだけの場合の最小サイズ
                 if (spawnedChars.Count == 1)
                 {
-                    colliderLength = spacing + COLLIDER_WIDTH_MARGIN;
+                    colliderLength = CHARACTER_SPACING + COLLIDER_WIDTH_MARGIN;
                 }
 
                 if (parent.gameObject.TryGetComponent(out BoxCollider box))
                 {
-                    // BoxColliderサイズの調整値
-                    const float COLLIDER_HEIGHT = 1.7f;    // BoxColliderの高さ
-                    const float COLLIDER_DEPTH = 0.5f;     // BoxColliderの奥行き
-
                     // ローカル座標で設定
                     box.center = localCenter;
                     box.size = new Vector3(colliderLength, COLLIDER_HEIGHT, COLLIDER_DEPTH);

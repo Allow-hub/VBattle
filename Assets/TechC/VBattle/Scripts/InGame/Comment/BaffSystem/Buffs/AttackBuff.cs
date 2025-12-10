@@ -7,13 +7,16 @@ namespace TechC.VBattle.InGame.Comment
     /// </summary>
     public class AttackBuff : BuffBase
     {
-        [SerializeField] private float attackMultiplier = 1.5f; /*攻撃力上昇の倍率 */
+        private const float DEFAULT_ATTACK_MULTIPLIER = 1.5f;
+        private const float DEFAULT_BUFF_DURATION = 5.0f;
+        
+        [SerializeField] private float attackMultiplier = DEFAULT_ATTACK_MULTIPLIER; /*攻撃力上昇の倍率 */
 
         public AttackBuff()
         {
             buffName = "AttackBuff";
             description = "攻撃力が上昇する";
-            buffDuration = 5.0f;
+            buffDuration = DEFAULT_BUFF_DURATION;
             remainingTime = buffDuration;
         }
 
