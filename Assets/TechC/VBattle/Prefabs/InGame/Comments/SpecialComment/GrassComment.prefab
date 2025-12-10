@@ -96,17 +96,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilities:
   - rid: 3641600335933865984
-  - rid: 3641600322251259905
+  - rid: 3641600335933865985
   references:
     version: 2
     RefIds:
-    - rid: 3641600322251259905
-      type: {class: ThrowAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
-      data:
-        throwPower: 10
-        throwUpwardPower: {x: 0.5, y: 1}
     - rid: 3641600335933865984
       type: {class: HoldAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
       data:
         gameObject: {fileID: 5430594490214581435, guid: 0c9123c38a160af498190ece76658ec9,
           type: 3}
+    - rid: 3641600335933865985
+      type: {class: ThrowAbility, ns: TechC.VBattle.InGame.Comment, asm: Assembly-CSharp}
+      data:
+        throwPower: 10
+        throwUpwardPower: {x: 0.5, y: 1}

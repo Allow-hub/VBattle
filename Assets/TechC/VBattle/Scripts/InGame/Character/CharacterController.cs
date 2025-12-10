@@ -243,7 +243,10 @@ namespace TechC.VBattle.InGame.Character
         public void RegisterCommentEvent(System.Action action)
         {
             commentEventAction = action;
-            // 即座に実行（元の実装に合わせて）
+        }
+        
+        public void InvokeCommentEvent()
+        {
             commentEventAction?.Invoke();
             commentEventAction = null;
         }

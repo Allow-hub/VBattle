@@ -13,9 +13,7 @@ namespace TechC.VBattle.InGame.Comment
         [SerializeField] private float throwPower = 10f;
         [SerializeField] private Vector2 throwUpwardPower = new Vector2(0.5f, 1.0f);
 
-        public void Init(SpecialCommentTrigger trigger)
-        {
-        }
+        public void Init(SpecialCommentTrigger trigger) { }
 
         public void Release() { }
 
@@ -27,8 +25,8 @@ namespace TechC.VBattle.InGame.Comment
             if (characterController == null) return;
             if (characterController.HoldItem == null) return;
 
+            // Playerとの衝突時にThrowイベントを登録
             RegisterThrowEvent(characterController);
-
         }
 
         /// <summary>
@@ -58,7 +56,6 @@ namespace TechC.VBattle.InGame.Comment
             var characterController = character.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
             if (characterController == null) return;
             characterController.SetHoldItem(null);
-
         }
     }
 }

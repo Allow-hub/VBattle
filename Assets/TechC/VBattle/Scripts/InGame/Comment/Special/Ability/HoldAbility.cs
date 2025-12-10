@@ -37,13 +37,8 @@ namespace TechC.VBattle.InGame.Comment
         private async void AttachToHand(GameObject obj, Transform handTransform)
         {
             obj.transform.SetParent(handTransform);
-            CustomLogger.Info($"SetParentで親を設定 / {handTransform}");
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
-
-            // 1フレーム待機してログ出力
-            await UniTask.Yield();
-            CustomLogger.Info($"1フレーム後 / 親: {(obj.transform.parent != null ? obj.transform.parent.name : "null")} / アクティブ: {obj.activeInHierarchy}");
         }
     }
 }
