@@ -5,25 +5,30 @@ Shader "Custom/CommentNeonGradient"
         _MainTex ("Texture", 2D) = "white" {}
         
         // グラデーション設定
-        _GradientColor1 ("Gradient Color 1", Color) = (1, 0, 1, 1)
-        _GradientColor2 ("Gradient Color 2", Color) = (0, 1, 1, 1)
-        _GradientColor3 ("Gradient Color 3", Color) = (1, 1, 0, 1)
+        _GradientColor1 ("Gradient Color 1", Color) = (1, 0, 1, 0.7)
+        _GradientColor2 ("Gradient Color 2", Color) = (0, 1, 1, 0.7)
+        _GradientColor3 ("Gradient Color 3", Color) = (1, 1, 0, 0.7)
         _GradientDirection ("Gradient Direction", Vector) = (0, 1, 0, 0)
         _GradientSpeed ("Gradient Animation Speed", Range(0, 5)) = 1.0
         
         // ネオン効果設定
-        _NeonIntensity ("Neon Intensity", Range(0, 5)) = 2.0
-        _GlowSize ("Glow Size", Range(0.1, 3)) = 1.5
+        _NeonIntensity ("Neon Intensity", Range(0, 3)) = 1.2
+        _GlowSize ("Glow Size", Range(0.1, 2)) = 1.0
         _FresnelPower ("Fresnel Power", Range(0.1, 5)) = 2.0
         
         // ベース設定
-        _BaseColor ("Base Color", Color) = (0.9, 0.9, 0.9, 1)
-        _EmissionBoost ("Emission Boost", Range(1, 10)) = 3.0
+        _BaseColor ("Base Color", Color) = (0.9, 0.9, 0.9, 0.8)
+        _EmissionBoost ("Emission Boost", Range(0.1, 5)) = 1.5
         
         // アウトライン設定
-        _OutlineWidth ("Outline Width", Range(0.001, 0.1)) = 0.02
-        _OutlineIntensity ("Outline Intensity", Range(1, 10)) = 4.0
-        _OutlinePulse ("Outline Pulse Speed", Range(0, 5)) = 2.0
+        _OutlineWidth ("Outline Width", Range(0.001, 0.1)) = 0.015
+        _OutlineIntensity ("Outline Intensity", Range(0.5, 5)) = 2.0
+        _OutlinePulse ("Outline Pulse Speed", Range(0, 5)) = 1.5
+        
+        // 透明度制御
+        _TextAlpha ("Text Alpha", Range(0, 1)) = 0.85
+        _GlowAlpha ("Glow Alpha", Range(0, 1)) = 0.7
+        _OverallAlpha ("Overall Alpha", Range(0, 1)) = 0.9
     }
     SubShader
     {
@@ -78,6 +83,11 @@ Shader "Custom/CommentNeonGradient"
             float _OutlineIntensity;
             float _OutlinePulse;
             
+            // 透明度制御（アウトラインパス用）
+            float _TextAlpha;
+            float _GlowAlpha;
+            float _OverallAlpha;
+            
             v2f vert (appdata v)
             {
                 v2f o;
@@ -114,11 +124,14 @@ Shader "Custom/CommentNeonGradient"
                     gradientColor = lerp(_GradientColor2, _GradientColor3, (gradientPos - 0.5) * 2.0);
                 }
                 
-                // パルス効果
-                float pulse = 1.0 + sin(_Time.y * _OutlinePulse) * 0.3;
+                // パルス効果（穏やかに）
+                float pulse = 1.0 + sin(_Time.y * _OutlinePulse) * 0.15;
                 
-                // アウトライン色（より強く光る）
-                fixed4 outlineColor = gradientColor * _OutlineIntensity * pulse * tex.a;
+                // アウトライン色（透明度を適用）
+                fixed4 outlineColor = gradientColor * _OutlineIntensity * pulse * tex.a * _GlowAlpha * 0.8;
+                
+                // 明度制限
+                outlineColor.rgb = saturate(outlineColor.rgb);
                 
                 UNITY_APPLY_FOG(i.fogCoord, outlineColor);
                 return outlineColor;
@@ -175,6 +188,11 @@ Shader "Custom/CommentNeonGradient"
             float _OutlineWidth;
             float _OutlineIntensity;
             float _OutlinePulse;
+            
+            // 透明度制御
+            float _TextAlpha;
+            float _GlowAlpha;
+            float _OverallAlpha;
 
             v2f vert (appdata v)
             {
@@ -221,29 +239,32 @@ Shader "Custom/CommentNeonGradient"
                 // ベースカラー（テキスト部分）
                 fixed4 baseText = _BaseColor * tex;
                 
-                // ネオングロー効果（強化）
-                float glowMask = smoothstep(0.2, 1.0, fresnel);
-                float pulseFactor = 1.0 + sin(_Time.y * 3.0) * 0.2; // パルス効果
-                fixed4 neonGlow = gradientColor * glowMask * _NeonIntensity * pulseFactor;
+                // ネオングロー効果（穏やかに）
+                float glowMask = smoothstep(0.3, 1.0, fresnel);
+                float pulseFactor = 1.0 + sin(_Time.y * 3.0) * 0.1; // パルス効果を抑える
+                fixed4 neonGlow = gradientColor * glowMask * _NeonIntensity * pulseFactor * _GlowAlpha;
                 
                 // 内側グロー（テキスト全体に色付け）
-                fixed4 innerGlow = gradientColor * tex.a * 0.8;
+                fixed4 innerGlow = gradientColor * tex.a * 0.6 * _TextAlpha;
                 
                 // エッジ検出（縁をより強く光らせる）
                 float edgeDetection = 1.0 - smoothstep(0.1, 0.9, length(frac(i.uv * 10.0) - 0.5));
-                fixed4 edgeGlow = gradientColor * edgeDetection * tex.a * _OutlineIntensity * 0.3;
+                fixed4 edgeGlow = gradientColor * edgeDetection * tex.a * _OutlineIntensity * 0.2 * _GlowAlpha;
                 
-                // 外側エミッション
+                // 外側エミッション（抑える）
                 fixed4 emission = (neonGlow + edgeGlow) * _EmissionBoost;
                 
                 // 最終色の合成
-                fixed4 finalColor = baseText + innerGlow + emission;
+                fixed4 finalColor = baseText * _TextAlpha + innerGlow + emission;
                 
-                // HDRエミッション効果
-                finalColor.rgb *= 1.0 + (fresnel * _GlowSize);
+                // HDRエミッション効果（抑える）
+                finalColor.rgb *= 1.0 + (fresnel * _GlowSize * 0.5);
                 
-                // アルファは元のテクスチャを基準
-                finalColor.a = tex.a;
+                // 明度を制限
+                finalColor.rgb = saturate(finalColor.rgb);
+                
+                // 全体の透明度を適用
+                finalColor.a = tex.a * _OverallAlpha;
                 
                 // フォグ適用
                 UNITY_APPLY_FOG(i.fogCoord, finalColor);
