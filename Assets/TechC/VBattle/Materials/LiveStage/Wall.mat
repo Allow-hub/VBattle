@@ -99,7 +99,7 @@ Material:
     - _FlowSpeed: 5.25
     - _FrameAlpha: 0.7
     - _FrameGlow: 0.373
-    - _FrameIntensity: 1
+    - _FrameIntensity: 0.4
     - _FrameWidth: 0.013
     - _GlossMapScale: 0
     - _Glossiness: 0

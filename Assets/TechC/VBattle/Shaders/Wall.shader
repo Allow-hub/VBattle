@@ -108,6 +108,24 @@ Shader "Custom/NeonWall"
                 return o;
             }
 
+            // ハニカムパターン生成関数
+            float hexDist(float2 p) {
+                p = abs(p);
+                float c = dot(p, normalize(float2(1, 1.73)));
+                c = max(c, p.x);
+                return c;
+            }
+            
+            float2 hexCoords(float2 uv) {
+                float2 r = float2(1, 1.73);
+                float2 h = r * 0.5;
+                float2 a = fmod(uv, r) - h;
+                float2 b = fmod(uv - h, r) - h;
+                
+                float2 gv = dot(a, a) < dot(b, b) ? a : b;
+                return gv;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 // テクスチャサンプリング
@@ -116,32 +134,44 @@ Shader "Custom/NeonWall"
                 // ベース壁色
                 fixed4 wallBase = _WallColor * tex * _WallBrightness;
                 
-                // フレーム検出（UVの端を使用）
-                float2 frameUV = abs(i.uv - 0.5) * 2.0; // 中央から端への距離
-                float frameDistance = max(frameUV.x, frameUV.y); // 矩形フレーム
+                // ハニカムパターンのスケール調整
+                float2 honeycombUV = i.uv * 15.0; // ハニカムの密度調整
                 
-                // フレームマスク（端から内側へのグラデーション）
-                float frameMask = smoothstep(1.0 - _FrameWidth, 1.0, frameDistance);
+                // ハニカム座標取得
+                float2 hv = hexCoords(honeycombUV);
                 
-                // フローアニメーション
-                float flowOffset = _Time.y * _FlowSpeed;
-                float flowPattern = sin((frameDistance * 10.0) + flowOffset) * 0.5 + 0.5;
+                // ハニカムの境界線計算
+                float hexDistance = hexDist(hv);
+                float hexSize = 0.4; // ハニカムのサイズ
                 
-                // フレーム色のグラデーション（流れる効果）
-                float gradientPos = frac(frameDistance * 3.0 + flowOffset * 0.1);
+                // ハニカムフレーム検出
+                float frameMask = smoothstep(hexSize - _FrameWidth, hexSize, hexDistance);
+                
+                // ハニカムセルID（各六角形の識別）
+                float2 cellID = floor(honeycombUV / float2(1, 1.73) + 0.5);
+                
+                // セル毎のランダムオフセット
+                float cellRandom = frac(sin(dot(cellID, float2(12.9898, 78.233))) * 43758.5453);
+                
+                // フローアニメーション（ハニカム用）
+                float flowOffset = _Time.y * _FlowSpeed + cellRandom * 6.28;
+                float flowPattern = sin(flowOffset) * 0.5 + 0.5;
+                
+                // フレーム色のグラデーション（各セルで異なる色）
+                float gradientPos = frac(cellRandom + _Time.y * 0.1);
                 fixed4 frameColor = lerp(_FrameColor1, _FrameColor2, gradientPos);
                 
-                // パルス効果（より穏やかに）
-                float pulse = 1.0 + sin(_Time.y * _PulseSpeed) * 0.15;
+                // パルス効果（セル毎に微妙に異なるタイミング）
+                float pulse = 1.0 + sin(_Time.y * _PulseSpeed + cellRandom * 3.14) * 0.15;
                 
                 // フレネル効果（角度による光り方の変化）
                 float3 normal = normalize(i.worldNormal);
                 float3 viewDir = normalize(i.viewDir);
                 float fresnel = 1.0 - saturate(dot(normal, viewDir));
-                fresnel = pow(fresnel, 2.0); // もう少しソフトに
+                fresnel = pow(fresnel, 2.0);
                 
-                // グロー効果
-                float glowMask = smoothstep(1.0 - (_FrameWidth + _FrameGlow), 1.0 - _FrameWidth, frameDistance);
+                // ハニカム用グロー効果
+                float glowMask = smoothstep(hexSize - (_FrameWidth + _FrameGlow), hexSize - _FrameWidth, hexDistance);
                 glowMask = pow(glowMask, _GlowFalloff);
                 
                 // フレーム発光（透明度を適用）
