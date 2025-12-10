@@ -63,7 +63,7 @@ namespace TechC.VBattle.InGame.Character
 
         // ===== コメントアイテム関連 =====
         public GameObject HoldItem { get; private set; }
-        private System.Action commentEventAction;
+        public TechC.VBattle.InGame.Comment.CommentAbilityHandler CommentAbilityHandler { get; private set; }
 
         public Transform HandPos => handPos;
 
@@ -84,6 +84,8 @@ namespace TechC.VBattle.InGame.Character
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+
+            CommentAbilityHandler = new TechC.VBattle.InGame.Comment.CommentAbilityHandler(this);
 
             // すべての状態を登録してキャッシュ
             RegisterState(new NeutralState(this));
@@ -234,26 +236,10 @@ namespace TechC.VBattle.InGame.Character
             HoldItem = item;
         }
 
-        /// <summary>
-        /// コメントイベントを登録する
-        /// </summary>
-        /// <param name="action">実行するアクション</param>
-        // TODO:Eventに関しては一時的にこのクラスに配置しているだけで、今後Handler的な中間クラスを用意する
-
-        public void RegisterCommentEvent(System.Action action)
-        {
-            commentEventAction = action;
-        }
-        
-        public void InvokeCommentEvent()
-        {
-            commentEventAction?.Invoke();
-            commentEventAction = null;
-        }
-
         private void OnDestroy()
         {
             stateMachine?.Cancel();
+            CommentAbilityHandler?.Dispose(); // クリーンアップ
         }
     }
 }

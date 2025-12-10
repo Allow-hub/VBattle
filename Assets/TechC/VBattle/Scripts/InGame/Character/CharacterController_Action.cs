@@ -88,8 +88,8 @@ namespace TechC.VBattle.InGame.Character
             CurrentAttackType = type;
             CurrentAttackDirection = direction;
             
-            if (HoldItem != null) 
-                InvokeCommentEvent();
+            if (HoldItem != null && CommentAbilityHandler.HasPendingAbility()) 
+                CommentAbilityHandler.ExecutePendingAbility();
 
             if (stateMachine.CurrentState == GetState<AttackState>()) return;
             stateMachine.ChangeState(GetState<AttackState>());
