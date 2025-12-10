@@ -22,7 +22,6 @@ namespace TechC.VBattle.InGame.Comment
             if (CommentDisplay.I.IsCommentFrozen) return;
 
             var characterController = collider.transform.root.GetComponent<TechC.VBattle.InGame.Character.CharacterController>();
-            if (characterController == null) return;
             if (characterController.HoldItem == null) return;
 
             // Playerとの衝突時にThrowイベントを登録
