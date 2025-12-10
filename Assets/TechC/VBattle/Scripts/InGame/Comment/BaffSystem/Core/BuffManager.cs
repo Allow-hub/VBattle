@@ -22,10 +22,7 @@ namespace TechC.VBattle.InGame.Comment
 
                 /* バフの残り時間が終了したらそのバフを削除 */
                 if (buff.remainingTime <= 0)
-                {
                     RemoveBuff(buff);
-                    // Debug.Log($"[Removed] {buff.GetType().Name} を削除しました。現在の数: {activeBuffs.Count}");
-                }
             }
         }
 
@@ -43,7 +40,6 @@ namespace TechC.VBattle.InGame.Comment
                 {
                     /* 同じバフが既に適用されている場合、バフの残り時間をリセット */
                     activeBuff.ResetDuration();
-                    // Debug.Log($"[Apply] {buff.GetType().Name} が再適用され、時間がリセットされました。");
                     return;
                 }
             }
@@ -52,7 +48,6 @@ namespace TechC.VBattle.InGame.Comment
             activeBuffs.Add(buff);
             buff.ResetDuration();
             buff.Apply(gameObject);
-            // Debug.Log($"[Apply] {buff.GetType().Name} が activeBuffs に追加されました。現在の数: {activeBuffs.Count}");
         }
 
         /// <summary>

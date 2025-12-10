@@ -1,6 +1,7 @@
 using UnityEngine;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Systems;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Comment
 {
@@ -24,38 +25,8 @@ namespace TechC.VBattle.InGame.Comment
         /// <returns></returns>
         public GameObject GetComment(CommentData commentData, GameObject commentPrefab)
         {
-            // デバッグログ追加
-            if (commentPool == null)
-            {
-                Debug.LogError("[CommentFactory] commentPool is null!");
-            }
-            if (commentPrefab == null)
-            {
-                Debug.LogError("[CommentFactory] commentPrefab is null!");
-            }
-
-            GameObject obj = null;
-            try
-            {
-                obj = commentPool.GetObject(commentPrefab);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"[CommentFactory] commentPool.GetObject threw exception: {e.Message}");
-            }
-
-            if (obj == null)
-            {
-                Debug.LogError("[CommentFactory] obj is null after GetObject!");
-                return null;
-            }
-
+            GameObject obj = commentPool.GetObject(commentPrefab);
             obj.transform.localScale = COMMENT_OBJ_SCALE;
-
-            if (commentData == null)
-            {
-                Debug.LogError("[CommentFactory] commentData is null!");
-            }
 
             if (commentData.type == CommentType.Normal) return obj; // NormalはBuffCommentTriggerがついていないため早期reture
 
@@ -63,24 +34,16 @@ namespace TechC.VBattle.InGame.Comment
             {
                 var specialCommentTrigger = obj.GetComponent<SpecialCommentTrigger>();
                 if (specialCommentTrigger == null)
-                {
-                    Debug.LogError("SpecialCommentTriggerがPrefabにアタッチされていません。PrefabのInspectorで必ず追加してください。");
-                }
+                    CustomLogger.Error("SpecialCommentTriggerがPrefabにアタッチされていません。PrefabのInspectorで必ず追加してください。");
+                
             }
             else
             {
                 var commentTrigger = obj.GetComponent<BuffCommentTrigger>();
-                if (commentTrigger == null)
-                {
-                    Debug.Log("Null");
-                }
-
                 commentTrigger.Init(commentPool);
                 commentTrigger.commentText = commentData?.text;
                 if (commentData != null && commentData.buffType.HasValue)
-                {
                     commentTrigger.buffType = commentData.buffType.Value;
-                }
             }
             return obj;
         }
@@ -105,7 +68,7 @@ namespace TechC.VBattle.InGame.Comment
 
             if (charPrefab == null)
             {
-                Debug.LogError($"その文字はcharPrefabDatabaseに登録されていません: {charName}");
+                CustomLogger.Error($"その文字はcharPrefabDatabaseに登録されていません: {charName}");
                 return null;
             }
 

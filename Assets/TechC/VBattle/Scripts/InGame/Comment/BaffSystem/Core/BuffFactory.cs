@@ -29,13 +29,6 @@ namespace TechC.VBattle.InGame.Comment
             else
                 return null;
         }
-
-        /* 新しいバフを追加するためのメソッド */
-        public static void AddBuffType(BuffType buffType, System.Func<BuffBase> buffFactoryMethod)
-        {
-            if (!buffDictionary.ContainsKey(buffType))
-                buffDictionary.Add(buffType, buffFactoryMethod);
-        }
     }
 }
 

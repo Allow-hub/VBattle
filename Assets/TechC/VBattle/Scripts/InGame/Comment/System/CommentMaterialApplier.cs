@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Extensions;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Comment
@@ -28,9 +29,7 @@ namespace TechC.VBattle.InGame.Comment
         public void Init()
         {
             if (propertyBlock == null)
-            {
                 propertyBlock = new MaterialPropertyBlock();
-            }
 
             CacheMaterialColors();
         }
@@ -92,21 +91,17 @@ namespace TechC.VBattle.InGame.Comment
         {
             if (characters == null || material == null)
             {
-                Debug.LogWarning("characters または material が null です");
+                CustomLogger.Error("characters または material が null です");
                 return;
             }
 
             if (propertyBlock == null)
-            {
                 Init();
-            }
 
             propertyBlock.Clear();
 
             if (materialColorCache.TryGetValue(material, out Color cachedColor))
-            {
                 propertyBlock.SetColor(ColorPropertyId, cachedColor);
-            }
 
             foreach (var charObj in characters)
             {
@@ -133,16 +128,12 @@ namespace TechC.VBattle.InGame.Comment
             }
 
             if (propertyBlock == null)
-            {
                 Init();
-            }
 
             propertyBlock.Clear();
 
             if (materialColorCache.TryGetValue(freezeCommentMaterial, out Color freezeColor))
-            {
                 propertyBlock.SetColor(ColorPropertyId, freezeColor);
-            }
 
             foreach (var charObj in characters)
             {

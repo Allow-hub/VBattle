@@ -32,15 +32,11 @@ namespace TechC.VBattle.InGame.Comment
                 foreach (var obj in chars)
                 {
                     if (obj != null && obj.activeInHierarchy)
-                    {
                         CommentFactory.I.ReturnChar(obj);
-                    }
                 }
             }
             if (comment != null && comment.activeInHierarchy)
-            {
                 CommentFactory.I.ReturnComment(comment);
-            }
         }
     }
 }

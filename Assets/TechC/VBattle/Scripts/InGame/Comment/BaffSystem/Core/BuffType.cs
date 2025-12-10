@@ -7,7 +7,5 @@ namespace TechC.VBattle.InGame.Comment
     {
         Speed,
         Attack,
-        Jump,
     }
-
 }

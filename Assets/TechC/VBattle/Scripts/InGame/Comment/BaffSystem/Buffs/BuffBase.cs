@@ -16,7 +16,8 @@ namespace TechC.VBattle.InGame.Comment
         public int id { get; private set; }
 
         // バフの識別ID生成用
-        private static int totalBuffCount = VoidID + 1;
+        private const int ID_INCREMENT = 1;
+        private static int totalBuffCount = VoidID + ID_INCREMENT;
         public static readonly int VoidID = 0;
 
         public BuffBase()

@@ -45,9 +45,7 @@ namespace TechC.VBattle.InGame.Comment
         public GameObject SpawnComment()
         {
             if (!isInitialized)
-            {
                 Init();
-            }
             
             if (CommentDisplay.I != null && CommentDisplay.I.IsCommentFrozen) return null;
 
@@ -71,18 +69,12 @@ namespace TechC.VBattle.InGame.Comment
         /// <summary>
         /// 最後に生成されたコメントのデータを取得
         /// </summary>
-        public CommentData GetLastCommentData()
-        {
-            return lastCommentData;
-        }
+        public CommentData GetLastCommentData() => lastCommentData;
 
         /// <summary>
         /// 最後に生成された文字オブジェクトを取得
         /// </summary>
-        public List<GameObject> GetLastCharacters()
-        {
-            return lastCharacters;
-        }
+        public List<GameObject> GetLastCharacters() => lastCharacters;
 
         private GameObject GetCommentPrefab(CommentData commentData)
         {

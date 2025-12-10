@@ -47,7 +47,7 @@ namespace TechC.VBattle.InGame.Comment
                 var controller = other.transform.GetComponent<Character.CharacterController>();
                 int id = controller.PlayerIndex;
 
-                float effectTime = buff.remainingTime; // バフのエフェクトの継続時間にバフの効果の時間を代入
+                float effectTime = buff.remainingTime;
 
                 switch (buffType)
                 {
