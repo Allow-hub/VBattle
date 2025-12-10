@@ -29278,22 +29278,22 @@ PrefabInstance:
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: normalChance
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: speedBuffChance
-      value: 0.1
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: attackBuffChance
-      value: 0.1
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: grassCommentChance
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
