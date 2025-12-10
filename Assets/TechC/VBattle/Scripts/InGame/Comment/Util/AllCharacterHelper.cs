@@ -15,7 +15,7 @@ namespace TechC.VBattle.InGame.Comment
         private const float COLLIDER_CENTER_Y_OFFSET = 0.4f; // BoxColliderを上方向にずらす量
         private const float COLLIDER_WIDTH_MARGIN = 1.5f; // BoxCollider横幅の余白
         private const float COLLIDER_HEIGHT = 1.7f; // BoxColliderの高さ
-        private const float COLLIDER_DEPTH = 0.5f; // BoxColliderの奥行き
+        private const float COLLIDER_DEPTH = 6f; // BoxColliderの奥行き（湾曲対応）
         private const float CENTER_CALCULATION_DIVISOR = 2f; // 中央位置計算用の除数
         
         /// <summary>
