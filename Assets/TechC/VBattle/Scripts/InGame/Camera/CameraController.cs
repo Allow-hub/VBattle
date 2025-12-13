@@ -12,19 +12,21 @@ namespace TechC.VBattle.InGame.Camera
 
         private UnityEngine.Camera targetCamera;
         private Vector3 originalPosition;
+        
+        private float cachedShakeIntensity;
+        private float cachedShakeDuration;
 
         private void Start()
         {
             targetCamera = GetComponent<UnityEngine.Camera>();
-            if (targetCamera == null)
-            {
-                return;
-            }
 
             originalPosition = transform.position;
 
-            // CameraShakeを初期化
             CameraShake.Initialize(transform);
+            
+            // デフォルト値をキャッシュ
+            cachedShakeIntensity = CameraShake.DefaultIntensity;
+            cachedShakeDuration = CameraShake.DefaultDuration;
         }
 
         private void Update()
@@ -32,7 +34,7 @@ namespace TechC.VBattle.InGame.Camera
             // テスト用：スペースキーでシェイク
             if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
             {
-                CameraShake.Apply(CameraShake.DefaultIntensity, CameraShake.DefaultDuration);
+                CameraShake.Apply(cachedShakeIntensity, cachedShakeDuration);
             }
         }
     }

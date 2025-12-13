@@ -15,9 +15,9 @@
 
 - **CameraController** - カメラエフェクトの統合管理とEventBusからのイベント購読
 
-- **ICameraEffect** - カメラエフェクトの共通インターフェース定義（State、Apply、Stop）
-- **CameraShake** - カメラを振動させるエフェクトの実装
-- **CameraPan** - カメラの位置を上下左右に移動させるエフェクトの実装  
-- **CameraZoom** - カメラのFOVを変更してズーム効果を実装
+- **CameraShake**
+- 機能の実装はできた
+- 攻撃して当たったときにシェイクする処理がまだでいていない
 
-- **CameraEffectState** - エフェクトの状態を表すEnum（Idle、Active、Completed）
+- **CameraPan** - 未実装  
+- **CameraZoom** - 未実装
