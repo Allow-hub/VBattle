@@ -11,13 +11,13 @@ namespace TechC.VBattle.InGame.Camera
     public class CameraShake : ICameraEffect
     {
         [Header("シェイク設定")]
-        [SerializeField] private float defaultIntensity = 0.5f;
-        [SerializeField] private float defaultDuration = 0.3f;
+        [SerializeField] private float shakeIntensity = 0.5f;
+        [SerializeField] private float shakeDuration = 0.3f;
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
         
         // 読み取り専用プロパティ
-        public float DefaultIntensity => defaultIntensity;
-        public float DefaultDuration => defaultDuration;
+        public float DefaultIntensity => shakeIntensity;
+        public float DefaultDuration => shakeDuration;
         
         private Transform cameraTransform;
         private Vector3 originalPosition;
@@ -43,8 +43,8 @@ namespace TechC.VBattle.InGame.Camera
             if (State == CameraEffectState.Active)
                 Stop();
 
-            currentIntensity = intensity > 0 ? intensity : defaultIntensity;
-            currentDuration = duration > 0 ? duration : defaultDuration;
+            currentIntensity = intensity > 0 ? intensity : shakeIntensity;
+            currentDuration = duration > 0 ? duration : shakeDuration;
             
             State = CameraEffectState.Active;
             isShaking = true;
