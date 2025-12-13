@@ -23,7 +23,7 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         /// <param name="intensity">エフェクトの強度</param>
         /// <param name="duration">エフェクトの継続時間</param>
-        void Apply(float intensity, float duration);
+        void Apply();
 
         /// <summary>
         /// エフェクトを停止する

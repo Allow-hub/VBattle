@@ -14,13 +14,14 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float zoomIntensity = 10f;
         [SerializeField] private float zoomDuration = 0.5f;
         
-        // 読み取り専用プロパティ
-        public float DefaultIntensity => zoomIntensity;
-        public float DefaultDuration => zoomDuration;
+        // プロパティは削除（不要になった）
         
         private UnityEngine.Camera targetCamera;
         private float originalFOV;
         private bool isZooming;
+        private float currentIntensity;
+        private float currentDuration;
+        private float zoomStartTime;
 
         public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
 
@@ -37,22 +38,47 @@ namespace TechC.VBattle.InGame.Camera
             }
         }
 
-        public void Apply(float intensity, float duration)
-        {
-            // TODO: 実装予定
-        }
-
         /// <summary>
         /// デフォルト設定でズームを実行
         /// </summary>
-        public void ApplyDefault()
+        public void Apply()
         {
-            Apply(zoomIntensity, zoomDuration);
+            if (State == CameraEffectState.Active)
+                Stop();
+
+            currentIntensity = zoomIntensity;
+            currentDuration = zoomDuration;
+            
+            State = CameraEffectState.Active;
+            isZooming = true;
+            
+            StartZoomAsync();
+        }
+
+        /// <summary>
+        /// カスタム設定でズームを実行
+        /// </summary>
+        /// <param name="intensity">ズーム強度</param>
+        /// <param name="duration">継続時間</param>
+        public void ApplyCustom(float intensity, float duration)
+        {
+            if (State == CameraEffectState.Active)
+                Stop();
+
+            currentIntensity = intensity;
+            currentDuration = duration;
+            
+            State = CameraEffectState.Active;
+            isZooming = true;
+            
+            StartZoomAsync();
         }
 
         public void Stop()
         {
-            // TODO: 実装予定
+            isZooming = false;
+            zoomStartTime = 0f;
+            Reset();
         }
 
         public void Reset()
@@ -62,7 +88,41 @@ namespace TechC.VBattle.InGame.Camera
                 targetCamera.fieldOfView = originalFOV;
             }
             
+            zoomStartTime = 0f;
             State = CameraEffectState.Completed;
+        }
+
+        private async void StartZoomAsync()
+        {
+            await DelayUtility.StartRepeatedActionAsync(
+                currentDuration, 
+                Time.fixedDeltaTime,
+                () => { PerformZoomStep(); return UniTask.CompletedTask; }
+            );
+            
+            if (isZooming)
+            {
+                isZooming = false;
+                Reset();
+            }
+        }
+
+        private void PerformZoomStep()
+        {
+            if (!isZooming || targetCamera == null) return;
+
+            // 開始時間を記録
+            if (zoomStartTime == 0f)
+                zoomStartTime = Time.time;
+
+            float elapsedTime = Time.time - zoomStartTime;
+            float progress = elapsedTime / currentDuration;
+
+            // サイン曲線でスムーズなズームイン/アウト
+            float curve = Mathf.Sin(progress * Mathf.PI);
+            float targetFOV = originalFOV - (currentIntensity * curve);
+
+            targetCamera.fieldOfView = targetFOV;
         }
     }
 }

@@ -14,11 +14,7 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float shakeIntensity = 0.5f;
         [SerializeField] private float shakeDuration = 0.3f;
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
-        
-        // 読み取り専用プロパティ
-        public float DefaultIntensity => shakeIntensity;
-        public float DefaultDuration => shakeDuration;
-        
+                
         private Transform cameraTransform;
         private Vector3 originalPosition;
         private float currentIntensity;
@@ -38,19 +34,23 @@ namespace TechC.VBattle.InGame.Camera
             originalPosition = cameraTransform.position;
         }
 
-        public void Apply(float intensity, float duration)
+        /// <summary>
+        /// デフォルト設定でシェイクを適用
+        /// </summary>
+        public void Apply()
         {
             if (State == CameraEffectState.Active)
                 Stop();
 
-            currentIntensity = intensity > 0 ? intensity : shakeIntensity;
-            currentDuration = duration > 0 ? duration : shakeDuration;
+            currentIntensity = shakeIntensity;
+            currentDuration = shakeDuration;
             
             State = CameraEffectState.Active;
             isShaking = true;
             
             StartShakeAsync();
         }
+
 
         private async void StartShakeAsync()
         {

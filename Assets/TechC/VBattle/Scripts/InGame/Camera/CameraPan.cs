@@ -15,10 +15,6 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float panDuration = 1.0f;
         [SerializeField] private AnimationCurve panCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
         
-        // 読み取り専用プロパティ
-        public float DefaultIntensity => panIntensity;
-        public float DefaultDuration => panDuration;
-        
         private Transform cameraTransform;
         private Vector3 originalPosition;
         private bool isPanning;
@@ -39,49 +35,20 @@ namespace TechC.VBattle.InGame.Camera
             originalPosition = cameraTransform.position;
         }
 
-        public void Apply(float intensity, float duration)
+        /// <summary>
+        /// デフォルト設定でパンを実行
+        /// </summary>
+        public void Apply()
         {
             if (State == CameraEffectState.Active)
                 Stop();
 
-            currentIntensity = intensity > 0 ? intensity : panIntensity;
-            currentDuration = duration > 0 ? duration : panDuration;
+            currentIntensity = panIntensity;
+            currentDuration = panDuration;
             
             // ランダムな方向にパン
             Vector2 randomDirection = Random.insideUnitCircle.normalized;
             targetOffset = new Vector3(randomDirection.x, randomDirection.y, 0f) * currentIntensity;
-            
-            State = CameraEffectState.Active;
-            isPanning = true;
-            
-            StartPanAsync();
-        }
-
-        /// <summary>
-        /// デフォルト設定でパンを実行
-        /// </summary>
-        public void ApplyDefault()
-        {
-            Apply(panIntensity, panDuration);
-        }
-
-        /// <summary>
-        /// 指定方向にパン
-        /// </summary>
-        /// <param name="direction">パン方向（正規化済み）</param>
-        /// <param name="intensity">パン強度</param>
-        /// <param name="duration">継続時間</param>
-        public void ApplyDirectional(Vector2 direction, float intensity, float duration)
-        {
-            if (State == CameraEffectState.Active)
-                Stop();
-
-            currentIntensity = intensity > 0 ? intensity : panIntensity;
-            currentDuration = duration > 0 ? duration : panDuration;
-            
-            // 指定方向にパン
-            Vector3 normalizedDirection = direction.normalized;
-            targetOffset = new Vector3(normalizedDirection.x, normalizedDirection.y, 0f) * currentIntensity;
             
             State = CameraEffectState.Active;
             isPanning = true;

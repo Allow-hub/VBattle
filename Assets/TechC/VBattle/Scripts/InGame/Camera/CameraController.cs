@@ -9,12 +9,11 @@ namespace TechC.VBattle.InGame.Camera
     {
         [Header("エフェクト設定")]
         [SerializeField] private CameraShake CameraShake = new CameraShake();
+        [SerializeField] private CameraZoom CameraZoom = new CameraZoom();
+        [SerializeField] private CameraPan CameraPan = new CameraPan();
 
         private UnityEngine.Camera targetCamera;
         private Vector3 originalPosition;
-        
-        private float cachedShakeIntensity;
-        private float cachedShakeDuration;
 
         private void Start()
         {
@@ -23,19 +22,21 @@ namespace TechC.VBattle.InGame.Camera
             originalPosition = transform.position;
 
             CameraShake.Initialize(transform);
-            
-            // デフォルト値をキャッシュ
-            cachedShakeIntensity = CameraShake.DefaultIntensity;
-            cachedShakeDuration = CameraShake.DefaultDuration;
+            CameraZoom.Initialize(transform);
+            CameraPan.Initialize(transform);
         }
 
         private void Update()
         {
-            // テスト用：スペースキーでシェイク
+            // テスト用：各エフェクトのテスト
             if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
-            {
-                CameraShake.Apply(cachedShakeIntensity, cachedShakeDuration);
-            }
+                CameraShake.Apply();
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Z))
+                CameraZoom.Apply();
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.X))
+                CameraPan.Apply();
         }
     }
 }
