@@ -18,6 +18,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Pos;
         
         [SerializeField] private GameObject ameObj;
+        [SerializeField] private Camera.CameraController cameraController;
         public InGameState InGameState => inGameState;
         private InGameState inGameState;
         public BattleEventBus BattleBus { get; private set; }
@@ -43,6 +44,9 @@ namespace TechC.VBattle.InGame
                 p2.GetComponent<PlayerInput>().enabled = false;
                 
                 battleJudge = new BattleJudge(p1,p2,BattleBus);
+                
+                // CameraControllerにプレイヤー参照を渡す
+                cameraController.SetupPlayers(p1, p2);
             }
             else
             {
@@ -66,7 +70,6 @@ namespace TechC.VBattle.InGame
             battleJudge?.Dispose();
             BattleBus?.Clear();
         }
-
 
         private void UpdateState()
         {

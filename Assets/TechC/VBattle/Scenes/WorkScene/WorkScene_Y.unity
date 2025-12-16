@@ -387,9 +387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3875449afb27e8745a9643419e8db2d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraShake:
-    defaultIntensity: 0.5
-    defaultDuration: 0.2
+  cameraShake:
+    shakeIntensity: 0.5
+    shakeDuration: 0.3
     shakeCurve:
       serializedVersion: 2
       m_Curve:
@@ -414,6 +414,48 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+  cameraZoom:
+    zoomIntensity: 10
+    zoomDuration: 0.5
+  cameraPan:
+    panIntensity: 2
+    panDuration: 1
+    panCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  cameraFollow:
+    zoomIntensity: 10
+    zoomDuration: 0.5
+    enableFollowMode: 1
+    followSpeed: 5
+    zoomSpeed: 3
+    marginSize: {x: 6, y: 4}
+    minFOV: 40
+    maxFOV: 60
+    jumpHeightOffset: 2
+    baseHeight: 0
+    followLimits: {x: 15, y: 10}
 --- !u!1001 &843925919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29747,6 +29789,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 657653369}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
