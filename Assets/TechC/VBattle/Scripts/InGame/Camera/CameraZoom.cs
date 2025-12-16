@@ -44,7 +44,7 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State == CameraEffectState.Active)
-                Stop();
+                Stop(Vector3.zero);
 
             currentIntensity = zoomIntensity;
             currentDuration = zoomDuration;
@@ -63,7 +63,7 @@ namespace TechC.VBattle.InGame.Camera
         public void ApplyCustom(float intensity, float duration)
         {
             if (State == CameraEffectState.Active)
-                Stop();
+                Stop(Vector3.zero); // ズームはFOVのみを制御するのでoriginalPositionは不要
 
             currentIntensity = intensity;
             currentDuration = duration;
@@ -74,14 +74,14 @@ namespace TechC.VBattle.InGame.Camera
             StartZoomAsync();
         }
 
-        public void Stop()
+        public void Stop(Vector3 originalPosition)
         {
             isZooming = false;
             zoomStartTime = 0f;
-            Reset();
+            Reset(originalPosition);
         }
 
-        public void Reset()
+        public void Reset(Vector3 originalPosition)
         {
             if (targetCamera != null)
             {
@@ -103,7 +103,7 @@ namespace TechC.VBattle.InGame.Camera
             if (isZooming)
             {
                 isZooming = false;
-                Reset();
+                Reset(Vector3.zero); // ズームはFOVのみを制御するのでoriginalPositionは不要
             }
         }
 

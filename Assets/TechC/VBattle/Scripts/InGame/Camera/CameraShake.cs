@@ -16,7 +16,6 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
                 
         private Transform cameraTransform;
-        private Vector3 originalPosition;
         private float currentIntensity;
         private float currentDuration;
         private bool isShaking;
@@ -31,16 +30,19 @@ namespace TechC.VBattle.InGame.Camera
         public void Initialize(Transform cameraTransform)
         {
             this.cameraTransform = cameraTransform;
-            originalPosition = cameraTransform.position;
         }
 
         /// <summary>
-        /// デフォルト設定でシェイクを適用
+        /// シェイクを適用
         /// </summary>
         public void Apply()
         {
             if (State == CameraEffectState.Active)
-                Stop();
+            {
+                var controller = cameraTransform?.GetComponent<CameraController>();
+                if (controller != null)
+                    Stop(controller.OriginalPosition);
+            }
 
             currentIntensity = shakeIntensity;
             currentDuration = shakeDuration;
@@ -63,18 +65,20 @@ namespace TechC.VBattle.InGame.Camera
             if (isShaking)
             {
                 isShaking = false;
-                Reset();
+                var controller = cameraTransform?.GetComponent<CameraController>();
+                if (controller != null)
+                    Reset(controller.OriginalPosition);
             }
         }
 
-        public void Stop()
+        public void Stop(Vector3 originalPosition)
         {
             isShaking = false;
             shakeStartTime = 0f;
-            Reset();
+            Reset(originalPosition);
         }
 
-        public void Reset()
+        public void Reset(Vector3 originalPosition)
         {
             if (cameraTransform != null)
                 cameraTransform.position = originalPosition;
@@ -100,7 +104,11 @@ namespace TechC.VBattle.InGame.Camera
             Vector3 randomOffset = Random.insideUnitSphere * shakeAmount;
             randomOffset.z = 0f; // Z軸の振動は制限
 
-            cameraTransform.position = originalPosition + randomOffset;
+            var controller = cameraTransform?.GetComponent<CameraController>();
+            if (controller != null)
+            {
+                cameraTransform.position = controller.OriginalPosition + randomOffset;
+            }
         }
     }
 }

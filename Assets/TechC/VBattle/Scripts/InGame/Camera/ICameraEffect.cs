@@ -28,11 +28,13 @@ namespace TechC.VBattle.InGame.Camera
         /// <summary>
         /// エフェクトを停止する
         /// </summary>
-        void Stop();
+        /// <param name="originalPosition">カメラの元の位置</param>
+        void Stop(Vector3 originalPosition);
 
         /// <summary>
         /// エフェクトをリセットして初期状態に戻す
         /// </summary>
-        void Reset();
+        /// <param name="originalPosition">カメラの元の位置</param>
+        void Reset(Vector3 originalPosition);
     }
 }
