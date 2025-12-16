@@ -14,9 +14,8 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float panIntensity = 2.0f;
         [SerializeField] private float panDuration = 1.0f;
         [SerializeField] private AnimationCurve panCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-        
+
         private Transform cameraTransform;
-        private Vector3 originalPosition;
         private bool isPanning;
         private float currentIntensity;
         private float currentDuration;
@@ -32,7 +31,6 @@ namespace TechC.VBattle.InGame.Camera
         public void Initialize(Transform cameraTransform)
         {
             this.cameraTransform = cameraTransform;
-            originalPosition = cameraTransform.position;
         }
 
         /// <summary>
@@ -41,35 +39,37 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State == CameraEffectState.Active)
-                Stop();
+            {
+                var controller = cameraTransform?.GetComponent<CameraController>();
+                if (controller != null)
+                    Stop(controller.OriginalPosition);
+            }
 
             currentIntensity = panIntensity;
             currentDuration = panDuration;
-            
+
             // ランダムな方向にパン
             Vector2 randomDirection = Random.insideUnitCircle.normalized;
             targetOffset = new Vector3(randomDirection.x, randomDirection.y, 0f) * currentIntensity;
-            
+
             State = CameraEffectState.Active;
             isPanning = true;
-            
+
             StartPanAsync();
         }
 
-        public void Stop()
+        public void Stop(Vector3 originalPosition)
         {
             isPanning = false;
             panStartTime = 0f;
-            Reset();
+            Reset(originalPosition);
         }
 
-        public void Reset()
+        public void Reset(Vector3 originalPosition)
         {
             if (cameraTransform != null)
-            {
                 cameraTransform.position = originalPosition;
-            }
-            
+
             panStartTime = 0f;
             State = CameraEffectState.Completed;
         }
@@ -77,15 +77,17 @@ namespace TechC.VBattle.InGame.Camera
         private async void StartPanAsync()
         {
             await DelayUtility.StartRepeatedActionAsync(
-                currentDuration, 
+                currentDuration,
                 Time.fixedDeltaTime,
                 () => { PerformPanStep(); return UniTask.CompletedTask; }
             );
-            
+
             if (isPanning)
             {
                 isPanning = false;
-                Reset();
+                var controller = cameraTransform?.GetComponent<CameraController>();
+                if (controller != null)
+                    Reset(controller.OriginalPosition);
             }
         }
 
@@ -104,7 +106,9 @@ namespace TechC.VBattle.InGame.Camera
             float curveValue = panCurve.Evaluate(progress);
             Vector3 currentOffset = targetOffset * curveValue;
 
-            cameraTransform.position = originalPosition + currentOffset;
+            var controller = cameraTransform?.GetComponent<CameraController>();
+            if (controller != null)
+                cameraTransform.position = controller.OriginalPosition + currentOffset;
         }
     }
 }
