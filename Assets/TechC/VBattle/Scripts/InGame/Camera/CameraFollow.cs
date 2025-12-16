@@ -1,3 +1,4 @@
+using TechC.VBattle.Core.Extensions;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Camera
@@ -18,17 +19,17 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float maxFOV = 60f;
         [SerializeField] private float jumpHeightOffset = 2f;
         [SerializeField] private float baseHeight = 0f;
-        
+
         [Header("追従制限")]
         [SerializeField] private Vector2 followLimits = new Vector2(15f, 10f);
-        
+
         // 定数定義
         private const float MIDPOINT_FACTOR = 0.5f; // プレイヤー間の中央位置計算用
-        
+
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
-        
+
         // 追従機能用
         private Transform player1;
         private Transform player2;
@@ -60,9 +61,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             // フォローモードがアクティブでない場合は何もしない
             if (!isFollowActive)
-            {
-                Debug.LogWarning("プレイヤーが設定されていないため、フォローできません");
-            }
+                CustomLogger.Error("プレイヤーが設定されていないため、フォローできません");
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace TechC.VBattle.InGame.Camera
             player2 = p2;
             isFollowActive = true;
             enableFollowMode = true;
-            
+
             if (cameraTransform != null)
             {
                 targetPosition = cameraTransform.position;
@@ -102,33 +101,33 @@ namespace TechC.VBattle.InGame.Camera
 
             // プレイヤー中央位置計算
             Vector3 centerPosition = (player1.position + player2.position) * MIDPOINT_FACTOR;
-            
+
             // Y軸にジャンプオフセットを追加（最も高いプレイヤーに合わせる）
             float highestY = Mathf.Max(player1.position.y, player2.position.y);
             float targetY = Mathf.Max(baseHeight, highestY + jumpHeightOffset);
             centerPosition.y = targetY;
-            
+
             // カメラのZ位置は維持
             var controller = cameraTransform.GetComponent<CameraController>();
             if (controller != null)
             {
                 centerPosition.z = controller.OriginalPosition.z;
             }
-            
+
             // 追従制限を適用
             centerPosition.x = Mathf.Clamp(centerPosition.x, -followLimits.x, followLimits.x);
             centerPosition.y = Mathf.Clamp(centerPosition.y, -followLimits.y, followLimits.y);
-            
+
             targetPosition = centerPosition;
-            
+
             // カメラ位置をスムーズに移動
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, followSpeed * Time.deltaTime);
-            
+
             // プレイヤー間距離に応じてFOV調整
             float distance = Vector3.Distance(player1.position, player2.position);
             float normalizedDistance = Mathf.Clamp01(distance / marginSize.x);
             targetFOV = Mathf.Lerp(minFOV, maxFOV, normalizedDistance);
-            
+
             // FOVをスムーズに調整
             targetCamera.fieldOfView = Mathf.Lerp(targetCamera.fieldOfView, targetFOV, zoomSpeed * Time.deltaTime);
         }
@@ -142,13 +141,9 @@ namespace TechC.VBattle.InGame.Camera
         public void Reset(Vector3 originalPosition)
         {
             if (targetCamera != null)
-            {
                 targetCamera.fieldOfView = originalFOV;
-            }
-            
+
             State = CameraEffectState.Completed;
         }
-
-
     }
 }

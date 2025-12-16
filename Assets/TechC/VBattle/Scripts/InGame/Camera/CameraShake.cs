@@ -14,7 +14,7 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float shakeIntensity = 0.5f;
         [SerializeField] private float shakeDuration = 0.3f;
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
-                
+
         private Transform cameraTransform;
         private float currentIntensity;
         private float currentDuration;
@@ -46,10 +46,10 @@ namespace TechC.VBattle.InGame.Camera
 
             currentIntensity = shakeIntensity;
             currentDuration = shakeDuration;
-            
+
             State = CameraEffectState.Active;
             isShaking = true;
-            
+
             StartShakeAsync();
         }
 
@@ -57,11 +57,11 @@ namespace TechC.VBattle.InGame.Camera
         private async void StartShakeAsync()
         {
             await DelayUtility.StartRepeatedActionAsync(
-                currentDuration, 
+                currentDuration,
                 Time.fixedDeltaTime, // 60FPS相当の間隔
                 async () => await PerformShakeStep()
             );
-            
+
             if (isShaking)
             {
                 isShaking = false;
@@ -82,7 +82,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             if (cameraTransform != null)
                 cameraTransform.position = originalPosition;
-            
+
             shakeStartTime = 0f;
             State = CameraEffectState.Completed;
         }
@@ -106,9 +106,7 @@ namespace TechC.VBattle.InGame.Camera
 
             var controller = cameraTransform?.GetComponent<CameraController>();
             if (controller != null)
-            {
                 cameraTransform.position = controller.OriginalPosition + randomOffset;
-            }
         }
     }
 }

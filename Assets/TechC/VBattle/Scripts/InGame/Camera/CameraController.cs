@@ -55,9 +55,7 @@ namespace TechC.VBattle.InGame.Camera
             
             // プレイヤーが設定されたら自動で追従モード開始
             if (player1 != null && player2 != null)
-            {
-                StartFollowMode();
-            }
+                cameraFollow.StartFollowMode(player1.transform, player2.transform);
         }
 
         /// <summary>
@@ -81,27 +79,10 @@ namespace TechC.VBattle.InGame.Camera
             if (eventBus != null)
                 eventBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
         }
+
         private void Update()
         {
             cameraFollow.UpdateFollow();
-
-            // テスト用：各エフェクトのテスト
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
-                cameraShake.Apply();
-
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Z))
-                // cameraZoom.Apply();
-                cameraFollow.Apply();
-
-            if (UnityEngine.Input.GetKeyDown(KeyCode.X))
-                cameraPan.Apply();
-                
-            // 追従モードテスト
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F))
-                StartFollowMode();
-                
-            if (UnityEngine.Input.GetKeyDown(KeyCode.G))
-                StopFollowMode();
         }
 
         /// <summary>
@@ -113,32 +94,6 @@ namespace TechC.VBattle.InGame.Camera
             // ヒットした場合のみカメラシェイクを実行
             if (attackResult.isHit)
                 cameraShake.Apply();
-        }
-        
-        /// <summary>
-        /// 追従モードを開始
-        /// </summary>
-        private void StartFollowMode()
-        {
-            // 保持したプレイヤー参照を使用（FindObjectsOfTypeを使わずメモリ効率が良い）
-            if (player1 != null && player2 != null)
-            {
-                cameraFollow.StartFollowMode(player1.transform, player2.transform);
-                Debug.Log("カメラ追従モード開始");
-            }
-            else
-            {
-                Debug.LogWarning("プレイヤーが設定されていません");
-            }
-        }
-        
-        /// <summary>
-        /// 追従モードを停止
-        /// </summary>
-        private void StopFollowMode()
-        {
-            cameraFollow.StopFollowMode();
-            Debug.Log("カメラ追従モード停止");
         }
     }
 }
