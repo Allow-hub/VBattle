@@ -20,7 +20,7 @@ namespace TechC.VBattle.InGame.Camera
         private float currentDuration;
         private bool isShaking;
         private float shakeStartTime;
-
+        private Vector3 shakeBasePosition;
         public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
 
         /// <summary>
@@ -38,14 +38,13 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State == CameraEffectState.Active)
-            {
-                var controller = cameraTransform?.GetComponent<CameraController>();
-                if (controller != null)
-                    Stop(controller.OriginalPosition);
-            }
+                Stop(cameraTransform.position);
 
             currentIntensity = shakeIntensity;
             currentDuration = shakeDuration;
+
+            // シェイク開始時の現在位置を基準位置として保存
+            shakeBasePosition = cameraTransform.position;
 
             State = CameraEffectState.Active;
             isShaking = true;
@@ -65,9 +64,8 @@ namespace TechC.VBattle.InGame.Camera
             if (isShaking)
             {
                 isShaking = false;
-                var controller = cameraTransform?.GetComponent<CameraController>();
-                if (controller != null)
-                    Reset(controller.OriginalPosition);
+                // シェイク終了時は基準位置に戻す（追従は別途継続される）
+                Reset(shakeBasePosition);
             }
         }
 
@@ -104,9 +102,8 @@ namespace TechC.VBattle.InGame.Camera
             Vector3 randomOffset = Random.insideUnitSphere * shakeAmount;
             randomOffset.z = 0f; // Z軸の振動は制限
 
-            var controller = cameraTransform?.GetComponent<CameraController>();
-            if (controller != null)
-                cameraTransform.position = controller.OriginalPosition + randomOffset;
+            // シェイク開始時の基準位置を使用
+            cameraTransform.position = shakeBasePosition + randomOffset;
         }
     }
 }

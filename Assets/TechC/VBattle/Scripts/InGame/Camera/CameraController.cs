@@ -27,6 +27,11 @@ namespace TechC.VBattle.InGame.Camera
         /// カメラの元の位置（読み取り専用）
         /// </summary>
         public Vector3 OriginalPosition => originalPosition;
+        
+        /// <summary>
+        /// 現在のカメラ位置
+        /// </summary>
+        public Vector3 CurrentPosition => transform.position;
 
         private void Start()
         {

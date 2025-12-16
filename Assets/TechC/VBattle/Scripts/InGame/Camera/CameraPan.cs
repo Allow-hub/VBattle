@@ -21,6 +21,7 @@ namespace TechC.VBattle.InGame.Camera
         private float currentDuration;
         private float panStartTime;
         private Vector3 targetOffset;
+        private Vector3 panBasePosition; // パン開始時の基準位置
 
         public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
 
@@ -42,11 +43,14 @@ namespace TechC.VBattle.InGame.Camera
             {
                 var controller = cameraTransform?.GetComponent<CameraController>();
                 if (controller != null)
-                    Stop(controller.OriginalPosition);
+                    Stop(controller.CurrentPosition);
             }
 
             currentIntensity = panIntensity;
             currentDuration = panDuration;
+            
+            // パン開始時の現在位置を基準位置として保存
+            panBasePosition = cameraTransform.position;
 
             // ランダムな方向にパン
             Vector2 randomDirection = Random.insideUnitCircle.normalized;
