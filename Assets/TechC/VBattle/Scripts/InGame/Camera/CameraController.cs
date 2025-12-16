@@ -12,7 +12,6 @@ namespace TechC.VBattle.InGame.Camera
     {   
         [Header("エフェクト設定")]
         [SerializeField] private CameraShake cameraShake = new CameraShake();
-        [SerializeField] private CameraZoom cameraZoom = new CameraZoom();
         [SerializeField] private CameraPan cameraPan = new CameraPan();
         [SerializeField] private CameraFollow cameraFollow = new CameraFollow();
 
@@ -36,7 +35,6 @@ namespace TechC.VBattle.InGame.Camera
             originalPosition = transform.position;
 
             cameraShake.Initialize(transform);
-            cameraZoom.Initialize(transform);
             cameraPan.Initialize(transform);
             cameraFollow.Initialize(transform);
 

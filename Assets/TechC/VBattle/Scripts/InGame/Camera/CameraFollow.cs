@@ -1,20 +1,14 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
-using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.InGame.Camera
 {
     /// <summary>
-    /// カメラ追従・ズームエフェクトの実装
-    /// 格闘ゲーム用のプレイヤー追従機能とズームエフェクトを統合
+    /// カメラ追従の実装
+    /// 格闘ゲーム用のプレイヤー追従機能
     /// </summary>
     [System.Serializable]
     public class CameraFollow : ICameraEffect
     {
-        [Header("ズームエフェクト設定")]
-        [SerializeField] private float zoomIntensity = 10f;
-        [SerializeField] private float zoomDuration = 0.5f;
-        
         [Header("格闘ゲーム追従設定")]
         [SerializeField] private bool enableFollowMode = false;
         [SerializeField] private float followSpeed = 5f;
@@ -28,13 +22,12 @@ namespace TechC.VBattle.InGame.Camera
         [Header("追従制限")]
         [SerializeField] private Vector2 followLimits = new Vector2(15f, 10f);
         
+        // 定数定義
+        private const float MIDPOINT_FACTOR = 0.5f; // プレイヤー間の中央位置計算用
+        
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
-        private bool isZooming;
-        private float currentIntensity;
-        private float currentDuration;
-        private float zoomStartTime;
         
         // 追従機能用
         private Transform player1;
@@ -61,43 +54,15 @@ namespace TechC.VBattle.InGame.Camera
         }
 
         /// <summary>
-        /// デフォルト設定でズームエフェクトを実行
+        /// フォローモードを開始（ICameraEffectインターフェース実装）
         /// </summary>
         public void Apply()
         {
-            if (State == CameraEffectState.Active)
+            // フォローモードがアクティブでない場合は何もしない
+            if (!isFollowActive)
             {
-                Stop(Vector3.zero);
+                Debug.LogWarning("プレイヤーが設定されていないため、フォローできません");
             }
-
-            currentIntensity = zoomIntensity;
-            currentDuration = zoomDuration;
-            
-            State = CameraEffectState.Active;
-            isZooming = true;
-            
-            StartZoomAsync();
-        }
-
-        /// <summary>
-        /// カスタム設定でズームエフェクトを実行
-        /// </summary>
-        /// <param name="intensity">ズーム強度</param>
-        /// <param name="duration">継続時間</param>
-        public void ApplyCustom(float intensity, float duration)
-        {
-            if (State == CameraEffectState.Active)
-            {
-                Stop(Vector3.zero);
-            }
-
-            currentIntensity = intensity;
-            currentDuration = duration;
-            
-            State = CameraEffectState.Active;
-            isZooming = true;
-            
-            StartZoomAsync();
         }
 
         /// <summary>
@@ -136,7 +101,7 @@ namespace TechC.VBattle.InGame.Camera
                 return;
 
             // プレイヤー中央位置計算
-            Vector3 centerPosition = (player1.position + player2.position) * 0.5f;
+            Vector3 centerPosition = (player1.position + player2.position) * MIDPOINT_FACTOR;
             
             // Y軸にジャンプオフセットを追加（最も高いプレイヤーに合わせる）
             float highestY = Mathf.Max(player1.position.y, player2.position.y);
@@ -170,8 +135,7 @@ namespace TechC.VBattle.InGame.Camera
 
         public void Stop(Vector3 originalPosition)
         {
-            isZooming = false;
-            zoomStartTime = 0f;
+            StopFollowMode();
             Reset(originalPosition);
         }
 
@@ -182,41 +146,9 @@ namespace TechC.VBattle.InGame.Camera
                 targetCamera.fieldOfView = originalFOV;
             }
             
-            zoomStartTime = 0f;
             State = CameraEffectState.Completed;
         }
 
-        private async void StartZoomAsync()
-        {
-            await DelayUtility.StartRepeatedActionAsync(
-                currentDuration, 
-                Time.fixedDeltaTime,
-                () => { PerformZoomStep(); return UniTask.CompletedTask; }
-            );
-            
-            if (isZooming)
-            {
-                isZooming = false;
-                Reset(Vector3.zero);
-            }
-        }
 
-        private void PerformZoomStep()
-        {
-            if (!isZooming || targetCamera == null) return;
-
-            // 開始時間を記録
-            if (zoomStartTime == 0f)
-                zoomStartTime = Time.time;
-
-            float elapsedTime = Time.time - zoomStartTime;
-            float progress = elapsedTime / currentDuration;
-
-            // サイン曲線でスムーズなズームイン/アウト
-            float curve = Mathf.Sin(progress * Mathf.PI);
-            float targetFOVEffect = originalFOV - (currentIntensity * curve);
-
-            targetCamera.fieldOfView = targetFOVEffect;
-        }
     }
 }
