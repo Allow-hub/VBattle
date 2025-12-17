@@ -2,9 +2,11 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Windows.Win32.Foundation;
 
 namespace TechC.VBattle.InGame
 {
@@ -20,6 +22,8 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Pos;
 
         [SerializeField] private GameObject ameObj;
+
+        [SerializeField] private Vector2[] countdownPosition;
         private int countdownTimer = 3;
         private CancellationTokenSource countdownCts;
         public InGameState InGameState => inGameState;
@@ -47,7 +51,7 @@ namespace TechC.VBattle.InGame
                 p2.GetComponent<PlayerInput>().enabled = false;
 
                 battleJudge = new BattleJudge(p1, p2, BattleBus);
-                ChangeState(InGameState.Start);
+                ChangeState(InGameState.Battle);
             }
             else
             {
@@ -128,7 +132,7 @@ namespace TechC.VBattle.InGame
             CountdownAsync(countdownCts.Token).Forget();
         }
 
-        /// <summary>
+       /// <summary>
         /// ゲーム開始時のカウントダウン
         /// </summary>
         /// <param name="token">キャンセルのトークン</param>
@@ -137,8 +141,56 @@ namespace TechC.VBattle.InGame
         {
             try
             {
+                if (countdownPosition == null || countdownPosition.Length == 0) return;
                 for (int i = countdownTimer; i > 0; i--)
                 {
+                    // キャンセルチェック
+                    token.ThrowIfCancellationRequested();
+
+                    // WindowFactory/I の存在確認
+                    var wf = WindowFactory.I;
+                    if (wf == null)
+                    {
+                        Debug.LogWarning("CountdownAsync: WindowFactory.I が null です。ウィンドウ移動をスキップします。");
+                        await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        continue;
+                    }
+
+                    var w = wf.GetWindow(WindowFactory.WindowType.Basic);
+                    if (w == null)
+                    {
+                        Debug.LogWarning("CountdownAsync: WindowFactory.GetWindow が null を返しました。");
+                        await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        continue;
+                    }
+
+                    // Hwnd の確認（IntPtr.Zero なら無効）
+                    var hwndObj = w.Hwnd;
+                    if (hwndObj == null || hwndObj.Equals(IntPtr.Zero))
+                    {
+                        Debug.LogWarning("CountdownAsync: window.Hwnd が null または IntPtr.Zero です。");
+                        await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        continue;
+                    }
+
+                    // countdownPosition の index 安全化
+                    Vector2 pos;
+                    if (countdownPosition != null && i < countdownPosition.Length)
+                        pos = countdownPosition[i];
+                    else if (countdownPosition != null && countdownPosition.Length > 0)
+                        pos = countdownPosition[countdownPosition.Length - 1];
+                    else
+                        pos = Vector2.zero;
+
+                    try
+                    {
+                        WindowUtility.MoveWindow((HWND)hwndObj, (int)pos.x, (int)pos.y);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"CountdownAsync: MoveWindow で例外: {ex.Message}");
+                    }
+
                     await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);// 1秒待機
                 }
 
@@ -150,6 +202,10 @@ namespace TechC.VBattle.InGame
             {
                 // キャンセルされた場合の処理
                 Debug.Log("Countdown cancelled");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
             }
         }
 

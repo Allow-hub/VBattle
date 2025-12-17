@@ -356,6 +356,41 @@ PrefabInstance:
       propertyPath: isDebug
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[0].x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[0].y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[1].x
+      value: 1400
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[1].y
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[2].x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: countdownPosition.Array.data[2].y
+      value: 800
+      objectReference: {fileID: 0}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
