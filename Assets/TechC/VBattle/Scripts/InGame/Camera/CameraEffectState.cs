@@ -9,12 +9,12 @@ namespace TechC.VBattle.InGame.Camera
         /// 待機状態
         /// </summary>
         Idle,
- 
+
         /// <summary>
         /// アクティブ状態
         /// </summary>
         Active,
- 
+
         /// <summary>
         /// 完了状態
         /// </summary>
