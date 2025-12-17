@@ -13,6 +13,7 @@ namespace TechC.VBattle.InGame.Camera
         [Header("エフェクト設定")]
         [SerializeField] private CameraShake cameraShake = new CameraShake();
         [SerializeField] private CameraFollow cameraFollow = new CameraFollow();
+        [SerializeField] private CameraZoom cameraZoom = new CameraZoom();
 
         private UnityEngine.Camera targetCamera;
         private Vector3 originalPosition;
@@ -39,6 +40,7 @@ namespace TechC.VBattle.InGame.Camera
 
             cameraShake.Initialize(transform);
             cameraFollow.Initialize(transform);
+            cameraZoom.Initialize(transform);
 
             InitializeEventBus();
         }
@@ -77,7 +79,8 @@ namespace TechC.VBattle.InGame.Camera
 
         private void Update()
         {
-            cameraFollow.UpdateFollow();
+            // ICameraEffectインターフェースに従った統一されたApplyメソッドを使用
+            cameraFollow.Apply();
         }
 
         /// <summary>
@@ -86,9 +89,12 @@ namespace TechC.VBattle.InGame.Camera
         /// <param name="attackResult">攻撃結果データ</param>
         private void OnAttackResult(AttackResultEvent attackResult)
         {
-            // ヒットした場合のみカメラシェイクを実行
+            // ヒットした場合のみカメラエフェクトを実行
             if (attackResult.isHit)
-                cameraShake.Apply();
+            {
+                cameraShake.Apply();  // シェイクエフェクト
+                cameraZoom.Apply();   // ズームエフェクト
+            }
         }
         private void OnDestroy()
         {

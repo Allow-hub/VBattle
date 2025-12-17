@@ -5,16 +5,12 @@ using TechC.VBattle.Core.Util;
 namespace TechC.VBattle.InGame.Camera
 {
     /// <summary>
-    /// カメラ追従・ズームエフェクトの実装
-    /// 格闘ゲーム用のプレイヤー追従機能とズームエフェクトを統合
+    /// カメラ追従エフェクトの実装
+    /// 格闘ゲーム用のプレイヤー追従機能を担当
     /// </summary>
     [System.Serializable]
     public class CameraFollow : ICameraEffect
     {
-        [Header("ズームエフェクト設定")]
-        [SerializeField] private float zoomIntensity = 10f;
-        [SerializeField] private float zoomDuration = 0.5f;
-        
         [Header("格闘ゲーム追従設定")]
         [SerializeField] private float followSpeed = 5f;
         [SerializeField] private float zoomSpeed = 3f;
@@ -30,10 +26,6 @@ namespace TechC.VBattle.InGame.Camera
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
-        private bool isZooming;
-        private float currentIntensity;
-        private float currentDuration;
-        private float zoomStartTime;
         
         // 追従機能用
         private Transform player1;
@@ -60,20 +52,14 @@ namespace TechC.VBattle.InGame.Camera
         }
 
         /// <summary>
-        /// デフォルト設定でズームエフェクトを実行
+        /// 追従エフェクトを開始し、毎フレーム更新を実行
         /// </summary>
         public void Apply()
         {
-            if (State == CameraEffectState.Active)
-                Stop(Vector3.zero);
-
-            currentIntensity = zoomIntensity;
-            currentDuration = zoomDuration;
+            if (!isFollowActive) return;
             
             State = CameraEffectState.Active;
-            isZooming = true;
-            
-            StartZoomAsync();
+            UpdateFollow();
         }
 
         /// <summary>
@@ -86,6 +72,7 @@ namespace TechC.VBattle.InGame.Camera
             player1 = p1;
             player2 = p2;
             isFollowActive = true;
+            State = CameraEffectState.Active;
             
             if (cameraTransform != null)
                 targetPosition = cameraTransform.position;
@@ -132,8 +119,7 @@ namespace TechC.VBattle.InGame.Camera
 
         public void Stop(Vector3 originalPosition)
         {
-            isZooming = false;
-            zoomStartTime = 0f;
+            isFollowActive = false;
             Reset(originalPosition);
         }
 
@@ -142,41 +128,7 @@ namespace TechC.VBattle.InGame.Camera
             if (targetCamera != null)
                 targetCamera.fieldOfView = originalFOV;
             
-            zoomStartTime = 0f;
             State = CameraEffectState.Completed;
-        }
-
-        private async void StartZoomAsync()
-        {
-            await DelayUtility.StartRepeatedActionAsync(
-                currentDuration, 
-                Time.fixedDeltaTime,
-                () => { PerformZoomStep(); return UniTask.CompletedTask; }
-            );
-            
-            if (isZooming)
-            {
-                isZooming = false;
-                Reset(Vector3.zero);
-            }
-        }
-
-        private void PerformZoomStep()
-        {
-            if (!isZooming || targetCamera == null) return;
-
-            // 開始時間を記録
-            if (zoomStartTime == 0f)
-                zoomStartTime = Time.time;
-
-            float elapsedTime = Time.time - zoomStartTime;
-            float progress = elapsedTime / currentDuration;
-
-            // サイン曲線でスムーズなズームイン/アウト
-            float curve = Mathf.Sin(progress * Mathf.PI);
-            float targetFOVEffect = originalFOV - (currentIntensity * curve);
-
-            targetCamera.fieldOfView = targetFOVEffect;
         }
     }
 }
