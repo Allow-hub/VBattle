@@ -1,5 +1,3 @@
-using TechC.VBattle.Audio;
-using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.Systems;
 using UnityEngine;
