@@ -16,7 +16,6 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float zoomDuration = 0.5f;
         
         [Header("格闘ゲーム追従設定")]
-        [SerializeField] private bool enableFollowMode = false;
         [SerializeField] private float followSpeed = 5f;
         [SerializeField] private float zoomSpeed = 3f;
         [SerializeField] private Vector2 marginSize = new Vector2(4f, 3f);
@@ -66,33 +65,10 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State == CameraEffectState.Active)
-            {
                 Stop(Vector3.zero);
-            }
 
             currentIntensity = zoomIntensity;
             currentDuration = zoomDuration;
-            
-            State = CameraEffectState.Active;
-            isZooming = true;
-            
-            StartZoomAsync();
-        }
-
-        /// <summary>
-        /// カスタム設定でズームエフェクトを実行
-        /// </summary>
-        /// <param name="intensity">ズーム強度</param>
-        /// <param name="duration">継続時間</param>
-        public void ApplyCustom(float intensity, float duration)
-        {
-            if (State == CameraEffectState.Active)
-            {
-                Stop(Vector3.zero);
-            }
-
-            currentIntensity = intensity;
-            currentDuration = duration;
             
             State = CameraEffectState.Active;
             isZooming = true;
@@ -110,12 +86,9 @@ namespace TechC.VBattle.InGame.Camera
             player1 = p1;
             player2 = p2;
             isFollowActive = true;
-            enableFollowMode = true;
             
             if (cameraTransform != null)
-            {
                 targetPosition = cameraTransform.position;
-            }
         }
 
         /// <summary>
@@ -124,7 +97,6 @@ namespace TechC.VBattle.InGame.Camera
         public void StopFollowMode()
         {
             isFollowActive = false;
-            enableFollowMode = false;
         }
 
         /// <summary>
@@ -132,7 +104,7 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void UpdateFollow()
         {
-            if (!isFollowActive || !enableFollowMode || player1 == null || player2 == null || targetCamera == null)
+            if (!isFollowActive || player1 == null || player2 == null || targetCamera == null)
                 return;
 
             // プレイヤー中央位置計算
@@ -146,9 +118,7 @@ namespace TechC.VBattle.InGame.Camera
             // カメラのZ位置は維持
             var controller = cameraTransform.GetComponent<CameraController>();
             if (controller != null)
-            {
                 centerPosition.z = controller.OriginalPosition.z;
-            }
             
             // 追従制限を適用
             centerPosition.x = Mathf.Clamp(centerPosition.x, -followLimits.x, followLimits.x);

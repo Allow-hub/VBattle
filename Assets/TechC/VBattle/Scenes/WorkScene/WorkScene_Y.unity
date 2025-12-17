@@ -359,15 +359,14 @@ MonoBehaviour:
   cameraFollow:
     zoomIntensity: 10
     zoomDuration: 0.5
-    enableFollowMode: 0
     followSpeed: 5
     zoomSpeed: 3
     marginSize: {x: 6, y: 4}
-    minFOV: 40
-    maxFOV: 60
+    minFOV: 60
+    maxFOV: 70
     jumpHeightOffset: 2
     baseHeight: 0
-    followLimits: {x: 15, y: 10}
+    followLimits: {x: 15, y: 4}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
