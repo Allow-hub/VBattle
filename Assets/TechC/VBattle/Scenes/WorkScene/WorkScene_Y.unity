@@ -255,6 +255,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 1962525379}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -357,8 +362,8 @@ MonoBehaviour:
     enableFollowMode: 0
     followSpeed: 5
     zoomSpeed: 3
-    marginSize: {x: 4, y: 3}
-    minFOV: 30
+    marginSize: {x: 6, y: 4}
+    minFOV: 40
     maxFOV: 60
     jumpHeightOffset: 2
     baseHeight: 0

@@ -3,7 +3,7 @@ using TechC.VBattle.Core.Managers;
 using TechC.VBattle.InGame.Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+ 
 namespace TechC.VBattle.InGame
 {
     /// <summary>
@@ -16,8 +16,9 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Rot;
         [SerializeField] private Vector3 p1Pos;
         [SerializeField] private Vector3 p2Pos;
-        
+       
         [SerializeField] private GameObject ameObj;
+        [SerializeField] private Camera.CameraController cameraController;
         public InGameState InGameState => inGameState;
         private InGameState inGameState;
         public BattleEventBus BattleBus { get; private set; }
@@ -27,7 +28,7 @@ namespace TechC.VBattle.InGame
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
-
+ 
         public override void Init()
         {
             base.Init();
@@ -37,54 +38,56 @@ namespace TechC.VBattle.InGame
             {
                 var p1 = Instantiate(ameObj,p1Pos,Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
                 var p2 = Instantiate(ameObj,p2Pos,Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
-
+ 
                 p1.Init(1,Keyboard.current,false);
                 p2.Init(2,Keyboard.current,false);
                 p2.GetComponent<PlayerInput>().enabled = false;
-                
+               
                 battleJudge = new BattleJudge(p1,p2,BattleBus);
+               
+                // CameraControllerにプレイヤー参照を渡す
+                cameraController.SetupPlayers(p1, p2);
             }
             else
             {
                 var p1 = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
                 var p2 = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab,p2Pos,Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
-
+ 
                 p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
                 p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
                 Debug.Log($"{GameDataBridge.I.Player_1Setup.PlayerIndex},{GameDataBridge.I.Player_2Setup.PlayerIndex}");
             }
         }
-
+ 
         private void Update()
         {
             UpdateState();
         }
-
+ 
         protected override void OnRelease()
         {
             base.OnRelease();
             battleJudge?.Dispose();
             BattleBus?.Clear();
         }
-
-
+ 
         private void UpdateState()
         {
             switch(inGameState)
             {
                 case InGameState.Start:
-
+ 
                     break;
                 case InGameState.Battle:
-                    
+                   
                     break;
                 case InGameState.Result:
-
+ 
                     break;
             }
         }
     }
-
+ 
     /// <summary>
     /// インゲームのState
     /// </summary>
