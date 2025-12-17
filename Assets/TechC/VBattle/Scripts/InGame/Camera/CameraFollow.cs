@@ -92,14 +92,6 @@ namespace TechC.VBattle.InGame.Camera
         }
 
         /// <summary>
-        /// 追従モードを停止
-        /// </summary>
-        public void StopFollowMode()
-        {
-            isFollowActive = false;
-        }
-
-        /// <summary>
         /// 毎フレーム呼び出してカメラ位置とFOVを調整
         /// </summary>
         public void UpdateFollow()
@@ -148,9 +140,7 @@ namespace TechC.VBattle.InGame.Camera
         public void Reset(Vector3 originalPosition)
         {
             if (targetCamera != null)
-            {
                 targetCamera.fieldOfView = originalFOV;
-            }
             
             zoomStartTime = 0f;
             State = CameraEffectState.Completed;

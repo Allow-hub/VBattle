@@ -12,14 +12,13 @@ namespace TechC.VBattle.InGame.Camera
     {  
         [Header("エフェクト設定")]
         [SerializeField] private CameraShake cameraShake = new CameraShake();
-        [SerializeField] private CameraPan cameraPan = new CameraPan();
         [SerializeField] private CameraFollow cameraFollow = new CameraFollow();
  
         private UnityEngine.Camera targetCamera;
         private Vector3 originalPosition;
         private BattleEventBus eventBus;
        
-        // プレイヤー参照（BattleJudgeと同じパターン）
+        // プレイヤー参照
         private Character.CharacterController player1;
         private Character.CharacterController player2;
  
@@ -40,7 +39,6 @@ namespace TechC.VBattle.InGame.Camera
             originalPosition = transform.position;
  
             cameraShake.Initialize(transform);
-            cameraPan.Initialize(transform);
             cameraFollow.Initialize(transform);
  
             // InGameManagerからBattleEventBusを取得して初期化
@@ -48,7 +46,7 @@ namespace TechC.VBattle.InGame.Camera
         }
        
         /// <summary>
-        /// プレイヤー参照を設定（InGameManagerから呼び出し）
+        /// プレイヤー参照を設定
         /// BattleJudgeと同じパターン
         /// </summary>
         /// <param name="p1">プレイヤー1</param>
