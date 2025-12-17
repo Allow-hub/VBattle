@@ -27,7 +27,7 @@ namespace TechC.VBattle.InGame.Comment
         public bool IsCommentFrozen { get; private set; } = false;
 
         private bool isSpawning = false;
-        
+
         private List<CommentInfo> activeComments = new List<CommentInfo>();
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace TechC.VBattle.InGame.Comment
         {
             base.Init();
 
-            if(InGameManager.I == null) CustomLogger.Info("InGameManager.Iがnull");
+            if (InGameManager.I == null) CustomLogger.Info("InGameManager.Iがnull");
 
             commentSpawner.Init();
             commentMover.Init();
@@ -176,6 +176,7 @@ namespace TechC.VBattle.InGame.Comment
         /// </summary>
         public void OnCommentReturned(GameObject comment)
         {
+            // activeCommentsから対象のコメント情報を削除
             for (int i = activeComments.Count - 1; i >= 0; i--)
             {
                 if (activeComments[i].commentObject == comment)
@@ -184,6 +185,9 @@ namespace TechC.VBattle.InGame.Comment
                     break;
                 }
             }
+
+            // コメントオブジェクトをPoolに返却
+            CommentFactory.I.ReturnComment(comment);
         }
 
         public float GetCurrentSpeed() => speed;

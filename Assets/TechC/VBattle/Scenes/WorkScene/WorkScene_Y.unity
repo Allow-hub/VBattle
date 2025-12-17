@@ -29494,17 +29494,17 @@ PrefabInstance:
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: normalChance
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: speedBuffChance
-      value: 0.4
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: attackBuffChance
-      value: 0.4
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
@@ -29524,7 +29524,7 @@ PrefabInstance:
     - target: {fileID: 1234211175300926983, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: commentInterval
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1234211175300926983, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
@@ -29567,6 +29567,11 @@ PrefabInstance:
       propertyPath: commentSpawner.bottomRightSpawnPos
       value: 
       objectReference: {fileID: 651533819}
+    - target: {fileID: 1234211175300926983, guid: d43ee5b8a82782549a110282ca425b38,
+        type: 3}
+      propertyPath: commentMaterialApplier.grassCommentMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 6809ca7fac4cdf34c9833acf1f5ff8cf, type: 2}
     - target: {fileID: 3869615586620007465, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: m_LocalPosition.x

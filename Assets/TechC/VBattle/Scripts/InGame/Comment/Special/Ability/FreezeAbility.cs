@@ -18,25 +18,22 @@ namespace TechC.VBattle.InGame.Comment
 
         public void OnTriggerEnter(Collider collider)
         {
-            ReturnCommentAndChars(trigger.gameObject, chars);
-            CommentDisplay.I.OnFreezeTriggered();
-        }
-
-        /// <summary>
-        /// コメント本体と文字オブジェクトをプールに返却する
-        /// </summary>
-        public void ReturnCommentAndChars(GameObject comment, List<GameObject> chars)
-        {
-            if (chars != null)
+            // コメントを視覚的に非表示にし、左端まで移動させる
+            var renderer = trigger.GetComponent<Renderer>();
+            if (renderer != null) renderer.enabled = false;
+            
+            // Colliderも無効化して判定を止める
+            var boxCollider = trigger.GetComponent<BoxCollider>();
+            if (boxCollider != null) boxCollider.enabled = false;
+            
+            // 子階層の文字も非表示に
+            foreach (Transform child in trigger.transform)
             {
-                foreach (var obj in chars)
-                {
-                    if (obj != null && obj.activeInHierarchy)
-                        CommentFactory.I.ReturnChar(obj);
-                }
+                var childRenderer = child.GetComponent<Renderer>();
+                if (childRenderer != null) childRenderer.enabled = false;
             }
-            if (comment != null && comment.activeInHierarchy)
-                CommentFactory.I.ReturnComment(comment);
+            
+            CommentDisplay.I.OnFreezeTriggered();
         }
     }
 }

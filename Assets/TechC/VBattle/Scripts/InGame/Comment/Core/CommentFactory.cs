@@ -49,6 +49,13 @@ namespace TechC.VBattle.InGame.Comment
 
         public void ReturnComment(GameObject comment)
         {
+            // 子階層の文字オブジェクトをすべてクリア
+            foreach (Transform child in comment.transform)
+            {
+                child.SetParent(null);
+                ReturnChar(child.gameObject);
+            }
+            
             commentPool.ReturnObject(comment);
         }
 
