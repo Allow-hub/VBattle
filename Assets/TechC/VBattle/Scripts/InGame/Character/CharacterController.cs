@@ -85,7 +85,7 @@ namespace TechC.VBattle.InGame.Character
         {
             rb = GetComponent<Rigidbody>();
 
-            CommentAbilityHandler = new CommentAbilityHandler(this);
+            CommentAbilityHandler = new CommentAbilityHandler();
 
             // すべての状態を登録してキャッシュ
             RegisterState(new NeutralState(this));

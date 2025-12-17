@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TechC.VBattle.Core.Managers;
 
 namespace TechC.VBattle.InGame.Comment
 {
@@ -7,12 +8,14 @@ namespace TechC.VBattle.InGame.Comment
     /// バフを生成するファクトリクラス
     /// バフタイプに応じて、適切なバフを生成するためのメソッドを提供
     /// </summary>
-    public class BuffFactory : MonoBehaviour
+    public class BuffFactory : Singleton<BuffFactory>
     {
-        private static Dictionary<BuffType, System.Func<BuffBase>> buffDictionary;
+        private Dictionary<BuffType, System.Func<BuffBase>> buffDictionary;
+        protected override bool UseDontDestroyOnLoad => false;
 
-        static BuffFactory()
+        public override void Init()
         {
+            base.Init();
             /* 初期化 */
             buffDictionary = new Dictionary<BuffType, System.Func<BuffBase>>()
             {
@@ -21,7 +24,7 @@ namespace TechC.VBattle.InGame.Comment
             };
         }
 
-        public static BuffBase CreateBuff(BuffType buffType)
+        public BuffBase CreateBuff(BuffType buffType)
         {
             /* Dictionaryにバフタイプが登録されていなければ、それに対応するバフを生成 */
             if (buffDictionary.ContainsKey(buffType))
