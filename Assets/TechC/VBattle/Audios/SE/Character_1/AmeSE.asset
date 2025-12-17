@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 133d51a2a1c84a4409b5ef5c95ca25d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 42008407ed8c6a04fa98a9b88c3592ea, type: 3}
   m_Name: AmeSE
   m_EditorClassIdentifier: 
-  characterType: 1
+  characterType: 0
   seList:
   - seType: 0
     clip: {fileID: 0}
@@ -144,79 +144,79 @@ MonoBehaviour:
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 1
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 2
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 3
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 4
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 5
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 6
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 7
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 8
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 9
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 10
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 11
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 12
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 13
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 14
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 15
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 16
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 17
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 18
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
-  - voiceType: 19
+  - voiceType: 0
     clip: {fileID: 0}
     volume: 1
     pitch: 1
