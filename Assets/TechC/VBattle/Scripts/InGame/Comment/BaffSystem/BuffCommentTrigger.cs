@@ -12,6 +12,18 @@ namespace TechC.VBattle.InGame.Comment
         [HideInInspector] public string commentText;
         private bool alreadyApplied = false;
 
+        private void OnEnable()
+        {
+            // Pool から取得時に状態をリセット
+            alreadyApplied = false;
+            
+            var renderer = GetComponent<Renderer>();
+            if (renderer != null) renderer.enabled = true;
+            
+            var boxCollider = GetComponent<BoxCollider>();
+            if (boxCollider != null) boxCollider.enabled = true;
+        }
+
 
         /// <summary>
         /// コメントにPlayerが当たったときにバフの効果とエフェクトを発動する
