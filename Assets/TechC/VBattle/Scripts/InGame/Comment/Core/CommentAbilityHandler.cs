@@ -9,13 +9,7 @@ namespace TechC.VBattle.InGame.Comment
     /// </summary>
     public class CommentAbilityHandler
     {
-        private CharacterController owner;
         private Action pendingAbility;
-
-        public CommentAbilityHandler(CharacterController controller)
-        {
-            owner = controller;
-        }
 
         /// <summary>
         /// コメントアビリティを登録（CommentSystemから呼ばれる）
@@ -45,7 +39,6 @@ namespace TechC.VBattle.InGame.Comment
         public void Dispose()
         {
             pendingAbility = null;
-            owner = null;
         }
     }
 }

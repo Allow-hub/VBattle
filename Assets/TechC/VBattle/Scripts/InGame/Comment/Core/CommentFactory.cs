@@ -40,7 +40,6 @@ namespace TechC.VBattle.InGame.Comment
             else
             {
                 var commentTrigger = obj.GetComponent<BuffCommentTrigger>();
-                commentTrigger.Init(commentPool);
                 commentTrigger.commentText = commentData?.text;
                 if (commentData != null && commentData.buffType.HasValue)
                     commentTrigger.buffType = commentData.buffType.Value;

@@ -12,16 +12,6 @@ namespace TechC.VBattle.InGame.Comment
         [HideInInspector] public string commentText;
         private bool alreadyApplied = false;
 
-        private ObjectPool objectPool;
-
-        /// <summary>
-        /// 疑似的なコンストラクタ
-        /// </summary>
-        /// <param name="objectPool"></param>
-        public void Init(ObjectPool objectPool)
-        {
-            this.objectPool = objectPool;
-        }
 
         /// <summary>
         /// コメントにPlayerが当たったときにバフの効果とエフェクトを発動する
@@ -35,7 +25,7 @@ namespace TechC.VBattle.InGame.Comment
 
             if (other.CompareTag("Player"))
             {
-                BuffBase buff = BuffFactory.CreateBuff(buffType);
+                BuffBase buff = BuffFactory.I.CreateBuff(buffType);
 
                 if (buff != null)
                 {
