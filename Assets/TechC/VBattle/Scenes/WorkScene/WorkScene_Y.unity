@@ -363,7 +363,7 @@ MonoBehaviour:
     zoomSpeed: 3
     marginSize: {x: 6, y: 4}
     minFOV: 60
-    maxFOV: 70
+    maxFOV: 95
     jumpHeightOffset: 2
     baseHeight: 0
     followLimits: {x: 15, y: 4}
