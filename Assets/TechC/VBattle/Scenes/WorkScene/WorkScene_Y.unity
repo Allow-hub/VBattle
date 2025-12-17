@@ -130,15 +130,55 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1434924754111263982, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1434924754111263982, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548952809597089878, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548952809597089878, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402348523171276801, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402348523171276801, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402348523171276801, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3260735377280577274, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4880679695495569093, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 960
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4880679695495569093, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 540
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4880679695495569093, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -180,16 +220,149 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5231933124452983106, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231933124452983106, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5256032833623941496, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_Name
       value: InGame
       objectReference: {fileID: 0}
+    - target: {fileID: 5515155645598367619, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5515155645598367619, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5515155645598367619, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682273496921815123, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4159416201870310033, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1962525379}
   m_SourcePrefab: {fileID: 100100000, guid: de551b8e8565c92489c9ebc3cb126d65, type: 3}
+--- !u!1 &1962525374 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4159416201870310033, guid: de551b8e8565c92489c9ebc3cb126d65,
+    type: 3}
+  m_PrefabInstance: {fileID: 1593272302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1962525379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962525374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3875449afb27e8745a9643419e8db2d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraShake:
+    shakeIntensity: 0.5
+    shakeDuration: 0.3
+    shakeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  cameraPan:
+    panIntensity: 2
+    panDuration: 1
+    panCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  cameraFollow:
+    zoomIntensity: 10
+    zoomDuration: 0.5
+    enableFollowMode: 0
+    followSpeed: 5
+    zoomSpeed: 3
+    marginSize: {x: 4, y: 3}
+    minFOV: 30
+    maxFOV: 60
+    jumpHeightOffset: 2
+    baseHeight: 0
+    followLimits: {x: 15, y: 10}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
