@@ -12,11 +12,6 @@ namespace TechC.VBattle.InGame.Comment
         [HideInInspector] public string commentText;
         private bool alreadyApplied = false;
 
-        private void OnEnable()
-        {
-            // プールから再利用される際にフラグをリセット
-            alreadyApplied = false;
-        }
 
         /// <summary>
         /// コメントにPlayerが当たったときにバフの効果とエフェクトを発動する
