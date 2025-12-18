@@ -38,12 +38,12 @@ Material:
     - _ShineWidth: 0.2
     - _Softness: 0.38
     - _Speed: 1
-    - _SweepIntensity: 1.65
+    - _SweepIntensity: 2.05
     - _SweepSpeed: 0.5
     - _SweepWidth: 0.226
     - _UseMask: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _ShineColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SweepColor: {r: 1, g: 1, b: 1, a: 0.9}
+    - _SweepColor: {r: 1, g: 0.08919676, b: 0.033018887, a: 0.9}
   m_BuildTextureStacks: []
