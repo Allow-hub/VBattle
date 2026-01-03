@@ -9,18 +9,18 @@ namespace TechC.VBattle.InGame.Comment
     /// </summary>
     public class BuffManager : MonoBehaviour
     {
-        /* バフを保持するリスト。現在アクティブなバフを管理 */
+        // バフを保持するリスト。現在アクティブなバフを管理
         private List<BuffBase> activeBuffs = new List<BuffBase>();
 
         void Update()
         {
-            /* アクティブなバフリストを更新 */
+            // アクティブなバフリストを更新
             for (int i = activeBuffs.Count - 1; i >= 0; i--)
             {
                 BuffBase buff = activeBuffs[i];
                 buff.UpdateBuff(Time.deltaTime, gameObject);
 
-                /* バフの残り時間が終了したらそのバフを削除 */
+                // バフの残り時間が終了したらそのバフを削除
                 if (buff.remainingTime <= 0)
                     RemoveBuff(buff);
             }
@@ -38,7 +38,7 @@ namespace TechC.VBattle.InGame.Comment
             {
                 if (activeBuff.GetType() == buff.GetType())
                 {
-                    /* 同じバフが既に適用されている場合、バフの残り時間をリセット */
+                    // 同じバフが既に適用されている場合、バフの残り時間をリセット
                     activeBuff.ResetDuration();
                     return;
                 }

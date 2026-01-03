@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using TechC.VBattle.Core.Managers;
 
 namespace TechC.VBattle.InGame.Comment
@@ -16,7 +15,7 @@ namespace TechC.VBattle.InGame.Comment
         public override void Init()
         {
             base.Init();
-            /* 初期化 */
+            // 初期化
             buffDictionary = new Dictionary<BuffType, System.Func<BuffBase>>()
             {
                 { BuffType.Speed, () => new SpeedBuff()},
@@ -26,7 +25,7 @@ namespace TechC.VBattle.InGame.Comment
 
         public BuffBase CreateBuff(BuffType buffType)
         {
-            /* Dictionaryにバフタイプが登録されていなければ、それに対応するバフを生成 */
+            // Dictionaryにバフタイプが登録されていなければ、それに対応するバフを生成
             if (buffDictionary.ContainsKey(buffType))
                 return buffDictionary[buffType]();
             else

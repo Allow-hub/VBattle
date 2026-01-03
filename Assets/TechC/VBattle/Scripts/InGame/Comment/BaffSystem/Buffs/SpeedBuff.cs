@@ -12,7 +12,6 @@ namespace TechC.VBattle.InGame.Comment
         private const float DEFAULT_SPEED_MULTIPLIER = 1.5f;
         private const float DEFAULT_BUFF_DURATION = 5.0f;
         
-        [SerializeField] private float speedMultiplier = DEFAULT_SPEED_MULTIPLIER;
         public SpeedBuff()
         {
             buffName = "SpeedBuff";
@@ -30,7 +29,7 @@ namespace TechC.VBattle.InGame.Comment
             Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
 
             if (characterController != null)
-                characterController.AddMultiplier(BuffType.Speed, id, speedMultiplier);
+                characterController.AddMultiplier(BuffType.Speed, id, DEFAULT_SPEED_MULTIPLIER);
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace TechC.VBattle.InGame.Comment
             Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
 
             if (characterController != null)
-                characterController.RemoveMultiplier(BuffType.Speed, id, speedMultiplier);
+                characterController.RemoveMultiplier(BuffType.Speed, id, DEFAULT_SPEED_MULTIPLIER);
         }
     }
 }

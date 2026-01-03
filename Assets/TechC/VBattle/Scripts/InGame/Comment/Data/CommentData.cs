@@ -18,7 +18,7 @@ namespace TechC.VBattle.InGame.Comment
         public string text;
         public BuffType? buffType;
 
-        /* コンストラクタでコメントタイプ、テキスト、バフタイプを設定 */
+        // コンストラクタでコメントタイプ、テキスト、バフタイプを設定
         public CommentData(CommentType type, string text, BuffType? buffType)
         {
             this.type = type;

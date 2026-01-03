@@ -9,8 +9,6 @@ namespace TechC.VBattle.InGame.Comment
     {
         private const float DEFAULT_ATTACK_MULTIPLIER = 1.5f;
         private const float DEFAULT_BUFF_DURATION = 5.0f;
-        
-        [SerializeField] private float attackMultiplier = DEFAULT_ATTACK_MULTIPLIER; /*攻撃力上昇の倍率 */
 
         public AttackBuff()
         {
@@ -28,7 +26,7 @@ namespace TechC.VBattle.InGame.Comment
         {
             Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
             if (characterController != null)
-                characterController.AddMultiplier(BuffType.Attack, id, attackMultiplier);
+                characterController.AddMultiplier(BuffType.Attack, id, DEFAULT_ATTACK_MULTIPLIER);
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace TechC.VBattle.InGame.Comment
         {
             Character.CharacterController characterController = target.GetComponent<Character.CharacterController>();
             if (characterController != null)
-                characterController.RemoveMultiplier(BuffType.Attack, id, attackMultiplier);
+                characterController.RemoveMultiplier(BuffType.Attack, id, DEFAULT_ATTACK_MULTIPLIER);
         }
     }
 }

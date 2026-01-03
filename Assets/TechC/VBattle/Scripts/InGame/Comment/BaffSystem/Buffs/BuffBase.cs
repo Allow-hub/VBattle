@@ -32,7 +32,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <param name="target"></param>
         public virtual void Apply(GameObject target)
         {
-            /* 各バフでオーバーライドして使用する */
+            // 各バフでオーバーライドして使用する
         }
         
         /// <summary>
@@ -41,7 +41,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <param name="target"></param>
         public virtual void Remove(GameObject target)
         {
-            /* 各バフでオーバーライドして使用する */
+            // 各バフでオーバーライドして使用する
         }
         
         /// <summary>

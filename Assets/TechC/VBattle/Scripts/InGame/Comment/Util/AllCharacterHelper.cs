@@ -34,7 +34,7 @@ namespace TechC.VBattle.InGame.Comment
                 {
                     obj.transform.SetParent(null); // 一旦親を外す
 
-                    /* 文字のPrefabのプロパティをいったんリセット */
+                    // 文字のPrefabのプロパティをいったんリセット
                     obj.transform.localRotation = Quaternion.identity;
                     obj.transform.localScale = Vector3.one;
 
@@ -70,7 +70,7 @@ namespace TechC.VBattle.InGame.Comment
                 }
             }
             
-            /* Boxcolliderのサイズを再調整する */
+            // Boxcolliderのサイズを再調整する
             if (spawnedChars.Count >= 1)
             {
                 // ローカル座標で計算（親の座標系で）
