@@ -19,8 +19,7 @@ namespace TechC.VBattle.Core.Window
         private static string _imageClassName = "WindowClass_Image";
         private static string _webClassName = "WindowClass_Web";
 
-
-        // WndProcデリゲート保持（GC防止）
+        // WndProcデリゲート保持(GC防止)
         private static readonly WNDPROC _basicWndProc = BasicWndProc;
         private static readonly WNDPROC _imageWndProc = ImageWndProc;
         private static readonly WNDPROC _webWndProc = WebWndProc;
@@ -82,7 +81,7 @@ namespace TechC.VBattle.Core.Window
         /// </summary>
         /// <param name="className">クラス名</param>
         /// <param name="wndProc">ウィンドウプロシージャー</param>
-        /// <param name="hInstance">実行中のアプリやDLLを一位に識別するハンドル</param>
+        /// <param name="hInstance">実行中のアプリやDLLを一意に識別するハンドル</param>
         private static void RegisterClassEx(string className, WNDPROC wndProc, HMODULE hInstance)
         {
             unsafe
@@ -198,13 +197,22 @@ namespace TechC.VBattle.Core.Window
                     }
                     PInvoke.DeleteObject(hFrameBrush);
 
-                    // テキスト描画
+                    // テキスト描画 - WindowRegistryから対応するBasicWindowを取得
+                    string displayText = "クラシック風ウィンドウ"; // デフォルト値
+                    if (WindowRegistry.ByHwnd.TryGetValue(hwnd, out var nativeWindow))
+                    {
+                        if (nativeWindow is BasicWindow basicWindow)
+                        {
+                            displayText = basicWindow.DisplayText;
+                        }
+                    }
+
                     PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);     // TRANSPARENT
                     PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
-                    var text = "クラシック風ウィンドウ";
-                    PInvoke.TextOut(hdc, 10, 10, text, text.Length);
+                    PInvoke.TextOut(hdc, 10, 10, displayText, displayText.Length);
                     PInvoke.EndPaint(hwnd, ps);
                     return new LRESULT(0);
+                    
                 case PInvoke.WM_SIZE:
                     unsafe
                     {
@@ -216,7 +224,6 @@ namespace TechC.VBattle.Core.Window
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
 
-
         private static LRESULT ImageWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg)
@@ -226,17 +233,9 @@ namespace TechC.VBattle.Core.Window
             }
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
+        
         private static LRESULT WebWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
-            // switch (msg)
-            // {
-            //     case PInvoke.WM_PAINT:
-            //         // 描画処理
-            //         break;
-            //     case PInvoke.WM_DESTROY:
-            //         break;
-            // }
-
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
     }

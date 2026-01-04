@@ -196,7 +196,25 @@ namespace TechC.VBattle.Core.Window
             var rect = GetWindowRect(hwnd);
             return PInvoke.MoveWindow(hwnd, rect.left, rect.top, width, height, true);
         }
+ 
+        /// <summary>
+        /// ウィンドウを再描画する
+        /// </summary>
+        /// <param name="hwnd">ウィンドウハンドル</param>
+        public static void InvalidateWindow(HWND hwnd)
+        {
+            if (hwnd.IsNull || !PInvoke.IsWindow(hwnd))
+            {
+                CustomLogger.Warning("InvalidateWindow: hwnd is invalid.", LogTagUtil.TagWidnow);
+                return;
+            }
 
+            unsafe
+            {
+                PInvoke.InvalidateRect(hwnd, (RECT*)null, true);
+            }
+            PInvoke.UpdateWindow(hwnd);
+        }
         #endregion
 
         #region ウィンドウ情報取得

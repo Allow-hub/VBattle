@@ -1,5 +1,6 @@
 using System;
 using TechC.VBattle.Core.Extensions;
+using Windows.Win32.Foundation;
 
 namespace TechC.VBattle.Core.Window
 {
@@ -8,6 +9,11 @@ namespace TechC.VBattle.Core.Window
     /// </summary>
     public class BasicWindow : NativeWindow
     {
+        /// <summary>
+        /// ウィンドウに表示するテキスト
+        /// </summary>
+        public string DisplayText { get; set; } = "クラシック風ウィンドウ";
+
         public BasicWindow(IntPtr hwnd, int width, int height) : base(hwnd, width, height, WindowFactory.WindowType.Basic)
         {
         }
@@ -16,6 +22,8 @@ namespace TechC.VBattle.Core.Window
         {
             base.Show();
             CustomLogger.Info($"[Show] hwnd: {Hwnd}", LOGTAG);
+            // 表示時に再描画してテキストを反映
+            WindowUtility.InvalidateWindow((HWND)Hwnd);
         }
 
         public override void Hide()
@@ -34,6 +42,16 @@ namespace TechC.VBattle.Core.Window
         {
             base.ResizeWindow(width, height, delay);
             CustomLogger.Info($"[ResizeWindow] hwnd: {Hwnd}, Width: {Width}, Height: {Height}", LOGTAG);
+        }
+
+        /// <summary>
+        /// 表示テキストを設定して再描画
+        /// </summary>
+        /// <param name="text">表示するテキスト</param>
+        public void SetText(string text)
+        {
+            DisplayText = text;
+            WindowUtility.InvalidateWindow((HWND)Hwnd);
         }
 
         public override void Destroy()

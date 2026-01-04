@@ -24,13 +24,14 @@ namespace TechC.VBattle.InGame
         [SerializeField] private GameObject ameObj;
 
         [SerializeField] private Vector2[] countdownPosition;
+        [SerializeField] private Vector2[] countdownSize;
         private int countdownTimer = 3;
         private CancellationTokenSource countdownCts;
         public InGameState InGameState => inGameState;
         private InGameState inGameState = InGameState.None;
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
-        private HitStopManager hitStopManager;//イベントを使用しているので保持しておく必要がある
+        private HitStopController hitStopController;//イベントを使用しているので保持しておく必要がある
         private bool isPaused = false;          // ポーズ状態フラグ
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
@@ -40,7 +41,7 @@ namespace TechC.VBattle.InGame
         {
             base.Init();
             BattleBus = new BattleEventBus();
-            hitStopManager = new HitStopManager(BattleBus);
+            hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
                 var p1 = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
@@ -132,7 +133,7 @@ namespace TechC.VBattle.InGame
             CountdownAsync(countdownCts.Token).Forget();
         }
 
-       /// <summary>
+        /// <summary>
         /// ゲーム開始時のカウントダウン
         /// </summary>
         /// <param name="token">キャンセルのトークン</param>
@@ -142,6 +143,10 @@ namespace TechC.VBattle.InGame
             try
             {
                 if (countdownPosition == null || countdownPosition.Length == 0) return;
+                
+                // カウントダウン用のインデックス（0から始まる）
+                int arrayIndex = 0;
+                
                 for (int i = countdownTimer; i > 0; i--)
                 {
                     // キャンセルチェック
@@ -153,6 +158,7 @@ namespace TechC.VBattle.InGame
                     {
                         Debug.LogWarning("CountdownAsync: WindowFactory.I が null です。ウィンドウ移動をスキップします。");
                         await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        arrayIndex++;
                         continue;
                     }
 
@@ -161,8 +167,21 @@ namespace TechC.VBattle.InGame
                     {
                         Debug.LogWarning("CountdownAsync: WindowFactory.GetWindow が null を返しました。");
                         await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        arrayIndex++;
                         continue;
                     }
+
+                    var basicWindow = w as BasicWindow;
+                    if (basicWindow == null)
+                    {
+                        Debug.LogWarning("CountdownAsync: 取得したウィンドウが BasicWindow にキャストできません。");
+                        await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        arrayIndex++;
+                        continue;
+                    }
+                    
+                    // テキスト、位置、サイズを設定
+                    basicWindow.SetText(i.ToString());
 
                     // Hwnd の確認（IntPtr.Zero なら無効）
                     var hwndObj = w.Hwnd;
@@ -170,20 +189,33 @@ namespace TechC.VBattle.InGame
                     {
                         Debug.LogWarning("CountdownAsync: window.Hwnd が null または IntPtr.Zero です。");
                         await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+                        arrayIndex++;
                         continue;
                     }
 
-                    // countdownPosition の index 安全化
+                    // arrayIndex を使用して配列から位置とサイズを取得
                     Vector2 pos;
-                    if (countdownPosition != null && i < countdownPosition.Length)
-                        pos = countdownPosition[i];
+                    Vector2 size;
+                    if (countdownPosition != null && arrayIndex < countdownPosition.Length)
+                    {
+                        pos = countdownPosition[arrayIndex];
+                        size = countdownSize[arrayIndex];
+                    }
                     else if (countdownPosition != null && countdownPosition.Length > 0)
+                    {
+                        // 配列の範囲外の場合は最後の要素を使用
                         pos = countdownPosition[countdownPosition.Length - 1];
+                        size = countdownSize[countdownSize.Length - 1];
+                    }
                     else
+                    {
                         pos = Vector2.zero;
+                        size = new Vector2(300, 300);
+                    }
 
                     try
                     {
+                        WindowUtility.ResizeWindow((HWND)hwndObj, (int)size.x, (int)size.y);
                         WindowUtility.MoveWindow((HWND)hwndObj, (int)pos.x, (int)pos.y);
                     }
                     catch (Exception ex)
@@ -192,6 +224,7 @@ namespace TechC.VBattle.InGame
                     }
 
                     await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);// 1秒待機
+                    arrayIndex++; // 配列インデックスを進める
                 }
 
                 // カウントダウン終了後、Battleステートへ遷移
@@ -221,7 +254,10 @@ namespace TechC.VBattle.InGame
 
         private void UpdateBattleState()
         {
-
+            if (UnityEngine.Input.GetKeyDown(KeyCode.R))
+            {
+                SceneLoader.I.LoadSceneAsync(0).Forget();
+            }
         }
 
         private void InitResultState()

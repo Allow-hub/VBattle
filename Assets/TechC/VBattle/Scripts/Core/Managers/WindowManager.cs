@@ -27,17 +27,17 @@ namespace TechC.VBattle.Core.Managers
         public override void Init()
         {
             base.Init();
-            DelayUtility.StartDelayedActionAsync(0.1f, () =>
-            {
-                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Basic);
-                normalWindows.Add(w);
-                WindowUtility.ResizeWindow((HWND)w.Hwnd, 300, 300);
-                var editorRect = GameViewUtils.GetGameViewScreenRectInEditorSpace();
-                var win32Rect = GameViewUtils.ToWin32Rect(editorRect);
-                WindowUtility.MoveWindow((HWND)w.Hwnd, win32Rect.left, win32Rect.top);
-                // if (w is ImageWindow imageWindow)
-                //     imageWindow.SetTextureToBitmap(image.texture);
-            });
+            // DelayUtility.StartDelayedActionAsync(0.1f, () =>
+            // {
+            //     var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Basic);
+            //     normalWindows.Add(w);
+            //     WindowUtility.ResizeWindow((HWND)w.Hwnd, 300, 300);
+            //     var editorRect = GameViewUtils.GetGameViewScreenRectInEditorSpace();
+            //     var win32Rect = GameViewUtils.ToWin32Rect(editorRect);
+            //     WindowUtility.MoveWindow((HWND)w.Hwnd, win32Rect.left, win32Rect.top);
+            //     // if (w is ImageWindow imageWindow)
+            //     //     imageWindow.SetTextureToBitmap(image.texture);
+            // });
         }
 
         void Update()

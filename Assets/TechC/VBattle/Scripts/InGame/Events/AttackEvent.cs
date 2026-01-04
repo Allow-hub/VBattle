@@ -37,4 +37,15 @@ namespace TechC.VBattle.InGame.Events
         public bool isGuard;                      // ガードしたかどうか
         public int damage;                        // 実際のダメージ量
     }
+
+    /// <summary>
+    /// 必殺技ゲージ変化イベント
+    /// </summary>
+    public class SpecialGaugeChangedEvent : IBattleEvent
+    {
+        public int PlayerIndex;
+        public float CurrentGauge;
+        public float MaxGauge;
+        public float Percentage; // 0-1
+    }
 }

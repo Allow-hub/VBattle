@@ -53,6 +53,7 @@ namespace TechC.VBattle.Core.Util
             }
 #endif
         }
+#if UNITY_EDITOR
 
         /// <summary>
         /// メインGameViewのEditorWindowインスタンスを取得
@@ -60,7 +61,6 @@ namespace TechC.VBattle.Core.Util
         /// <returns>GameViewのEditorWindowインスタンス、取得できない場合はnull</returns>
         public static EditorWindow GetGameViewWindow()
         {
-#if UNITY_EDITOR
             try
             {
                 // まずGetMainPlayModeViewメソッドを試す
@@ -86,9 +86,9 @@ namespace TechC.VBattle.Core.Util
             {
                 Debug.LogError($"GameViewWindow取得エラー: {e.Message}");
             }
-#endif
             return null;
         }
+#endif
 
         /// <summary>
         /// ゲームビューのスクリーンRectを取得（GameView内の相対座標）
