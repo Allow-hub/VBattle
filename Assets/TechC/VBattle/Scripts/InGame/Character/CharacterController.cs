@@ -184,6 +184,12 @@ namespace TechC.VBattle.InGame.Character
                 else
                     EndCrouch();
             }
+            else if (command is SpecialCommand)
+            {
+                // 必殺技は100%かつ適切な状態でのみ実行可能
+                if (CurrentSpecialGauge >= Data.maxSpecialGauge)
+                    PerformSpecial();
+            }
             currentState.OnCommandExecuted(command);
         }
 
@@ -255,6 +261,17 @@ namespace TechC.VBattle.InGame.Character
             currentSpecialGauge -= amount;
             if (currentSpecialGauge < 0)
                 currentSpecialGauge = 0;
+            InGameManager.I.BattleBus.Publish(new SpecialGaugeChangedEvent
+            {
+                PlayerIndex = playerIndex,
+                CurrentGauge = currentSpecialGauge,
+                MaxGauge = characterData.maxSpecialGauge,
+                Percentage = currentSpecialGauge / characterData.maxSpecialGauge
+            });
+            // 必殺技発動、攻撃状態へ遷移
+            CurrentAttackType = AttackType.Special;
+            CurrentAttackDirection = AttackDirection.Neutral;
+            stateMachine.ChangeState(GetState<AttackState>());
         }
 
         private void OnCollisionEnter(Collision collision)

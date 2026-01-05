@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Ame_Neutral_W
+  m_Name: Ame_Special
   m_EditorClassIdentifier: 
   charaName: 0
-  attackName: NormalWeakAttack_1
-  attackPrefab: {fileID: 7930082209967865745, guid: d2b6121c45f1a854f86daa7bc4c5104f,
+  attackName: Special
+  attackPrefab: {fileID: 5874002435478171051, guid: 9b0b78a0fe84ee84ea5f1929af66c573,
     type: 3}
-  prefabOffset: {x: 0, y: 2, z: 0.5}
-  prefabRotation: {x: -40, y: -90, z: 0}
+  prefabOffset: {x: 0, y: 2, z: 0}
+  prefabRotation: {x: 0, y: 0, z: 0}
   animationSpeed: 2.5
-  attackDuration: 0.5
-  hitDetectionMode: 1
+  attackDuration: 1.5
+  hitDetectionMode: 2
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
   radius: 1.4
   hitboxOffset: {x: 0, y: 1.4, z: 1}
-  hitTiming: 0.2
+  hitTiming: 0.1
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 10
@@ -37,7 +37,7 @@ MonoBehaviour:
   cancelEndTime: 0.5
   hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
-  canChain: 1
+  canChain: 0
   isChainPos: 0
   hitStopDuration: 0
   hitStopTimeScale: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   canRepeat: 0
   repeatInterval: 0
   repeatDuration: 0
-  specialGaugeGain: 100
+  specialGaugeGain: 0
   specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8

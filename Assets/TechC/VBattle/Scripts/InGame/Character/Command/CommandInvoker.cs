@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TechC.VBattle.InGame.Input;
 using UnityEngine;
@@ -49,6 +50,9 @@ namespace TechC.VBattle.InGame.Character
             // --- ガード ---
             CheckGuardInput(latestSnap);
 
+            // --- 必殺技 ---
+            CheckSpecialInput(latestSnap);
+            
             // --- 攻撃 ---
             CheckAttackInput(latestSnap);
 
@@ -60,6 +64,7 @@ namespace TechC.VBattle.InGame.Character
 
             frame++;
         }
+
 
         public void FixedUpdate()
         {
@@ -99,6 +104,17 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
+        /// <summary>
+        /// 必殺技の入力チェック
+        /// </summary>
+        /// <param name="snap"></param>
+        private void CheckSpecialInput(BaseInputManager.InputSnapshot snap)
+        {
+            bool specialPressed = (snap.pressedButtons & BaseInputManager.InputButton.Special) != 0;
+            if(specialPressed)
+                controller.ExecuteCommand(new SpecialCommand());
+        }
+        
         /// <summary>
         /// 攻撃の入力チェック
         /// </summary>

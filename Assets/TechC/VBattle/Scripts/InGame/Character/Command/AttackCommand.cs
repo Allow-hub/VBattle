@@ -8,6 +8,7 @@ namespace TechC.VBattle.InGame.Character
         Weak = 0,
         Strong = 1,
         Air,
+        Special,
         None,
     }
 

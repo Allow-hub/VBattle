@@ -74,3 +74,7 @@ MonoBehaviour:
     type: 2
     direction: 4
     attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
+  - attackName: "\u5FC5\u6BBA\u6280"
+    type: 3
+    direction: 0
+    attackData: {fileID: 11400000, guid: 60338b45a9385024e890cdc0ba47fe26, type: 2}
