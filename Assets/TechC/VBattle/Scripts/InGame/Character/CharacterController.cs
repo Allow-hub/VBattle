@@ -231,10 +231,7 @@ namespace TechC.VBattle.InGame.Character
         /// 持っているアイテムを設定する
         /// </summary>
         /// <param name="item">持つアイテム（nullで解除）</param>
-        public void SetHoldItem(GameObject item)
-        {
-            HoldItem = item;
-        }
+        public void SetHoldItem(GameObject item) =>  HoldItem = item;
 
         private void OnDestroy()
         {

@@ -18,6 +18,9 @@ namespace TechC.VBattle.InGame.Comment
         [SerializeField] Rigidbody rb;
         private bool isReturning = false;
         [SerializeField] private float returnDelay = DEFAULT_RETURN_DELAY;
+        
+        // このオブジェクトを持っているキャラクターの参照
+        private Character.CharacterController holderCharacter;
 
         private void OnEnable()
         {
@@ -25,6 +28,21 @@ namespace TechC.VBattle.InGame.Comment
             if (grassEffect != null) grassEffect.SetActive(false);
             isReturning = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
+            holderCharacter = null;
+        }
+
+        /// <summary>
+        /// 親が変更されたときに自動的に呼ばれる
+        /// HoldAbility/ThrowAbilityに依存せず、GrassCollider自身が持ち主を追跡
+        /// </summary>
+        private void OnTransformParentChanged()
+        {
+            // 親が設定された場合、その親からCharacterControllerを探す
+            if (transform.parent != null)
+                holderCharacter = transform.root.GetComponent<Character.CharacterController>();
+            else
+                // 親が解除された（投げられた）場合
+                holderCharacter = null;
         }
 
         public async void OnTriggerEnter(Collider other)
@@ -32,7 +50,12 @@ namespace TechC.VBattle.InGame.Comment
             string layerName = LayerMask.LayerToName(other.gameObject.layer);
             if (layerName == "Ground" || layerName == "Wall")
             {
-                // TODO:Playerが草コメントを持った状態で壁に当ると草コメント保持しながら戦闘し、再度草コメントを拾えなくなる
+                // プレイヤーがこのアイテムを持っている場合、HoldItemを解除
+                if (holderCharacter != null && holderCharacter.HoldItem == gameObject)
+                {
+                    holderCharacter.SetHoldItem(null);
+                    holderCharacter = null;
+                }
 
                 Vector3 contactPoint = other.ClosestPoint(transform.position);
                 Vector3 direction = (transform.position - contactPoint).normalized;

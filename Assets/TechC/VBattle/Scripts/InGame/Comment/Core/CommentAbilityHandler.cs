@@ -1,5 +1,4 @@
 using System;
-using TechC.VBattle.InGame.Character;
 
 namespace TechC.VBattle.InGame.Comment
 {

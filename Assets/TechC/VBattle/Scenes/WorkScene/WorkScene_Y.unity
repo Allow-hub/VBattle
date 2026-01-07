@@ -29504,12 +29504,12 @@ PrefabInstance:
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: attackBuffChance
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: grassCommentChance
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 685101053772922644, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
@@ -29524,7 +29524,7 @@ PrefabInstance:
     - target: {fileID: 1234211175300926983, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: commentInterval
-      value: 0.3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1234211175300926983, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}

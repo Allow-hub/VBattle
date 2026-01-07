@@ -153,6 +153,17 @@ namespace TechC.VBattle.InGame.Comment
         }
 
 #if UNITY_EDITOR
+        [ContextMenu("全ての出現確率を1にする")]
+        private void SetAllChancesToOne()
+        {
+            normalChance = 1f;
+            speedBuffChance = 1f;
+            attackBuffChance = 1f;
+            grassCommentChance = 1f;
+            freezeCommentChance = 1f;
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
         [ContextMenu("全ての出現確率を0にする")]
         private void SetAllChancesToZero()
         {
