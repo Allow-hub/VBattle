@@ -13,6 +13,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private Vector3 moveDir = Vector3.forward;
         [SerializeField] private AttackMoverType moverType = AttackMoverType.None;
+        [SerializeField] private float characterYOffset = 0f; // Y軸のオフセット
         private Vector3 currentMoveDir;
         private GameObject character;
         // 追従関連
@@ -51,7 +52,11 @@ namespace TechC.VBattle.InGame.Character
                         Vector3 delta = currentMoveDir.normalized * moveSpeed * deltaTime;
                         rb.MovePosition(rb.position + delta);
                         if(character != null)
-                            character.transform.position = rb.position; // キャラクターを攻撃オブジェクトの位置に追従
+                        {
+                            Vector3 targetPos = new Vector3(rb.position.x, rb.position.y, characterTransform.position.z);
+                            targetPos.y += characterYOffset; // Y軸オフセット
+                            character.transform.position = targetPos;
+                        }
                     }
                     break;
             }

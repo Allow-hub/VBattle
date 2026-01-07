@@ -43,5 +43,7 @@ namespace TechC.VBattle.Core.Managers
             if (playerIndex == 1) Player_1Setup = data;
             else Player_2Setup = data;
         }
+
+        public void SetPauseState(bool pause) => isPaused = pause;
     }
 }

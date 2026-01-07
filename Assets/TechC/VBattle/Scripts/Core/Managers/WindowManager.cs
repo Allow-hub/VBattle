@@ -140,7 +140,7 @@ namespace TechC.VBattle.Core.Managers
         public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float duration = 1f, Sprite tex = null)
         {
             // 画面サイズ取得
-            var editorRect = GameViewUtils.GetGameViewScreenRectInEditorSpace();
+            var editorRect = GameViewUtils.GetGameViewWindowRect();
             var win32Rect = GameViewUtils.ToWin32Rect(editorRect);
             int unityScreenX = win32Rect.left;
             int unityScreenY = win32Rect.top;
@@ -204,7 +204,7 @@ namespace TechC.VBattle.Core.Managers
                 win.SetRect();
 
                 if (win is ImageWindow imageWindow)
-                    imageWindow.SetImage(tex.texture, w, h);
+                    imageWindow.SetTextureToBitmap(tex.texture);
 
                 normalWindows.Add(win);
                 created++;

@@ -49,6 +49,7 @@ MonoBehaviour:
   behaviours:
   - rid: 175954951146831872
   - rid: 175954951146831873
+  - rid: 175954964878196736
   references:
     version: 2
     RefIds:
@@ -59,11 +60,16 @@ MonoBehaviour:
     - rid: 175954951146831873
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        yOffset: -0.5
         rb: {fileID: 5508901849141189314}
         moveSpeed: 15
         moveDir: {x: 1, y: 0, z: 0}
         moverType: 2
+        characterYOffset: -1.7
+    - rid: 175954964878196736
+      type: {class: AttackAmeSpecial, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: e96029342badc7f429c20520b3337f35, type: 2}
+        tex: {fileID: 21300000, guid: d5edb5c12859204478a93387c710052a, type: 3}
 --- !u!54 &5508901849141189314
 Rigidbody:
   m_ObjectHideFlags: 0
