@@ -7,7 +7,6 @@ namespace TechC.VBattle.InGame.Comment
     public class GrassCollider : MonoBehaviour
     {
         // 定数定義
-        private const float DEFAULT_RETURN_DELAY = 3f;
         private const float ROTATION_0_DEGREES = 0f;
         private const float ROTATION_90_DEGREES = 90f;
         private const float ROTATION_180_DEGREES = 180f;
@@ -17,7 +16,7 @@ namespace TechC.VBattle.InGame.Comment
         [SerializeField] private GameObject grassEffect;
         [SerializeField] Rigidbody rb;
         private bool isReturning = false;
-        [SerializeField] private float returnDelay = DEFAULT_RETURN_DELAY;
+        [SerializeField] private float returnDelay = 3f;
         
         // このオブジェクトを持っているキャラクターの参照
         private Character.CharacterController holderCharacter;
@@ -56,6 +55,9 @@ namespace TechC.VBattle.InGame.Comment
                     holderCharacter.SetHoldItem(null);
                     holderCharacter = null;
                 }
+
+                // 草コメントが壁などにくっつくように親を切断
+                transform.SetParent(null);
 
                 Vector3 contactPoint = other.ClosestPoint(transform.position);
                 Vector3 direction = (transform.position - contactPoint).normalized;

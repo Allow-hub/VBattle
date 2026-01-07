@@ -19,6 +19,7 @@ namespace TechC.VBattle.InGame
         // InGameのPrefabにComment関連のオブジェクトをオーバーライドしていないため、
         // 同様にコメントアウトしておく→将来的にコメントを含めてビルドするようになったら再度コメントアウト解除する
         // [SerializeField] private CommentFactory commentFactory;
+        // [SerializeField] private BuffFactory buffFactory;
         // [SerializeField] private CommentDisplay commentDisplay;
 
         private void Awake()
@@ -28,6 +29,7 @@ namespace TechC.VBattle.InGame
             effectFactory.Init();
             attackVisualizer.Init();
             // commentFactory.Init();
+            // buffFactory.Init();
             // commentDisplay.Init();
         }
     }
