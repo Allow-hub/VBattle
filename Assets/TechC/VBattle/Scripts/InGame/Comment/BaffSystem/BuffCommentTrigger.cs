@@ -28,8 +28,6 @@ namespace TechC.VBattle.InGame.Comment
         /// <summary>
         /// コメントにPlayerが当たったときにバフの効果とエフェクトを発動する
         /// </summary>
-        /// <param name="other"></param>
-
         private void OnTriggerEnter(Collider other)
         {
             if (alreadyApplied) return;
@@ -46,18 +44,15 @@ namespace TechC.VBattle.InGame.Comment
                         buffManager.ApplyBuff(buff);
                 }
 
-                var controller = other.transform.GetComponent<Character.CharacterController>();
-                int id = controller.PlayerIndex;
-
                 float effectTime = buff.remainingTime;
 
                 switch (buffType)
                 {
                     case BuffType.Speed:
-                        EffectFactory.I.PlayEffect("SpeedBuff", id, Quaternion.identity, effectTime);
+                        EffectFactory.I.PlayEffect("SpeedBuff", other.gameObject, Quaternion.identity, effectTime);
                         break;
                     case BuffType.Attack:
-                        EffectFactory.I.PlayEffect("AttackBuff", id, Quaternion.identity, effectTime);
+                        EffectFactory.I.PlayEffect("AttackBuff", other.gameObject, Quaternion.identity, effectTime);
                         break;
                     default:
                         break;

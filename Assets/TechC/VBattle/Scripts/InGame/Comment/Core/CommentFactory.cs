@@ -17,12 +17,8 @@ namespace TechC.VBattle.InGame.Comment
         private static readonly Vector3 COMMENT_OBJ_SCALE = new Vector3(0.25f, 0.25f, 0.25f);
 
         /// <summary>
-        /// コメントを取得する
+        /// コメントオブジェクトをプールから取得して初期化
         /// </summary>
-        /// <param name="commentData"></param>
-        /// <param name="commentPrefab"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
         public GameObject GetComment(CommentData commentData, GameObject commentPrefab)
         {
             GameObject obj = commentPool.GetObject(commentPrefab);
@@ -31,7 +27,7 @@ namespace TechC.VBattle.InGame.Comment
             obj.transform.localScale = COMMENT_OBJ_SCALE;
             obj.transform.rotation = Quaternion.identity; // 回転をリセット（前回の湾曲で設定された回転をクリア）
 
-            if (commentData.type == CommentType.Normal) return obj; // NormalはBuffCommentTriggerがついていないため早期reture
+            if (commentData.type == CommentType.Normal) return obj; // NormalはBuffCommentTriggerがついていないため早期return
 
             if (commentData != null && (commentData.type == CommentType.Grass || commentData.type == CommentType.Freeze))
             {

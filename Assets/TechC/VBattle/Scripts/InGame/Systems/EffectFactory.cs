@@ -1,5 +1,5 @@
-using System.Collections;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
 using UnityEngine;
 
 namespace TechC.VBattle.Systems
@@ -25,28 +25,41 @@ namespace TechC.VBattle.Systems
         }
 
         /// <summary>
-        /// 位置だけを指定してエフェクトを再生（回転はデフォルト値）
+        /// エフェクトを再生
         /// </summary>
         /// <param name="effectName">エフェクト名</param>
-        /// <param name="position">エフェクトの位置</param>
+        /// <param name="playerObj">エフェクトを配置するプレイヤーオブジェクト</param>
+        /// <param name="rotation">エフェクトの回転</param>
         /// <param name="effectRemainingTime">自動返却までの時間（省略可）</param>
-        public void PlayEffect(string effectName, int playerID, Quaternion rotation, float effectRemainingTime = 0f)
+        public void PlayEffect(string effectName, GameObject playerObj, Quaternion rotation, float effectRemainingTime = 0f)
         {
-            /* ObjectPoolから指定された名前のエフェクトを取得 */
+            // ObjectPoolから指定された名前のエフェクトを取得
             GameObject effect = effectPool.GetObjectByName(effectName);
+            
+            if (effect == null)
+            {
+                Debug.LogWarning($"エフェクト '{effectName}' が見つかりません。");
+                return;
+            }
 
+            // エフェクトの位置と回転を設定
+            if (playerObj != null)
+            {
+                effect.transform.position = playerObj.transform.position;
+                effect.transform.SetParent(playerObj.transform);
+            }
+            effect.transform.rotation = rotation;
+            effect.SetActive(true);
 
-            /* エフェクトの位置を回転を設定 */
-            // var obj = BattleJudge.I.GetPlayerObjById(playerID);
-            // effect.transform.position = obj.transform.position;
-            // effect.transform.SetParent(obj.transform);
-            // effect.transform.rotation = rotation; /* 回転を設定 */
-            // effect.SetActive(true); /* エフェクトを表示 */
-
-            // if (effectRemainingTime > 0f)
-            // {
-            //     StartCoroutine(AutoReturn(effect, effectRemainingTime));
-            // }
+            // 指定時間後に自動返却
+            if (effectRemainingTime > 0f)
+            {
+                _ = DelayUtility.StartDelayedActionAsync(effectRemainingTime, () =>
+                {
+                    if (effect != null)
+                        effectPool.ReturnObject(effect);
+                });
+            }
         }
 
         public GameObject GetEffectObj(GameObject prefab, Vector3 position, Quaternion rotation)
@@ -77,20 +90,10 @@ namespace TechC.VBattle.Systems
             GameObject result = effectPool.GetObject(prefab);    
             return result;
         }
-        /// <summary>
-        /// 指定時間後にエフェクトをプールに返却する
-        /// </summary>
-        private IEnumerator AutoReturn(GameObject effect, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-
-            effectPool.ReturnObject(effect);
-        }
 
         /// <summary>
         /// エフェクトをプールに返却する
         /// </summary>
-        /// <param name="effect">返却するエフェクトのゲームオブジェクト</param>
         public void ReturnEffect(GameObject effect)
         {
             effectPool.ReturnObject(effect);

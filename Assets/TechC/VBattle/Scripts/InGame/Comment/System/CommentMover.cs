@@ -89,7 +89,7 @@ namespace TechC.VBattle.InGame.Comment
             MoveCurvedComment(trans);
 
             if (trans.position.x <= despawnPosX)
-                ReturnComment(trans.gameObject, chars);
+                ReturnComment(trans.gameObject);
             
         }
         
@@ -152,7 +152,7 @@ namespace TechC.VBattle.InGame.Comment
         /// <summary>
         /// コメントをプールに返却
         /// </summary>
-        private void ReturnComment(GameObject comment, List<GameObject> chars)
+        private void ReturnComment(GameObject comment)
         {
             if (commentCurveDataMap.ContainsKey(comment.transform))
                 commentCurveDataMap.Remove(comment.transform);
