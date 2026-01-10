@@ -154,26 +154,10 @@ namespace TechC.VBattle.InGame.Comment
         /// </summary>
         private void ReturnComment(GameObject comment, List<GameObject> chars)
         {
-            CommentDisplay.I.OnCommentReturned(comment);
-
             if (commentCurveDataMap.ContainsKey(comment.transform))
                 commentCurveDataMap.Remove(comment.transform);
             
-
-            foreach (var obj in chars)
-            {
-                if (obj != null && obj.activeInHierarchy)
-                {
-                    obj.SetActive(false);
-                    UnityEngine.Object.Destroy(obj);
-                }
-            }
-
-            if (comment.activeInHierarchy)
-            {
-                comment.SetActive(false);
-                CommentDisplay.I.OnCommentReturned(comment);
-            }
+            CommentDisplay.I.OnCommentReturned(comment);
         }
     }
 }

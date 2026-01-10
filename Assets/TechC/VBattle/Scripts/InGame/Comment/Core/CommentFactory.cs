@@ -35,7 +35,6 @@ namespace TechC.VBattle.InGame.Comment
                 var specialCommentTrigger = obj.GetComponent<SpecialCommentTrigger>();
                 if (specialCommentTrigger == null)
                     CustomLogger.Error("SpecialCommentTriggerがPrefabにアタッチされていません。PrefabのInspectorで必ず追加してください。");
-                
             }
             else
             {
@@ -47,21 +46,27 @@ namespace TechC.VBattle.InGame.Comment
             return obj;
         }
 
+        /// <summary>
+        /// コメントをプールに返却
+        /// </summary>
         public void ReturnComment(GameObject comment)
         {
             // 子階層の文字オブジェクトをすべてクリア
-            foreach (Transform child in comment.transform)
+            // 逆順で処理して、インデックスのずれを防ぐ
+            for (int i = comment.transform.childCount - 1; i >= 0; i--)
             {
-                child.SetParent(null);
-                ReturnChar(child.gameObject);
+                Transform child = comment.transform.GetChild(i);
+                commentPool.ReturnObject(child.gameObject);
             }
-            
+
             commentPool.ReturnObject(comment);
         }
 
+        /// <summary>
+        /// 文字名に対応する3D文字オブジェクトをプールから取得
+        /// </summary>
         public GameObject GetChar(string charName)
         {
-
             GameObject charPrefab = null;
             foreach (var entry in charPrefabDatabase.entries)
             {
@@ -81,12 +86,6 @@ namespace TechC.VBattle.InGame.Comment
             // ObjectPoolから取得
             GameObject charObj = commentPool.GetObject(charPrefab);
             return charObj;
-        }
-
-        // 文字オブジェクトをプールに返却
-        public void ReturnChar(GameObject charObj)
-        {
-            commentPool.ReturnObject(charObj);
         }
     }
 }
