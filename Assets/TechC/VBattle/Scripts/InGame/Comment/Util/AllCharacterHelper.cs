@@ -37,6 +37,11 @@ namespace TechC.VBattle.InGame.Comment
                     // 文字のPrefabのプロパティをいったんリセット
                     obj.transform.localRotation = Quaternion.identity;
                     obj.transform.localScale = Vector3.one;
+                    
+                    // MeshRendererを有効化
+                    var meshRenderer = obj.GetComponent<MeshRenderer>();
+                    if (meshRenderer != null)
+                        meshRenderer.enabled = true;
 
                     obj.transform.SetParent(parent);
 
@@ -59,13 +64,10 @@ namespace TechC.VBattle.InGame.Comment
                     pos.z = 0;
                     obj.transform.position = pos;
 
-
                     // マテリアル色変更
-                    var meshRenderer = obj.GetComponent<MeshRenderer>();
                     if (meshRenderer != null)
-                    {
                         meshRenderer.material.color = color;
-                    }
+
                     spawnedChars.Add(obj); // リストに記録
                 }
             }
@@ -102,7 +104,6 @@ namespace TechC.VBattle.InGame.Comment
             }
             return spawnedChars;
         }
-
 
         #region 文字とPrefabのセット
         private static readonly Dictionary<string, string> charToPrefabName;
