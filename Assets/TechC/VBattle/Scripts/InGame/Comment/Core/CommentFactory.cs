@@ -26,7 +26,10 @@ namespace TechC.VBattle.InGame.Comment
         public GameObject GetComment(CommentData commentData, GameObject commentPrefab)
         {
             GameObject obj = commentPool.GetObject(commentPrefab);
+            
+            // ObjectPoolでリセットされた状態を上書きして、コメント用に初期化
             obj.transform.localScale = COMMENT_OBJ_SCALE;
+            obj.transform.rotation = Quaternion.identity; // 回転をリセット（前回の湾曲で設定された回転をクリア）
 
             if (commentData.type == CommentType.Normal) return obj; // NormalはBuffCommentTriggerがついていないため早期reture
 
