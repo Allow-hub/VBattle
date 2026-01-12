@@ -10,6 +10,8 @@ namespace TechC.VBattle.Core.Window
     public class ImageWindow : NativeWindow
     {
         private Texture2D image;
+        private int targetX = 0;
+        private int targetY = 0;
 
         public ImageWindow(IntPtr hwnd, int width, int height, Texture2D texture)
             : base(hwnd, width, height, WindowFactory.WindowType.Image)
@@ -23,16 +25,28 @@ namespace TechC.VBattle.Core.Window
             if (image != null)
             {
                 SetRect();
-                DrawWindowUtility.DrawTextureToWindow(Hwnd, image, Width, Height);
+                // レイヤードウィンドウの場合は位置情報も含めて描画
+                DrawWindowUtility.SetLayeredTextureWithPosition((HWND)Hwnd, image, targetX, targetY);
+            }
+        }
+
+        /// <summary>
+        /// レイヤードウィンドウの位置を設定
+        /// </summary>
+        public void SetPosition(int x, int y)
+        {
+            targetX = x;
+            targetY = y;
+            
+            if (image != null)
+            {
+                DrawWindowUtility.SetLayeredTextureWithPosition((HWND)Hwnd, image, targetX, targetY);
             }
         }
 
         /// <summary>
         /// 引数を省略した場合このウィンドウのサイズを用いる
         /// </summary>
-        /// <param name="texture"></param>
-        /// <param name="drawWidth"></param>
-        /// <param name="drawHeight"></param>
         public void SetImage(Texture2D texture, int? drawWidth = null, int? drawHeight = null, int widthMargin = 10, int heightMargin = 40)
         {
             image = texture;
@@ -45,15 +59,15 @@ namespace TechC.VBattle.Core.Window
         }
 
         /// <summary>
-        /// テクスチャをリドローしない
+        /// テクスチャをレイヤードウィンドウとして描画
         /// </summary>
-        /// <param name="texture"></param>
         public void SetTextureToBitmap(Texture2D texture)
         {
             image = texture;
             SetRect();
-            DrawWindowUtility.SetLayeredTexture((HWND)Hwnd, image);
+            DrawWindowUtility.SetLayeredTextureWithPosition((HWND)Hwnd, image, targetX, targetY);
         }
+        
         public override void Destroy()
         {
             base.Destroy();

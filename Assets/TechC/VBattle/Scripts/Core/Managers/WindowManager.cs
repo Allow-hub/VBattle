@@ -148,7 +148,6 @@ namespace TechC.VBattle.Core.Managers
             int unityScreenHeight = win32Rect.bottom - win32Rect.top;
             int tileSize = unityScreenHeight / 6;
 
-            // Windowで隙間なく覆うための分割数を計算
             var rnd = new System.Random();
 
             // 横・縦に何枚並べるか
@@ -199,12 +198,23 @@ namespace TechC.VBattle.Core.Managers
                 int y = unityScreenY + yi * tileSize;
 
                 var win = WindowFactory.I.GetWindow(type);
-                WindowUtility.MoveWindow((HWND)win.Hwnd, x, y);
+
+                // まずリサイズ
                 WindowUtility.ResizeWindow((HWND)win.Hwnd, w, h);
                 win.SetRect();
 
+                // ImageWindowの場合は専用メソッドで位置を設定
                 if (win is ImageWindow imageWindow)
-                    imageWindow.SetTextureToBitmap(tex.texture);
+                {
+                    imageWindow.SetPosition(x, y);
+                    if (tex != null)
+                        imageWindow.SetTextureToBitmap(tex.texture);
+                }
+                else
+                {
+                    // 通常のウィンドウは従来通り
+                    WindowUtility.MoveWindow((HWND)win.Hwnd, x, y);
+                }
 
                 normalWindows.Add(win);
                 created++;
