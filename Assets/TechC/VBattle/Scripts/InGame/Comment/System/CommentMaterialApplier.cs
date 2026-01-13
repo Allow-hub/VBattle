@@ -123,7 +123,7 @@ namespace TechC.VBattle.InGame.Comment
         {
             if (characters == null)
             {
-                Debug.LogWarning("characters が null です");
+                CustomLogger.Warning("characters が null です");
                 return;
             }
 
