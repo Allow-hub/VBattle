@@ -18,7 +18,6 @@ namespace TechC.VBattle.InGame.Camera
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
-        private bool isZooming;
         private float currentIntensity;
         private float currentDuration;
         private float zoomStartTime;
@@ -35,9 +34,7 @@ namespace TechC.VBattle.InGame.Camera
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
             
             if (targetCamera != null)
-            {
                 originalFOV = targetCamera.fieldOfView;
-            }
         }
 
         /// <summary>
@@ -52,14 +49,13 @@ namespace TechC.VBattle.InGame.Camera
             currentDuration = zoomDuration;
             
             State = CameraEffectState.Active;
-            isZooming = true;
             
-            StartZoomAsync();
+            StartZoomAsync().Forget();
         }
 
         public void Stop(Vector3 originalPosition)
         {
-            isZooming = false;
+            State = CameraEffectState.Idle;
             zoomStartTime = 0f;
             Reset(originalPosition);
         }
@@ -73,7 +69,7 @@ namespace TechC.VBattle.InGame.Camera
             State = CameraEffectState.Completed;
         }
 
-        private async void StartZoomAsync()
+        private async UniTaskVoid StartZoomAsync()
         {
             await DelayUtility.StartRepeatedActionAsync(
                 currentDuration, 
@@ -81,18 +77,17 @@ namespace TechC.VBattle.InGame.Camera
                 () => { PerformZoomStep(); return UniTask.CompletedTask; }
             );
             
-            if (isZooming)
+            if (State == CameraEffectState.Active)
             {
-                isZooming = false;
+                State = CameraEffectState.Idle;
                 Reset(Vector3.zero);
             }
         }
 
         private void PerformZoomStep()
         {
-            if (!isZooming || targetCamera == null) return;
+            if (State != CameraEffectState.Active || targetCamera == null) return;
 
-            // 開始時間を記録
             if (zoomStartTime == 0f)
                 zoomStartTime = Time.time;
 

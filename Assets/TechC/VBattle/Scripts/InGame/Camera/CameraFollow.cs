@@ -11,6 +11,8 @@ namespace TechC.VBattle.InGame.Camera
     [System.Serializable]
     public class CameraFollow : ICameraEffect
     {
+        private const float HALF = 0.5f;
+        
         [Header("格闘ゲーム追従設定")]
         [SerializeField] private float followSpeed = 5f;
         [SerializeField] private float zoomSpeed = 3f;
@@ -27,10 +29,8 @@ namespace TechC.VBattle.InGame.Camera
         private Transform cameraTransform;
         private float originalFOV;
         
-        // 追従機能用
         private Transform player1;
         private Transform player2;
-        private bool isFollowActive = false;
         private Vector3 targetPosition;
         private float targetFOV;
 
@@ -44,11 +44,10 @@ namespace TechC.VBattle.InGame.Camera
         {
             this.cameraTransform = cameraTransform;
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
-            if (targetCamera != null)
-            {
-                originalFOV = targetCamera.fieldOfView;
-                targetFOV = originalFOV;
-            }
+            if (targetCamera == null) return;
+            
+            originalFOV = targetCamera.fieldOfView;
+            targetFOV = originalFOV;
         }
 
         /// <summary>
@@ -56,9 +55,8 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void Apply()
         {
-            if (!isFollowActive) return;
+            if (State != CameraEffectState.Active) return;
             
-            State = CameraEffectState.Active;
             UpdateFollow();
         }
 
@@ -71,7 +69,6 @@ namespace TechC.VBattle.InGame.Camera
         {
             player1 = p1;
             player2 = p2;
-            isFollowActive = true;
             State = CameraEffectState.Active;
             
             if (cameraTransform != null)
@@ -83,11 +80,9 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void UpdateFollow()
         {
-            if (!isFollowActive || player1 == null || player2 == null || targetCamera == null)
-                return;
+            if (State != CameraEffectState.Active || player1 == null || player2 == null || targetCamera == null) return;
 
-            // プレイヤー中央位置計算
-            Vector3 centerPosition = (player1.position + player2.position) * 0.5f;
+            Vector3 centerPosition = (player1.position + player2.position) * HALF;
             
             // Y軸にジャンプオフセットを追加（最も高いプレイヤーに合わせる）
             float highestY = Mathf.Max(player1.position.y, player2.position.y);
@@ -119,7 +114,7 @@ namespace TechC.VBattle.InGame.Camera
 
         public void Stop(Vector3 originalPosition)
         {
-            isFollowActive = false;
+            State = CameraEffectState.Idle;
             Reset(originalPosition);
         }
 

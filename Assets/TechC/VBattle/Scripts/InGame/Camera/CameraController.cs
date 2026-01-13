@@ -79,7 +79,6 @@ namespace TechC.VBattle.InGame.Camera
 
         private void Update()
         {
-            // ICameraEffectインターフェースに従った統一されたApplyメソッドを使用
             cameraFollow.Apply();
         }
 
@@ -89,12 +88,10 @@ namespace TechC.VBattle.InGame.Camera
         /// <param name="attackResult">攻撃結果データ</param>
         private void OnAttackResult(AttackResultEvent attackResult)
         {
-            // ヒットした場合のみカメラエフェクトを実行
-            if (attackResult.isHit)
-            {
-                cameraShake.Apply();  // シェイクエフェクト
-                cameraZoom.Apply();   // ズームエフェクト
-            }
+            if (!attackResult.isHit) return;
+            
+            cameraShake.Apply();
+            cameraZoom.Apply();
         }
         private void OnDestroy()
         {

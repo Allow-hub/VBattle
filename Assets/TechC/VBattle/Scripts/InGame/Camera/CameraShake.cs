@@ -16,7 +16,6 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
 
         private Transform cameraTransform;
-        private bool isShaking;
         private float shakeStartTime;
         private Vector3 shakeBasePosition;
 
@@ -39,18 +38,16 @@ namespace TechC.VBattle.InGame.Camera
             if (State == CameraEffectState.Active)
                 Stop(cameraTransform.position);
 
-            // シェイク開始時の現在位置を基準位置として保存
             shakeBasePosition = cameraTransform.position;
 
             State = CameraEffectState.Active;
-            isShaking = true;
 
             StartShakeAsync().Forget();
         }
 
         public void Stop(Vector3 originalPosition)
         {
-            isShaking = false;
+            State = CameraEffectState.Idle;
             shakeStartTime = 0f;
             Reset(originalPosition);
         }
@@ -72,19 +69,17 @@ namespace TechC.VBattle.InGame.Camera
                 async () => await PerformShakeStep()
             );
 
-            if (isShaking)
+            if (State == CameraEffectState.Active)
             {
-                isShaking = false;
-                // シェイク終了時は基準位置に戻す（追従は別途継続される）
+                State = CameraEffectState.Idle;
                 Reset(shakeBasePosition);
             }
         }
 
         private async UniTask PerformShakeStep()
         {
-            if (!isShaking) return;
+            if (State != CameraEffectState.Active) return;
 
-            // 開始時間を記録
             if (shakeStartTime == 0f)
                 shakeStartTime = Time.time;
 
@@ -95,9 +90,8 @@ namespace TechC.VBattle.InGame.Camera
             float shakeAmount = shakeIntensity * curveValue;
 
             Vector3 randomOffset = Random.insideUnitSphere * shakeAmount;
-            randomOffset.z = 0f; // Z軸の振動は制限
+            randomOffset.z = 0f;
 
-            // シェイク開始時の基準位置を使用
             cameraTransform.position = shakeBasePosition + randomOffset;
 
             await UniTask.Yield();
