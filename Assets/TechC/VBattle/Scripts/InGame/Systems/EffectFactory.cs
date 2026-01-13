@@ -1,3 +1,4 @@
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using UnityEngine;
@@ -27,18 +28,18 @@ namespace TechC.VBattle.Systems
         /// <summary>
         /// エフェクトを再生
         /// </summary>
-        /// <param name="effectName">エフェクト名</param>
+        /// <param name="effectPrefab">エフェクトPrefab</param>
         /// <param name="playerObj">エフェクトを配置するプレイヤーオブジェクト</param>
         /// <param name="rotation">エフェクトの回転</param>
         /// <param name="effectRemainingTime">自動返却までの時間（省略可）</param>
-        public void PlayEffect(string effectName, GameObject playerObj, Quaternion rotation, float effectRemainingTime = 0f)
+        public void PlayEffect(GameObject effectPrefab, GameObject playerObj, Quaternion rotation, float effectRemainingTime = 0f)
         {
-            // ObjectPoolから指定された名前のエフェクトを取得
-            GameObject effect = effectPool.GetObjectByName(effectName);
+            // ObjectPoolから指定されたPrefabのエフェクトを取得
+            GameObject effect = effectPool.GetObject(effectPrefab);
             
             if (effect == null)
             {
-                Debug.LogWarning($"エフェクト '{effectName}' が見つかりません。");
+                CustomLogger.Warning($"エフェクト '{effectPrefab?.name}' が見つかりません。");
                 return;
             }
 
@@ -66,21 +67,19 @@ namespace TechC.VBattle.Systems
         {
             if (effectPool == null)
             {
-                Debug.LogError("EffectFactory: effectPool is not assigned!");
+                CustomLogger.Error("EffectFactory: effectPool is not assigned!");
                 return null;
             }
             
             if (prefab == null)
             {
-                Debug.LogError("EffectFactory: prefab is null!");
+                CustomLogger.Error("EffectFactory: prefab is null!");
                 return null;
             }
             
             GameObject result = effectPool.GetObject(prefab, position, rotation);
             if (result == null)
-            {
-                Debug.LogWarning($"EffectFactory: Failed to get object from pool for prefab '{prefab.name}'. Make sure the prefab is registered in ObjectPool.");
-            }
+                CustomLogger.Warning($"EffectFactory: Failed to get object from pool for prefab '{prefab.name}'. Make sure the prefab is registered in ObjectPool.");
             
             return result;
         }

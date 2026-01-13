@@ -95,5 +95,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buffType: 1
-  specialCommentType: 0
   commentText: 
+  effectPrefab: {fileID: 971276580557662903, guid: fd7e8cca3ad2cad4a94b3beb2a7b6fa2,
+    type: 3}

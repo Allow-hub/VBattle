@@ -10,6 +10,10 @@ namespace TechC.VBattle.InGame.Comment
     {
         public BuffType buffType;
         [HideInInspector] public string commentText;
+        
+        [Header("エフェクト設定")]
+        [SerializeField] private GameObject effectPrefab;
+        
         private bool alreadyApplied = false;
 
         private void OnEnable()
@@ -42,20 +46,10 @@ namespace TechC.VBattle.InGame.Comment
                     BuffManager buffManager = other.GetComponent<BuffManager>();
                     if (buffManager != null)
                         buffManager.ApplyBuff(buff);
-                }
-
-                float effectTime = buff.remainingTime;
-
-                switch (buffType)
-                {
-                    case BuffType.Speed:
-                        EffectFactory.I.PlayEffect("SpeedBuff", other.gameObject, Quaternion.identity, effectTime);
-                        break;
-                    case BuffType.Attack:
-                        EffectFactory.I.PlayEffect("AttackBuff", other.gameObject, Quaternion.identity, effectTime);
-                        break;
-                    default:
-                        break;
+                    
+                    // エフェクト再生
+                    if (effectPrefab != null)
+                        EffectFactory.I.PlayEffect(effectPrefab, other.gameObject, Quaternion.identity, buff.remainingTime);
                 }
 
                 alreadyApplied = true;
