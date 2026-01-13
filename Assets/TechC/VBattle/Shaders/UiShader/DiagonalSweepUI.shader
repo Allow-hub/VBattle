@@ -123,9 +123,11 @@ Shader "Unlit/DiagonalSweepUI"
                 float sweepFactor = band * centerFalloff * _SweepIntensity;
                 sweepFactor = saturate(sweepFactor);
 
-                // final color: additively blend sweepColor over base, multiplied by base alpha
-                fixed4 sweepCol = _SweepColor * sweepFactor;
+                // ★ 修正：sweep を「乗算」ではなく「加算」でブレンド
+                // または sweep を強く見せるため、base の影響を減らす
                 
+                fixed4 sweepCol = _SweepColor * sweepFactor;
+
                 // optionally use mask to restrict sweep
                 if (_UseMask > 0.5)
                 {
@@ -134,15 +136,17 @@ Shader "Unlit/DiagonalSweepUI"
                     else sweepCol *= maskA;
                 }
 
-                // choose blending: additive on top of base, but respect base alpha
+                // ★ ここを修正：sweep を「乗算合成」から「加算合成」に変更
                 fixed4 outCol;
-                // preserve base alpha
-                outCol.rgb = baseCol.rgb + sweepCol.rgb * sweepCol.a;
+                // オプション1：純粋に加算（赤が強く見える）
+                outCol.rgb = baseCol.rgb + sweepCol.rgb * sweepCol.a * 2.0;  // 2.0 で強度UP
                 outCol.a = baseCol.a;
 
-                // tone down if alpha > 1
-                outCol.rgb = outCol.rgb * (1.0 / max(1.0, outCol.a));
+                // オプション2：sweep 部分だけ sweep 色に置き換え（最もシンプル）
+                // outCol.rgb = lerp(baseCol.rgb, sweepCol.rgb, sweepFactor);
+                // outCol.a = baseCol.a;
 
+                outCol.rgb = outCol.rgb * (1.0 / max(1.0, outCol.a));
                 return outCol;
             }
             ENDCG

@@ -3,7 +3,7 @@ namespace TechC.VBattle.InGame.Character
     /// <summary>
     /// ジャンプコマンド
     /// </summary>
-    public struct JumpCommand : ICommand
+    public readonly struct JumpCommand : ICommand
     {
         public CommandType Type => CommandType.Jump;
     }

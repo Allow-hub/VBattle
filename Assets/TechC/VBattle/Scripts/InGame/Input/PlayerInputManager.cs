@@ -52,6 +52,16 @@ namespace TechC.VBattle.InGame.Input
         }
 
         /// <summary>
+        /// 必殺技
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void OnSpecial(InputAction.CallbackContext ctx)
+        {
+            if (ctx.started) OnButtonDown(InputButton.Special);
+            if (ctx.canceled) OnButtonUp(InputButton.Special);
+        }
+
+        /// <summary>
         /// 弱攻撃
         /// </summary>
         /// <param name="ctx"></param>

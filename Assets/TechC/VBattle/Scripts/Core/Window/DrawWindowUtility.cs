@@ -18,11 +18,6 @@ namespace TechC.VBattle.Core.Window
         /// <summary>
         /// ウィンドウにテクスチャを描画する。
         /// </summary>
-        /// <param name="hWnd">ウィンドウハンドル</param>
-        /// <param name="texture">テクスチャ</param>
-        /// <param name="drawWidth">横幅</param>
-        /// <param name="drawHeight">高さ</param>
-        /// <param name="orientation">向き</param>
         public static void DrawTextureToWindow(IntPtr hWnd, Texture2D texture, int drawWidth, int drawHeight, ImageOrientation orientation = ImageOrientation.Normal)
         {
             if (hWnd == IntPtr.Zero || texture == null) return;
@@ -61,10 +56,8 @@ namespace TechC.VBattle.Core.Window
                         // GDIは上下反転なのでさらに反転
                         int gdiY = srcHeight - 1 - srcY;
                         if (orientation == ImageOrientation.FlipVertical)
-                        {
-                            // 反転済みなのでそのまま
-                            gdiY = srcY;
-                        }
+                            gdiY = srcY;// 反転済みなのでそのまま
+                        
                         var pixel = pixels[srcY * srcWidth + srcX];
                         int idx = (gdiY * srcWidth + x) * 4;
                         bmpData[idx] = pixel.b;
@@ -104,7 +97,11 @@ namespace TechC.VBattle.Core.Window
                 PInvoke.ReleaseDC(hwnd, hdc);
             }
         }
-        public static void SetLayeredTexture(HWND hwnd, Texture2D tex)
+        
+        /// <summary>
+        /// レイヤードウィンドウにテクスチャを設定(位置指定付き)
+        /// </summary>
+        public static void SetLayeredTextureWithPosition(HWND hwnd, Texture2D tex, int posX, int posY)
         {
             int texWidth = tex.width;
             int texHeight = tex.height;
@@ -155,12 +152,12 @@ namespace TechC.VBattle.Core.Window
                     int wndHeight = rect.bottom - rect.top;
                     SIZE wndSize = new SIZE(wndWidth, wndHeight);
 
-                    // 転送先DC（ウィンドウサイズにリサイズ）
+                    // 転送先DC(ウィンドウサイズにリサイズ)
                     HDC hdcDst = PInvoke.CreateCompatibleDC(hdcScreen);
                     HBITMAP hBitmapDst = PInvoke.CreateCompatibleBitmap(hdcScreen, wndWidth, wndHeight);
                     HGDIOBJ oldDst = PInvoke.SelectObject(hdcDst, hBitmapDst);
 
-                    // ストレッチ転送（テクスチャサイズ → ウィンドウサイズ）
+                    // ストレッチ転送(テクスチャサイズ → ウィンドウサイズ)
                     PInvoke.StretchBlt(
                         hdcDst,
                         0, 0, wndWidth, wndHeight,   // 転送先サイズ
@@ -178,11 +175,11 @@ namespace TechC.VBattle.Core.Window
                         AlphaFormat = (byte)PInvoke.AC_SRC_ALPHA
                     };
 
-                    // リサイズ済みの hdcDst を使って更新
+                    // UpdateLayeredWindowで位置も指定
                     PInvoke.UpdateLayeredWindow(
                         hwnd,
                         hdcScreen,
-                        new System.Drawing.Point(0, 0),
+                        new System.Drawing.Point(posX, posY),  // ウィンドウ位置を指定
                         wndSize,
                         hdcDst,
                         new System.Drawing.Point(0, 0),
@@ -203,6 +200,15 @@ namespace TechC.VBattle.Core.Window
             }
         }
 
+        /// <summary>
+        /// レイヤードウィンドウにテクスチャを設定(位置は現在位置を維持)
+        /// </summary>
+        public static void SetLayeredTexture(HWND hwnd, Texture2D tex)
+        {
+            RECT rect;
+            PInvoke.GetWindowRect(hwnd, out rect);
+            SetLayeredTextureWithPosition(hwnd, tex, rect.left, rect.top);
+        }
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ namespace TechC.VBattle.InGame.Character
         public CharaName CharacterName;
 
         public GameObject CharaPrefab;
-        
+
         [Header("移動関連")]
         [Tooltip("通常の移動速度")]
         public float MoveSpeed;
@@ -37,6 +37,13 @@ namespace TechC.VBattle.InGame.Character
         public float GuardRecoveryInterval;
         [Tooltip("ガード破壊スタンの時間")]
         public float GuardBreakDuration;
+
+        [Header("必殺技ゲージの設定")]
+        [Tooltip("必殺技ゲージの溜まりやすさ")]
+        public float specialGaugeChargeRate = 1.0f;
+
+        [Tooltip("必殺技ゲージの最大値")]
+        public int maxSpecialGauge = 100;
     }
 
     /// <summary>

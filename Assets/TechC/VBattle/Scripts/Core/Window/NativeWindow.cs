@@ -77,5 +77,9 @@ namespace TechC.VBattle.Core.Window
             Width = width;
             Height = height;
         }
+
+        public virtual void OnPaint(IntPtr hdcPtr, RECT rc)
+        {
+        }
     }
 }
