@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
@@ -25,6 +26,7 @@ namespace TechC.VBattle.InGame
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
+        [SerializeField] private int[] countdownFontSize; // フォントサイズ配列を追加
         private int countdownTimer = 3;
         private CancellationTokenSource countdownCts;
         public InGameState InGameState => inGameState;
@@ -143,10 +145,11 @@ namespace TechC.VBattle.InGame
             try
             {
                 if (countdownPosition == null || countdownPosition.Length == 0) return;
-                
+
                 // カウントダウン用のインデックス（0から始まる）
                 int arrayIndex = 0;
-                
+
+                // 3, 2, 1 のカウントダウン
                 for (int i = countdownTimer; i > 0; i--)
                 {
                     // キャンセルチェック
@@ -179,9 +182,20 @@ namespace TechC.VBattle.InGame
                         arrayIndex++;
                         continue;
                     }
-                    
-                    // テキスト、位置、サイズを設定
+
+                    // テキストを設定
                     basicWindow.SetText(i.ToString());
+
+                    // フォントサイズを設定
+                    int fontSize;
+                    if (countdownFontSize != null && arrayIndex < countdownFontSize.Length)
+                        fontSize = countdownFontSize[arrayIndex];
+                    else if (countdownFontSize != null && countdownFontSize.Length > 0)
+                        fontSize = countdownFontSize[countdownFontSize.Length - 1];// 配列の範囲外の場合は最後の要素を使用
+                    else
+                        fontSize = 300; // デフォルト値
+
+                    basicWindow.SetFont(fontSize);
 
                     // Hwnd の確認（IntPtr.Zero なら無効）
                     var hwndObj = w.Hwnd;
@@ -223,12 +237,87 @@ namespace TechC.VBattle.InGame
                         Debug.LogWarning($"CountdownAsync: MoveWindow で例外: {ex.Message}");
                     }
 
-                    await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);// 1秒待機
+                    // 0.5秒待機
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.5), cancellationToken: token);
+
+                    // 下方向にアニメーション移動
+                    try
+                    {
+                        await WindowUtility.MoveWindowInDirectionAsync(
+                            basicWindow,
+                            Vector2.down,
+                            moveSpeedPerFrame: 50f,
+                            intervalMs: 16,
+                            texture: null,
+                            durationSeconds: 0.5f
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"CountdownAsync: カウントダウンアニメーション移動で例外: {ex.Message}");
+                    }
+
                     arrayIndex++; // 配列インデックスを進める
                 }
 
+                // 0のタイミングで「Start!」を表示
+                token.ThrowIfCancellationRequested();
+
+                var windowFactory = WindowFactory.I;
+                if (windowFactory != null)
+                {
+                    var window = windowFactory.GetWindow(WindowFactory.WindowType.Basic);
+                    if (window != null)
+                    {
+                        var basicWindow = window as BasicWindow;
+                        if (basicWindow != null)
+                        {
+                            basicWindow.SetText("Start!");
+                            basicWindow.SetFont(countdownFontSize.Last());
+
+                            var hwndObj = window.Hwnd;
+                            if (hwndObj != null && !hwndObj.Equals(IntPtr.Zero))
+                            {
+                                // 画面全体のサイズを取得
+                                int screenWidth = Screen.currentResolution.width;
+                                int screenHeight = Screen.currentResolution.height;
+
+                                try
+                                {
+                                    WindowUtility.ResizeWindow((HWND)hwndObj, screenWidth, screenHeight);
+                                    WindowUtility.MoveWindow((HWND)hwndObj, 0, 0);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogWarning($"CountdownAsync: Start表示時のMoveWindowで例外: {ex.Message}");
+                                }
+                            }
+
+                            // Start!を1秒間表示
+                            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+
+                            // 下方向にアニメーション移動してからHide
+                            try
+                            {
+                                await WindowUtility.MoveWindowInDirectionAsync(
+                                    basicWindow,
+                                    Vector2.down,
+                                    moveSpeedPerFrame: 50f,
+                                    intervalMs: 16,
+                                    texture: null,
+                                    durationSeconds: 1f
+                                );
+                                basicWindow.Hide();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogWarning($"CountdownAsync: アニメーション移動で例外: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+
                 // カウントダウン終了後、Battleステートへ遷移
-                Debug.Log("Battle Start!");
                 ChangeState(InGameState.Battle);
             }
             catch (OperationCanceledException)

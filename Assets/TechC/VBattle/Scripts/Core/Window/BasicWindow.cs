@@ -14,6 +14,31 @@ namespace TechC.VBattle.Core.Window
         /// </summary>
         public string DisplayText { get; set; } = "クラシック風ウィンドウ";
 
+        /// <summary>
+        /// フォントサイズ
+        /// </summary>
+        public int FontSize { get; set; } = 16;
+
+        /// <summary>
+        /// テキストのX座標
+        /// </summary>
+        public int TextX { get; set; } = 10;
+
+        /// <summary>
+        /// テキストのY座標
+        /// </summary>
+        public int TextY { get; set; } = 10;
+
+        /// <summary>
+        /// フォント名
+        /// </summary>
+        public string FontName { get; set; } = "MS Gothic";
+
+        /// <summary>
+        /// フォントの太さ (400 = Normal, 700 = Bold)
+        /// </summary>
+        public int FontWeight { get; set; } = 400;
+
         public BasicWindow(IntPtr hwnd, int width, int height) : base(hwnd, width, height, WindowFactory.WindowType.Basic)
         {
         }
@@ -51,6 +76,34 @@ namespace TechC.VBattle.Core.Window
         public void SetText(string text)
         {
             DisplayText = text;
+            WindowUtility.InvalidateWindow((HWND)Hwnd);
+        }
+
+        /// <summary>
+        /// フォント設定を変更して再描画
+        /// </summary>
+        /// <param name="fontSize">フォントサイズ</param>
+        /// <param name="fontName">フォント名（省略可）</param>
+        /// <param name="fontWeight">フォントの太さ（省略可）</param>
+        public void SetFont(int fontSize, string fontName = null, int fontWeight = -1)
+        {
+            FontSize = fontSize;
+            if (fontName != null)
+                FontName = fontName;
+            if (fontWeight >= 0)
+                FontWeight = fontWeight;
+            WindowUtility.InvalidateWindow((HWND)Hwnd);
+        }
+
+        /// <summary>
+        /// テキスト描画位置を設定して再描画
+        /// </summary>
+        /// <param name="x">X座標</param>
+        /// <param name="y">Y座標</param>
+        public void SetTextPosition(int x, int y)
+        {
+            TextX = x;
+            TextY = y;
             WindowUtility.InvalidateWindow((HWND)Hwnd);
         }
 
