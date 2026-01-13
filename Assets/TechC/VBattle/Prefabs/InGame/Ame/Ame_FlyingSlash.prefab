@@ -62,9 +62,11 @@ MonoBehaviour:
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         rb: {fileID: 7542037042622624240}
-        moveSpeed: 10
+        moveSpeed: 1
         moveDir: {x: 1, y: 0, z: 0}
-        followCharacter: 0
+        followMode: 0
+        smoothFollow: 0
+        useCharacterMove: 0
     - rid: 5312645644256542753
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:

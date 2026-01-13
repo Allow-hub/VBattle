@@ -10,6 +10,7 @@ namespace TechC.VBattle.InGame
         Jump,
         Guard,
         Crouch,
+        Special 
     }
 
     /// <summary>

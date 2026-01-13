@@ -9,7 +9,7 @@ namespace TechC.VBattle.InGame.Systems
     /// ヒットストップを管理するクラス
     /// TimeScaleを補間しながら変更する
     /// </summary>
-    public class HitStopManager
+    public class HitStopController
     {
         private readonly BattleEventBus eventBus;
         private bool isHitStopping = false;
@@ -17,7 +17,7 @@ namespace TechC.VBattle.InGame.Systems
         // 補間設定
         private const float INTERPOLATION_DURATION = 0.05f; // 補間にかける時間（秒）
 
-        public HitStopManager(BattleEventBus eventBus)
+        public HitStopController(BattleEventBus eventBus)
         {
             this.eventBus = eventBus;
             eventBus.Subscribe<AttackResultEvent>(OnAttackResult);

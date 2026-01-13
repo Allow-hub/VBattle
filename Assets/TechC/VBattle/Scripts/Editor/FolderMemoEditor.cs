@@ -1,4 +1,4 @@
-namespace TechC.VBattle.Editors
+namespace TechC.VBattle.Editor
 {
     using UnityEngine;
     using UnityEditor;
@@ -16,6 +16,7 @@ namespace TechC.VBattle.Editors
 
         static FolderMemoEditor()
         {
+            //Inspector のヘッダー部分の描画を終えたあとに呼ばれるコールバック
             Editor.finishedDefaultHeaderGUI += OnPostHeaderGUI;
         }
         
@@ -27,9 +28,7 @@ namespace TechC.VBattle.Editors
                 string assetPath = AssetDatabase.GetAssetPath(editor.target);
 
                 if (AssetDatabase.IsValidFolder(assetPath))
-                {
                     DrawFolderMemo(assetPath);
-                }
             }
         }
 
@@ -46,9 +45,7 @@ namespace TechC.VBattle.Editors
             string newMemo = EditorGUILayout.TextArea(memo, GUILayout.MinHeight(60));
 
             if (EditorGUI.EndChangeCheck())
-            {
                 SaveMemo(folderPath, newMemo);
-            }
 
             EditorGUILayout.Space(5);
         }
@@ -57,9 +54,7 @@ namespace TechC.VBattle.Editors
         {
             // キャッシュをチェック
             if (memoCache.ContainsKey(folderPath))
-            {
                 return memoCache[folderPath];
-            }
 
             // メモファイルのパスを取得
             string memoFilePath = Path.Combine(folderPath, MEMO_FILE_NAME);
@@ -99,9 +94,7 @@ namespace TechC.VBattle.Editors
                         File.Delete(memoFilePath);
                         string metaFilePath = memoFilePath + ".meta";
                         if (File.Exists(metaFilePath))
-                        {
                             File.Delete(metaFilePath);
-                        }
                         AssetDatabase.Refresh();
                     }
                 }

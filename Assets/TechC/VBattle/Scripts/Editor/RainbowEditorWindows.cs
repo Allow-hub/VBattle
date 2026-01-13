@@ -19,7 +19,7 @@ public static class RainbowEditorWindows
         // Inspector
         Editor.finishedDefaultHeaderGUI += DrawRainbowInspector;
 
-        // SceneView 追加！！
+        // SceneView
         SceneView.duringSceneGui += OnSceneGUI;
 
         // アニメーション更新
@@ -35,7 +35,7 @@ public static class RainbowEditorWindows
                 if (typeName == "SceneHierarchyWindow" ||
                     typeName == "ProjectBrowser" ||
                     typeName == "InspectorWindow" ||
-                    typeName == "SceneView")     // ← 追加
+                    typeName == "SceneView")
                 {
                     w.Repaint();
                 }

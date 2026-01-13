@@ -52,7 +52,6 @@ namespace TechC.VBattle.InGame.Character
                 isAirAttack = false;
                 currentAttackData = controller.AttackSet.GetAttackData(controller.CurrentAttackType, controller.CurrentAttackDirection);
             }
-
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }

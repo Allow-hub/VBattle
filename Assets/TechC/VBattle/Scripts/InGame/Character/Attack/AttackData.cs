@@ -115,6 +115,13 @@ namespace TechC.VBattle.InGame.Character
         [Tooltip("繰り返し攻撃の継続時間")]
         public float repeatDuration;
 
+        [Header("必殺技ゲージ関連")]
+        [Tooltip("ヒット時に攻撃者が得る必殺技ゲージ量")]
+        public float specialGaugeGain = 5f;
+
+        [Tooltip("被弾時に防御者が得る必殺技ゲージ量")]
+        public float specialGaugeGainOnHit = 3f;
+
         // ===== 壁バウンド設定 =====
         [Header("壁バウンド設定")]
         [Tooltip("この攻撃が壁バウンドを発生させるかどうか")]
