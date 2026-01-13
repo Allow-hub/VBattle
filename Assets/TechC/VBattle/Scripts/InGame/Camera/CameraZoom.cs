@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -14,7 +15,7 @@ namespace TechC.VBattle.InGame.Camera
         [Header("ズームエフェクト設定")]
         [SerializeField] private float zoomIntensity = 10f;
         [SerializeField] private float zoomDuration = 0.5f;
-        
+
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
@@ -32,7 +33,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             this.cameraTransform = cameraTransform;
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
-            
+
             if (targetCamera != null)
                 originalFOV = targetCamera.fieldOfView;
         }
@@ -47,9 +48,9 @@ namespace TechC.VBattle.InGame.Camera
 
             currentIntensity = zoomIntensity;
             currentDuration = zoomDuration;
-            
+
             State = CameraEffectState.Active;
-            
+
             StartZoomAsync().Forget();
         }
 
@@ -64,7 +65,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             if (targetCamera != null)
                 targetCamera.fieldOfView = originalFOV;
-            
+
             zoomStartTime = 0f;
             State = CameraEffectState.Completed;
         }
@@ -72,11 +73,11 @@ namespace TechC.VBattle.InGame.Camera
         private async UniTaskVoid StartZoomAsync()
         {
             await DelayUtility.StartRepeatedActionAsync(
-                currentDuration, 
+                currentDuration,
                 Time.fixedDeltaTime,
                 () => { PerformZoomStep(); return UniTask.CompletedTask; }
             );
-            
+
             if (State == CameraEffectState.Active)
             {
                 State = CameraEffectState.Idle;
@@ -87,6 +88,7 @@ namespace TechC.VBattle.InGame.Camera
         private void PerformZoomStep()
         {
             if (State != CameraEffectState.Active || targetCamera == null) return;
+            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
 
             if (zoomStartTime == 0f)
                 zoomStartTime = Time.time;

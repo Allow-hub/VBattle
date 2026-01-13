@@ -53,6 +53,7 @@ namespace TechC.VBattle.InGame
                 p2.GetComponent<PlayerInput>().enabled = false;
 
                 battleJudge = new BattleJudge(p1, p2, BattleBus);
+                cameraController.SetupPlayers(p1, p2);
                 ChangeState(InGameState.Battle);
             }
             else
@@ -255,9 +256,21 @@ namespace TechC.VBattle.InGame
         private void UpdateBattleState()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.R))
-            {
                 SceneLoader.I.LoadSceneAsync(0).Forget();
-            }
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+                TogglePause();
+        }
+
+        private void TogglePause()
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0f : 1f;
+            
+            if (isPaused)
+                BattleBus.Publish(new Events.GamePausedEvent());
+            else
+                BattleBus.Publish(new Events.GameResumedEvent());
         }
 
         private void InitResultState()

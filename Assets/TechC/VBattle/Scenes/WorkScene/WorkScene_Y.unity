@@ -122,6 +122,86 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &850406533 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6300330035708693693, guid: de551b8e8565c92489c9ebc3cb126d65,
+    type: 3}
+  m_PrefabInstance: {fileID: 1593272302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &922310447 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1542052354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1542052354
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 850406533}
+    m_Modifications:
+    - target: {fileID: 166152888674219944, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_Name
+      value: Walls
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.7943783
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.681873
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 18.459164
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d943afa8794265a438235fde12226e5c, type: 3}
 --- !u!1001 &1593272302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -277,7 +357,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6300330035708693693, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 922310447}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4159416201870310033, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -329,36 +413,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  cameraPan:
-    panIntensity: 2
-    panDuration: 1
-    panCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
   cameraFollow:
-    zoomIntensity: 10
-    zoomDuration: 0.5
     followSpeed: 5
     zoomSpeed: 3
     marginSize: {x: 6, y: 4}
@@ -367,6 +422,9 @@ MonoBehaviour:
     jumpHeightOffset: 2
     baseHeight: 0
     followLimits: {x: 15, y: 4}
+  cameraZoom:
+    zoomIntensity: 10
+    zoomDuration: 0.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

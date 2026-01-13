@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -79,7 +80,7 @@ namespace TechC.VBattle.InGame.Camera
         private async UniTask PerformShakeStep()
         {
             if (State != CameraEffectState.Active) return;
-
+            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
             if (shakeStartTime == 0f)
                 shakeStartTime = Time.time;
 

@@ -93,6 +93,7 @@ namespace TechC.VBattle.InGame.Camera
             cameraShake.Apply();
             cameraZoom.Apply();
         }
+
         private void OnDestroy()
         {
             // イベント購読を解除

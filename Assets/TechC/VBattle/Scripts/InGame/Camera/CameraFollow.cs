@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -12,7 +13,7 @@ namespace TechC.VBattle.InGame.Camera
     public class CameraFollow : ICameraEffect
     {
         private const float HALF = 0.5f;
-        
+
         [Header("格闘ゲーム追従設定")]
         [SerializeField] private float followSpeed = 5f;
         [SerializeField] private float zoomSpeed = 3f;
@@ -21,14 +22,14 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private float maxFOV = 60f;
         [SerializeField] private float jumpHeightOffset = 2f;
         [SerializeField] private float baseHeight = 0f;
-        
+
         [Header("追従制限")]
         [SerializeField] private Vector2 followLimits = new Vector2(15f, 10f);
-        
+
         private UnityEngine.Camera targetCamera;
         private Transform cameraTransform;
         private float originalFOV;
-        
+
         private Transform player1;
         private Transform player2;
         private Vector3 targetPosition;
@@ -42,10 +43,11 @@ namespace TechC.VBattle.InGame.Camera
         /// <param name="cameraTransform">対象のカメラTransform</param>
         public void Initialize(Transform cameraTransform)
         {
+
             this.cameraTransform = cameraTransform;
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
             if (targetCamera == null) return;
-            
+
             originalFOV = targetCamera.fieldOfView;
             targetFOV = originalFOV;
         }
@@ -56,7 +58,8 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State != CameraEffectState.Active) return;
-            
+            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
+
             UpdateFollow();
         }
 
@@ -70,7 +73,7 @@ namespace TechC.VBattle.InGame.Camera
             player1 = p1;
             player2 = p2;
             State = CameraEffectState.Active;
-            
+
             if (cameraTransform != null)
                 targetPosition = cameraTransform.position;
         }
@@ -83,31 +86,31 @@ namespace TechC.VBattle.InGame.Camera
             if (State != CameraEffectState.Active || player1 == null || player2 == null || targetCamera == null) return;
 
             Vector3 centerPosition = (player1.position + player2.position) * HALF;
-            
+
             // Y軸にジャンプオフセットを追加（最も高いプレイヤーに合わせる）
             float highestY = Mathf.Max(player1.position.y, player2.position.y);
             float targetY = Mathf.Max(baseHeight, highestY + jumpHeightOffset);
             centerPosition.y = targetY;
-            
+
             // カメラのZ位置は維持
             var controller = cameraTransform.GetComponent<CameraController>();
             if (controller != null)
                 centerPosition.z = controller.OriginalPosition.z;
-            
+
             // 追従制限を適用
             centerPosition.x = Mathf.Clamp(centerPosition.x, -followLimits.x, followLimits.x);
             centerPosition.y = Mathf.Clamp(centerPosition.y, -followLimits.y, followLimits.y);
-            
+
             targetPosition = centerPosition;
-            
+
             // カメラ位置をスムーズに移動
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, followSpeed * Time.deltaTime);
-            
+
             // プレイヤー間距離に応じてFOV調整
             float distance = Vector3.Distance(player1.position, player2.position);
             float normalizedDistance = Mathf.Clamp01(distance / marginSize.x);
             targetFOV = Mathf.Lerp(minFOV, maxFOV, normalizedDistance);
-            
+
             // FOVをスムーズに調整
             targetCamera.fieldOfView = Mathf.Lerp(targetCamera.fieldOfView, targetFOV, zoomSpeed * Time.deltaTime);
         }
@@ -122,7 +125,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             if (targetCamera != null)
                 targetCamera.fieldOfView = originalFOV;
-            
+
             State = CameraEffectState.Completed;
         }
     }
