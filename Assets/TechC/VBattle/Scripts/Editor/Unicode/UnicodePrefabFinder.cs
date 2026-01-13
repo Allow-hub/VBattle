@@ -1,9 +1,15 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Editor.Unicode
 {
+    /// <summary>
+    /// 3D文字ツール用のウィンドウクラス（プレースホルダー）
+    /// キーボードショートカット用のヘルプメッセージを表示します
+    /// </summary>
     public class My3DCharToolWindow : EditorWindow
     {
         private const string Shortcut = "Ctrl + Shift + P";
@@ -16,6 +22,10 @@ namespace TechC.VBattle.Editor.Unicode
         }
     }
 
+    /// <summary>
+    /// 文字列からUnicodePrefabを検索・配置・管理するエディターツール
+    /// 入力された文字列に対応するUnicodePrefabを検索し、シーン内に配置・削除する機能を提供します
+    /// </summary>
     public class UnicodePrefabFinder : EditorWindow
     {
         private string inputText = "";
@@ -99,7 +109,7 @@ namespace TechC.VBattle.Editor.Unicode
 
             if (parent == null)
             {
-                Debug.LogWarning($"Scene上に親オブジェクト「{parentName}」が存在しません。先に作成してください。");
+                CustomLogger.Warning($"Scene上に親オブジェクト「{parentName}」が存在しません。先に作成してください。", LogTagUtil.TagUnicode);
                 return; // 処理中断
             }
 
@@ -127,14 +137,14 @@ namespace TechC.VBattle.Editor.Unicode
             GameObject parentObject = GameObject.Find("TestCharPrefab");
             if (parentObject == null)
             {
-                Debug.LogWarning("親オブジェクト 'TestCharPrefab' がSceneに見つかりません。");
+                CustomLogger.Warning("親オブジェクト 'TestCharPrefab' がSceneに見つかりません。", LogTagUtil.TagUnicode);
                 return;
             }
 
             int childCount = parentObject.transform.childCount;
             if (childCount == 0)
             {
-                Debug.Log("TestCharPrefabには子オブジェクトがありません。");
+                CustomLogger.Info("TestCharPrefabには子オブジェクトがありません。", LogTagUtil.TagUnicode);
                 return;
             }
 
@@ -151,7 +161,7 @@ namespace TechC.VBattle.Editor.Unicode
                 Undo.DestroyObjectImmediate(child);
             }
 
-            Debug.Log($"TestCharPrefabの子オブジェクト{childCount}件を削除しました。");
+            CustomLogger.Info($"TestCharPrefabの子オブジェクト{childCount}件を削除しました。", LogTagUtil.TagUnicode);
         }
     }
 }

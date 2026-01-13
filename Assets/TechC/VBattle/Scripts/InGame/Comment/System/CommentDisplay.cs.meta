@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 1e1c8d1788a097a46b3497fbb43e166b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - commentData: {instanceID: 0}
+  - commentPrefab: {instanceID: 0}
+  - buffCommentPrefab: {instanceID: 0}
+  - commentLayer: {instanceID: 0}
+  - topRightSpawn: {instanceID: 0}
+  - bottomRightSpawn: {instanceID: 0}
+  - topLeftDespawn: {instanceID: 0}
+  - buttonLeftDespawn: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

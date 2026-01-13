@@ -1,0 +1,53 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace TechC.VBattle.InGame.Comment
+{
+    /// <summary>
+    /// 特殊コメントの当たり判定を取り、Inspectorで設定した能力リストを実行するクラス
+    /// </summary>
+    public class SpecialCommentTrigger : MonoBehaviour
+    {
+        [SerializeReference]
+        [Tooltip("コメントが持つ特殊能力のリスト")]
+        public List<ICommentAbility> abilities = new List<ICommentAbility>();
+
+        private void OnEnable()
+        {
+            // Pool から取得時に状態をリセット
+            var renderer = GetComponent<Renderer>();
+            if (renderer != null) renderer.enabled = true;
+            
+            var boxCollider = GetComponent<BoxCollider>();
+            if (boxCollider != null) boxCollider.enabled = true;
+        }
+
+        private void Awake()
+        {
+            // 各アビリティを初期化
+            foreach (var ability in abilities)
+            {
+                ability?.Init(this);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // abilitiesの各要素にReleaseを呼ぶ
+            foreach (var ability in abilities)
+            {
+                ability?.Release();
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
+
+            foreach (var ability in abilities)
+            {
+                ability?.OnTriggerEnter(other);
+            }
+        }
+    }
+}

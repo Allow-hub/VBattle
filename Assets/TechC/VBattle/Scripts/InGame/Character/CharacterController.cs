@@ -5,6 +5,7 @@ using TechC.VBattle.Core;
 using TechC.VBattle.Core.Util;
 using UnityEngine.InputSystem;
 using TechC.VBattle.InGame.Events;
+using TechC.VBattle.InGame.Comment;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -21,6 +22,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private float groundCheckDistance;
         [SerializeField] private GameObject guardObj;
         [SerializeField] private LayerMask groundMask;
+        [SerializeField] private Transform handPos;
         [SerializeField, ReadOnly] private int playerIndex;
         [SerializeField,ReadOnly] private string playerTag = "Player";
 
@@ -59,6 +61,12 @@ namespace TechC.VBattle.InGame.Character
         private bool isGuarding = false;
         public bool IsGuarding => isGuarding;
 
+        // ===== コメントアイテム関連 =====
+        public GameObject HoldItem { get; private set; }
+        public CommentAbilityHandler CommentAbilityHandler { get; private set; }
+
+        public Transform HandPos => handPos;
+
         // ===== ジャンプ関連 =====
         private int currentJumpCount = 0;
         private int maxJumpCount = 2;
@@ -76,6 +84,8 @@ namespace TechC.VBattle.InGame.Character
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+
+            CommentAbilityHandler = new CommentAbilityHandler();
 
             // すべての状態を登録してキャッシュ
             RegisterState(new NeutralState(this));
@@ -210,9 +220,23 @@ namespace TechC.VBattle.InGame.Character
             currentJumpCount = 0;
         }
 
+        private void OnCollisionExit(Collision collision)
+        {
+            if (stateMachine.CurrentState == GetState<AirState>()) return;
+            stateMachine.ChangeState(GetState<AirState>());
+        }
+
+        // ===== コメントアイテム関連メソッド =====
+        /// <summary>
+        /// 持っているアイテムを設定する
+        /// </summary>
+        /// <param name="item">持つアイテム（nullで解除）</param>
+        public void SetHoldItem(GameObject item) =>  HoldItem = item;
+
         private void OnDestroy()
         {
             stateMachine?.Cancel();
+            CommentAbilityHandler?.Dispose(); // クリーンアップ
         }
     }
 }

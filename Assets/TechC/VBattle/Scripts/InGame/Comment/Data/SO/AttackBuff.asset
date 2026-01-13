@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66658d1605800d04e947b5499caf2a98, type: 3}
+  m_Name: AttackBuff
+  m_EditorClassIdentifier: 
+  buffType: 1
+  comments:
+  - "\u9811\u5F35\u308C\uFF01\uFF01"
+  - "\u30D1\u30EF\u30FC\u30A2\u30C3\u30D7\uFF01"
+  - "\u3081\u3063\u3061\u3083\u304B\u3063\u3053\u3044\u3044\u3088\uFF01"
+  - "\u3075\u3041\u3044\u3068\uFF5E\uFF01"
+  - "\u914D\u4FE1\u3042\u308A\u304C\u3068\u3046\uFF01\uFF01"
+  - "\u5143\u6C17\u306B\u306A\u308C\u308B\uFF01"
+  - "\u3074\u304D\u3063\u3066\u308B\uFF1F"
+  - "\u3044\u3044\u306D\u3057\u307E\u3057\u305F"
+  - "\u30C1\u30E3\u30F3\u30CD\u30EB\u767B\u9332\u3057\u307E\u3057\u305F\uFF01"
