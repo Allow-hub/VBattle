@@ -71,7 +71,8 @@ namespace TechC.VBattle.InGame.Camera
 
         private void OnDestroy()
         {
-            InGameManager.I.BattleBus?.Unsubscribe<AttackResultEvent>(OnAttackResult);
+            if (InGameManager.I != null && InGameManager.I.BattleBus != null)
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
         }
     }
 }
