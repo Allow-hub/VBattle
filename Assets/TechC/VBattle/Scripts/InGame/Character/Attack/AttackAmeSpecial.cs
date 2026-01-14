@@ -51,7 +51,7 @@ namespace TechC.VBattle.InGame.Character
                 hitPosition = other.gameObject.transform.position,
                 hitTargets = new[] { other }
             });
-            GameDataBridge.I.SetPauseState(true);
+            InGameManager.I.SetPauseState(true);
             WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, duration: 1f,tex: tex);
         }
     }
