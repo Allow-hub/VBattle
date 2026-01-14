@@ -41,7 +41,7 @@ namespace TechC.VBattle.InGame.Camera
         /// 初期化
         /// </summary>
         /// <param name="cameraTransform">対象のカメラTransform</param>
-        public void Initialize(Transform cameraTransform)
+        public void Init(Transform cameraTransform)
         {
 
             this.cameraTransform = cameraTransform;
@@ -58,7 +58,7 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (State != CameraEffectState.Active) return;
-            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
+            if (InGameManager.I.IsPaused) return;
 
             UpdateFollow();
         }

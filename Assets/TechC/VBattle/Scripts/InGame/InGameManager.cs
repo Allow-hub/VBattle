@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Systems;
@@ -259,18 +260,10 @@ namespace TechC.VBattle.InGame
                 SceneLoader.I.LoadSceneAsync(0).Forget();
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
-                TogglePause();
-        }
-
-        private void TogglePause()
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0f : 1f;
-            
-            if (isPaused)
-                BattleBus.Publish(new Events.GamePausedEvent());
-            else
-                BattleBus.Publish(new Events.GameResumedEvent());
+            {
+                isPaused = !isPaused;
+                // CustomLogger.Info($"ポーズ切り替え: {isPaused}");
+            }
         }
 
         private void InitResultState()

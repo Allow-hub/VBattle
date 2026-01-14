@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TechC.VBattle.Core.Util;
-using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -17,7 +16,7 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
 
         private Transform cameraTransform;
-        private float shakeStartTime;
+        private float elapsedShakeTime;  // 経過時間を自分で管理
         private Vector3 shakeBasePosition;
 
         public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
@@ -26,7 +25,7 @@ namespace TechC.VBattle.InGame.Camera
         /// 初期化
         /// </summary>
         /// <param name="cameraTransform">対象のカメラTransform</param>
-        public void Initialize(Transform cameraTransform)
+        public void Init(Transform cameraTransform)
         {
             this.cameraTransform = cameraTransform;
         }
@@ -40,6 +39,7 @@ namespace TechC.VBattle.InGame.Camera
                 Stop(cameraTransform.position);
 
             shakeBasePosition = cameraTransform.position;
+            elapsedShakeTime = 0f;
 
             State = CameraEffectState.Active;
 
@@ -49,7 +49,7 @@ namespace TechC.VBattle.InGame.Camera
         public void Stop(Vector3 originalPosition)
         {
             State = CameraEffectState.Idle;
-            shakeStartTime = 0f;
+            elapsedShakeTime = 0f;
             Reset(originalPosition);
         }
 
@@ -58,16 +58,17 @@ namespace TechC.VBattle.InGame.Camera
             if (cameraTransform != null)
                 cameraTransform.position = originalPosition;
 
-            shakeStartTime = 0f;
+            elapsedShakeTime = 0f;
             State = CameraEffectState.Completed;
         }
 
         private async UniTaskVoid StartShakeAsync()
         {
-            await DelayUtility.StartRepeatedActionAsync(
+            await DelayUtility.StartRepeatedActionWithPauseAsync(
                 shakeDuration,
                 Time.fixedDeltaTime,
-                async () => await PerformShakeStep()
+                async () => await PerformShakeStep(),
+                InGameManager.I.GetPauseStateFunc
             );
 
             if (State == CameraEffectState.Active)
@@ -80,12 +81,10 @@ namespace TechC.VBattle.InGame.Camera
         private async UniTask PerformShakeStep()
         {
             if (State != CameraEffectState.Active) return;
-            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
-            if (shakeStartTime == 0f)
-                shakeStartTime = Time.time;
 
-            float elapsedTime = Time.time - shakeStartTime;
-            float progress = elapsedTime / shakeDuration;
+            // ポーズ中は進まないように経過時間を自分で加算
+            elapsedShakeTime += Time.fixedDeltaTime;
+            float progress = elapsedShakeTime / shakeDuration;
 
             float curveValue = shakeCurve.Evaluate(progress);
             float shakeAmount = shakeIntensity * curveValue;

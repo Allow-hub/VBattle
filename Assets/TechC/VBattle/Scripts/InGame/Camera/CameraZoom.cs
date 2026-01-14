@@ -21,7 +21,7 @@ namespace TechC.VBattle.InGame.Camera
         private float originalFOV;
         private float currentIntensity;
         private float currentDuration;
-        private float zoomStartTime;
+        private float elapsedZoomTime;  // 経過時間を自分で管理
 
         public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
 
@@ -29,7 +29,7 @@ namespace TechC.VBattle.InGame.Camera
         /// 初期化
         /// </summary>
         /// <param name="cameraTransform">対象のカメラTransform</param>
-        public void Initialize(Transform cameraTransform)
+        public void Init(Transform cameraTransform)
         {
             this.cameraTransform = cameraTransform;
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
@@ -48,6 +48,7 @@ namespace TechC.VBattle.InGame.Camera
 
             currentIntensity = zoomIntensity;
             currentDuration = zoomDuration;
+            elapsedZoomTime = 0f;  // 経過時間をリセット
 
             State = CameraEffectState.Active;
 
@@ -57,7 +58,7 @@ namespace TechC.VBattle.InGame.Camera
         public void Stop(Vector3 originalPosition)
         {
             State = CameraEffectState.Idle;
-            zoomStartTime = 0f;
+            elapsedZoomTime = 0f;
             Reset(originalPosition);
         }
 
@@ -66,16 +67,17 @@ namespace TechC.VBattle.InGame.Camera
             if (targetCamera != null)
                 targetCamera.fieldOfView = originalFOV;
 
-            zoomStartTime = 0f;
+            elapsedZoomTime = 0f;
             State = CameraEffectState.Completed;
         }
 
         private async UniTaskVoid StartZoomAsync()
         {
-            await DelayUtility.StartRepeatedActionAsync(
+            await DelayUtility.StartRepeatedActionWithPauseAsync(
                 currentDuration,
                 Time.fixedDeltaTime,
-                () => { PerformZoomStep(); return UniTask.CompletedTask; }
+                () => { PerformZoomStep(); return UniTask.CompletedTask; },
+                InGameManager.I.GetPauseStateFunc
             );
 
             if (State == CameraEffectState.Active)
@@ -88,13 +90,10 @@ namespace TechC.VBattle.InGame.Camera
         private void PerformZoomStep()
         {
             if (State != CameraEffectState.Active || targetCamera == null) return;
-            if (InGameManager.I != null && InGameManager.I.IsPaused) return;
 
-            if (zoomStartTime == 0f)
-                zoomStartTime = Time.time;
-
-            float elapsedTime = Time.time - zoomStartTime;
-            float progress = elapsedTime / currentDuration;
+            // ポーズ中は進まないように経過時間を自分で加算
+            elapsedZoomTime += Time.fixedDeltaTime;
+            float progress = elapsedZoomTime / currentDuration;
 
             // サイン曲線でスムーズなズームイン/アウト
             float curve = Mathf.Sin(progress * Mathf.PI);
