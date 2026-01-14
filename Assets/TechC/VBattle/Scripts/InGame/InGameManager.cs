@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
+using TechC.VBattle.InGame.Character;
 using TechC.VBattle.InGame.Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,8 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Pos;
 
         [SerializeField] private GameObject ameObj;
+        [SerializeField] private CharacterData ameData;
+        [SerializeField] private CharacterData teramiData;
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
@@ -54,6 +57,25 @@ namespace TechC.VBattle.InGame
                 p2.GetComponent<PlayerInput>().enabled = false;
 
                 battleJudge = new BattleJudge(p1, p2, BattleBus);
+
+                if (GameDataBridge.I != null)
+                    GameDataBridge.I.SetupPlayer(1, new GameDataBridge.PlayerSetupData
+                    {
+                        PlayerIndex = 1,
+                        DeviceName = Keyboard.current,
+                        IsNPC = false,
+                        SelectedCharacter = ameData
+                    });
+
+                if (GameDataBridge.I != null)
+                    GameDataBridge.I.SetupPlayer(2, new GameDataBridge.PlayerSetupData
+                    {
+                        PlayerIndex = 2,
+                        DeviceName = Keyboard.current,
+                        IsNPC = false,
+                        SelectedCharacter = teramiData
+                    });
+
                 ChangeState(InGameState.Battle);
             }
             else

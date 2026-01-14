@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace TechC.VBattle.InGame.Character
     {
         [SerializeField] private AttackData attackData;
         [SerializeField] private Sprite tex;
+        [SerializeField] private GameObject ultPrefab;
+        [SerializeField] private Vector3 ultSpawnPos;
+        [SerializeField] private float popupDelay = 1f;
 
         // --- IAttackerの継承　--- ///
         public GameObject AttackerObj { get; private set; }
@@ -53,6 +57,14 @@ namespace TechC.VBattle.InGame.Character
             });
             GameDataBridge.I.SetPauseState(true);
             WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, duration: 1f,tex: tex);
+
+            DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
+            {
+                GameObject ult = Object.Instantiate(ultPrefab);
+                ult.transform.position = ultSpawnPos;
+                GameDataBridge.I.SetPauseState(false);
+                Camera.main.gameObject.SetActive(false);
+            },InGameManager.I.GetPauseStateFunc);
         }
     }
 }
