@@ -1,11 +1,15 @@
 using UnityEngine;
 
-public class RotateStageLight : MonoBehaviour
+namespace StageLighting
 {
-    public float rotateSpeed = 30f; // 度/秒
-
-    void Update()
+    public class RotateStageLight : MonoBehaviour
     {
-        transform.Rotate(0f, rotateSpeed * Time.deltaTime, 0f);
+        [SerializeField]
+        private float rotateSpeed = 30f; // 度/秒
+
+        private void Update()
+        {
+            transform.Rotate(0f, rotateSpeed * Time.deltaTime, 0f);
+        }
     }
 }
