@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TechC.VBattle.InGame.Character
+namespace TechC.VBattle.InGame.Stage
 {
     public class MovingHeadSweep : MonoBehaviour
     {
