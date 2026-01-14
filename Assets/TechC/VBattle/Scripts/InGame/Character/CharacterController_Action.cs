@@ -123,6 +123,14 @@ namespace TechC.VBattle.InGame.Character
         }
 
         /// <summary>
+        /// 必殺技の実行
+        /// </summary>
+        private void PerformSpecial()
+        {
+            UseSpecialGauge(characterData.maxSpecialGauge);
+        }
+
+        /// <summary>
         /// 攻撃をEventBusから処理する、基本的にPlayer同士の攻撃はこちら
         /// </summary>
         /// <param name="e">EventBusで処理された結果</param>

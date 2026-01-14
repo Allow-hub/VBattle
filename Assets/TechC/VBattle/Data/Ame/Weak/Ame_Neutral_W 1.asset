@@ -30,7 +30,7 @@ MonoBehaviour:
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 10
-  knockbackForce: 5
+  knockbackForce: 7
   isCounter: 0
   recoveryDuration: 0.01
   cancelStartTime: 0.2

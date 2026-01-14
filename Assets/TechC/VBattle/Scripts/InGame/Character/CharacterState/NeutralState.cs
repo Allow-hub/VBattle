@@ -20,7 +20,8 @@ namespace TechC.VBattle.InGame.Character
                    command.Type == CommandType.Jump ||
                    command.Type == CommandType.Attack ||
                    command.Type == CommandType.Guard || 
-                   command.Type == CommandType.Crouch;
+                   command.Type == CommandType.Crouch|| 
+                   command.Type == CommandType.Special;
         }
 
         public override void OnEnter(CharacterState prevState)

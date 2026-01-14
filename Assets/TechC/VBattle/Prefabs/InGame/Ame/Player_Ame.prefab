@@ -137,6 +137,7 @@ MonoBehaviour:
   playerIndex: 0
   playerTag: Player
   idleAnimSpeed: 1.1
+  specialAttackData: {fileID: 11400000, guid: 60338b45a9385024e890cdc0ba47fe26, type: 2}
 --- !u!54 &1628242938499199573
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -275,6 +276,23 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 937818c6-271f-444e-a5b0-53ec4a850392
     m_ActionName: Player/Down[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1701139814730841512}
+        m_TargetAssemblyTypeName: TechC.VBattle.InGame.Input.PlayerInputManager,
+          Assembly-CSharp
+        m_MethodName: OnSpecial
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: de1b98c8-e530-4c31-9964-ca0c38711de9
+    m_ActionName: Player/Special[/Keyboard/l]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

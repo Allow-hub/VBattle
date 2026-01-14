@@ -3,7 +3,7 @@ namespace TechC.VBattle.InGame.Character
     /// <summary>
     /// ガードコマンド
     /// </summary>
-    public struct GuardCommand : ICommand
+    public readonly struct GuardCommand : ICommand
     {
         public CommandType Type => CommandType.Guard;
 

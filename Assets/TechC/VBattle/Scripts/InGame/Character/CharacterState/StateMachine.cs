@@ -46,9 +46,7 @@ namespace TechC.VBattle.InGame.Character
                     var nextState = await _currentState.OnUpdate(stateToken);
 
                     if (nextState == null)
-                    {
                         nextState = _currentState;
-                    }
 
                     // 状態遷移が必要な場合
                     if (nextState != _currentState)

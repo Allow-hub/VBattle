@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
+  m_Name: Ame_Right_W 1
+  m_EditorClassIdentifier: 
+  charaName: 0
+  attackName: Right_W
+  attackPrefab: {fileID: 1683792544504208174, guid: 46e07cbaf6401a54eadc74e66cb0ecee,
+    type: 3}
+  prefabOffset: {x: 0, y: 0, z: 0}
+  prefabRotation: {x: 0, y: 0, z: 0}
+  animationSpeed: 1.8
+  attackDuration: 0.6
+  hitDetectionMode: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  radius: 1.5
+  hitboxOffset: {x: 0, y: 1, z: 0}
+  hitTiming: 0.1
+  hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
+    type: 3}
+  damage: 5
+  knockbackForce: 4
+  isCounter: 0
+  recoveryDuration: 0.25
+  cancelStartTime: 0.3
+  cancelEndTime: 0.5
+  hitStunDuration: 0.25
+  nextChain: {fileID: 0}
+  canChain: 0
+  isChainPos: 0
+  hitStopDuration: 0.9
+  hitStopTimeScale: 0.8
+  knockbackDirection: {x: 1, y: 1, z: 0}
+  shakeIntensity: 0.1
+  shakeDuraion: 0.1
+  noiseSettings: {fileID: 0}
+  canRepeat: 0
+  repeatInterval: 0
+  repeatDuration: 0
+  causesWallBounce: 0
+  wallBounceForce: 8
+  wallBounceVerticalBoost: 2
+  wallBounceTime: 0.5
+  characterSEType: 0
+  characterVoiceType: 0

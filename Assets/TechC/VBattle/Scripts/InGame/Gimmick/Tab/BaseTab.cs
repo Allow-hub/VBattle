@@ -29,10 +29,10 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
         protected RectTransform rectTransform;
         [SerializeField] protected Vector2 hiddenPos = new Vector2(0, 100);   // 画面外（上）
         [SerializeField] protected Vector2 visiblePos = new Vector2(0, -50);  // 表示位置
+        [SerializeField] protected Vector2 windowSize = new Vector2(400, 200);
         public TabType TabType => tabType;
         protected TabType tabType;
 
-        private float lerpSpeed = 0.3f;
         private float repeatInterval = 0.01f;
         private NativeWindow nativeWindow;
         private RECT viewRect;
@@ -47,7 +47,8 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
 
         public virtual void Show()
         {
-            AudioManager.I.PlaySE(SEID.TabNotification);
+            if(AudioManager.I != null)
+                AudioManager.I.PlaySE(SEID.TabNotification);
             gameObject.SetActive(true);
             StopAllCoroutines();
             StartCoroutine(SlideIn());
@@ -59,10 +60,7 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
             StartCoroutine(SlideOut());
         }
 
-        public virtual void Excute()
-        {
-
-        }
+        public virtual void Excute() {}
 
         protected IEnumerator SlideIn()
         {
@@ -97,31 +95,68 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
         protected virtual void SlideInWindow()
         {
             nativeWindow = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
-            WindowUtility.MoveWindow((HWND)nativeWindow.Hwnd, viewRect.top, -viewRect.Height / 3);
-            if (!WindowUtility.ResizeWindow((HWND)nativeWindow.Hwnd, viewRect.Width, (int)(viewRect.Height / 3.5f)))
-            {
+
+            // ★ hiddenPos に対応する画面座標
+            int windowHiddenX = viewRect.left + (int)hiddenPos.x;
+            int windowHiddenY = viewRect.top + (int)hiddenPos.y;
+            // ★ visiblePos に対応する画面座標
+            int windowVisibleX = viewRect.left + (int)visiblePos.x;
+            int windowVisibleY = viewRect.top + (int)visiblePos.y;
+            
+            // ★ 最初に hiddenPos の位置に移動
+            WindowUtility.MoveWindow((HWND)nativeWindow.Hwnd, windowHiddenX, windowHiddenY);
+            if (!WindowUtility.ResizeWindow((HWND)nativeWindow.Hwnd, (int)windowSize.x, (int)windowSize.y))
                 Debug.LogError("Windowのリサイズに失敗");
-            }
             nativeWindow.SetRect();
+            
             var imageWindow = nativeWindow as ImageWindow;
+            
+            // ★ slideDuration に基づいてアニメーション
+            float elapsedTime = 0f;
             DelayUtility.StartRepeatedActionAsync(slideDuration, repeatInterval, () =>
             {
-                imageWindow.SetImage(windowImage.texture);
-                WindowUtility.MoveWindowToTargetPosition((HWND)imageWindow.Hwnd, viewRect.top, viewRect.top, lerpSpeed);
+                elapsedTime += (float)repeatInterval;
+                float progress = Mathf.Clamp01(elapsedTime / slideDuration);
+                
+                int currentX = Mathf.RoundToInt(Mathf.Lerp(windowHiddenX, windowVisibleX, progress));
+                int currentY = Mathf.RoundToInt(Mathf.Lerp(windowHiddenY, windowVisibleY, progress));
+                
+                imageWindow?.SetImage(windowImage.texture);
+                WindowUtility.MoveWindow((HWND)imageWindow?.Hwnd, currentX, currentY);
+                
                 return UniTask.CompletedTask;
-            });
+            }).Forget();
         }
+
         protected virtual void SlideOutWindow()
         {
             var imageWindow = nativeWindow as ImageWindow;
+            
+            // ★ visiblePos に対応する画面座標
+            int windowVisibleX = viewRect.left + (int)visiblePos.x;
+            int windowVisibleY = viewRect.top + (int)visiblePos.y;
+            // ★ hiddenPos に対応する画面座標
+            int windowHiddenX = viewRect.left + (int)hiddenPos.x;
+            int windowHiddenY = viewRect.top + (int)hiddenPos.y;
+            
+            // ★ slideDuration に基づいてアニメーション
+            float elapsedTime = 0f;
             DelayUtility.StartRepeatedActionAsync(slideDuration, repeatInterval, () =>
             {
-                imageWindow.SetImage(windowImage.texture);
-                WindowUtility.MoveWindowToTargetPosition((HWND)imageWindow.Hwnd, viewRect.top, -viewRect.Height / 4, lerpSpeed);
-                if (WindowUtility.GetWindowRect((HWND)imageWindow.Hwnd).Y == -viewRect.Height / 4)
+                elapsedTime += (float)repeatInterval;
+                float progress = Mathf.Clamp01(elapsedTime / slideDuration);
+                
+                int currentX = Mathf.RoundToInt(Mathf.Lerp(windowVisibleX, windowHiddenX, progress));
+                int currentY = Mathf.RoundToInt(Mathf.Lerp(windowVisibleY, windowHiddenY, progress));
+                
+                imageWindow?.SetImage(windowImage.texture);
+                WindowUtility.MoveWindow((HWND)imageWindow?.Hwnd, currentX, currentY);
+                
+                if (progress >= 1f)
                     WindowFactory.I.ReturnWindow(imageWindow);
+                
                 return UniTask.CompletedTask;
-            });
+            }).Forget();
         }
 
         protected virtual void OnDestroy()

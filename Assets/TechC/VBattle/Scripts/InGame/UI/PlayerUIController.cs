@@ -33,11 +33,18 @@ namespace TechC.VBattle.InGame.UI
         [SerializeField] private Color color1p;
         [SerializeField] private Color color2p;
 
+        [Header("Special Gauge Display")]
+        [SerializeField] private Slider specialGaugeSlider;
+        [SerializeField] private TextMeshProUGUI specialGaugeText;
+        [SerializeField] private Image specialGaugeFillImage;
+        [SerializeField] private GameObject specialReadyEffect; // 100%時のエフェクト
+
         private float targetHpPercentage = 1f;
 
         private void Start()
         {
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
+            InGameManager.I.BattleBus.Subscribe<SpecialGaugeChangedEvent>(OnSpecialGaugeChanged);
             InitUI();
         }
 
@@ -92,6 +99,37 @@ namespace TechC.VBattle.InGame.UI
             // 色変更
             if (hpFillImage != null)
                 hpFillImage.color = percentage <= lowHpThreshold ? lowHpColor : normalHpColor;
+        }
+
+        /// <summary>
+        /// 必殺技ゲージ変化イベントの処理
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnSpecialGaugeChanged(SpecialGaugeChangedEvent e)
+        {
+            if (e.PlayerIndex != targetPlayerIndex) return;
+
+            UpdateSpecialGauge(e.CurrentGauge, e.MaxGauge);
+        }
+
+        /// <summary>
+        /// 必殺技ゲージ表示の更新
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="max"></param>
+        private void UpdateSpecialGauge(float current, float max)
+        {
+            float percentage = current / max;
+
+            if (specialGaugeSlider != null)
+                specialGaugeSlider.value = percentage;
+
+            if (specialGaugeText != null)
+                specialGaugeText.text = $"{(int)current}%";
+
+            // 100%達成時の演出
+            if (specialReadyEffect != null)
+                specialReadyEffect.SetActive(percentage >= 1f);
         }
 
         private void SetCharacterIcon(CharaName charaName)

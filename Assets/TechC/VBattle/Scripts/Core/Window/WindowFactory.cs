@@ -24,6 +24,7 @@ namespace TechC.VBattle.Core.Window
             { WindowType.Image, 81 },
             { WindowType.Web,   0 }
         };
+
         private List<NativeWindow> activeWindows = new();
 
         public override void Init()
@@ -76,20 +77,18 @@ namespace TechC.VBattle.Core.Window
 
             return window;
         }
+
         public void ReturnWindow(NativeWindow window)
         {
             window.Hide();
             if (!poolByType.ContainsKey(window.Type))
-            {
                 poolByType[window.Type] = new Queue<NativeWindow>();
-            }
             poolByType[window.Type].Enqueue(window);
             activeWindows.Remove(window);
         }
 
         public NativeWindow CreateNewWindow() =>
             CreateNewWindow(WindowType.Basic, "Default", 100, 100);
-
 
         /// <summary>
         /// 新しいウィンドウの作成
@@ -123,11 +122,20 @@ namespace TechC.VBattle.Core.Window
                     WINDOW_EX_STYLE.WS_EX_TRANSPARENT
                 );
             }
+            else if (type == WindowType.Image)
+            {
+                style = (uint)WINDOW_STYLE.WS_POPUP;
+                exStyle = (uint)(
+                    WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
+                    WINDOW_EX_STYLE.WS_EX_TOPMOST |
+                    WINDOW_EX_STYLE.WS_EX_TOOLWINDOW |
+                    WINDOW_EX_STYLE.WS_EX_LAYERED
+                );
+            }
             else
             {
-                // 通常ウィンドウ
+                // Basic ウィンドウ:通常描画(WM_PAINT で GDI 描画)
                 style = (uint)WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
-                // exStyle = (uint)WINDOW_EX_STYLE.WS_EX_NOACTIVATE | (uint)WINDOW_EX_STYLE.WS_EX_TOPMOST | (uint)WINDOW_EX_STYLE.WS_EX_LAYERED;
                 exStyle = (uint)WINDOW_EX_STYLE.WS_EX_NOACTIVATE | (uint)WINDOW_EX_STYLE.WS_EX_TOPMOST;
             }
 
@@ -143,18 +151,31 @@ namespace TechC.VBattle.Core.Window
             if (hwnd == IntPtr.Zero)
                 return null;
 
+            NativeWindow window = null;
             switch (type)
             {
                 case WindowType.Basic:
-                    return new BasicWindow(hwnd, width, height);
+                    window = new BasicWindow(hwnd, width, height);
+                    break;
                 case WindowType.Image:
-                    return new ImageWindow(hwnd, width, height, tex);
+                    window = new ImageWindow(hwnd, width, height, tex);
+                    break;
                 case WindowType.Web:
                     // WebWindowはURLを設定する必要があるため、初期URLを指定
-                    return new WebWindow(hwnd, width, height, this, "https://www.google.com");
+                    window = new WebWindow(hwnd, width, height, this, "https://www.google.com");
+                    break;
                 default:
-                    return new NativeWindow(hwnd, width, height, type);
+                    window = new NativeWindow(hwnd, width, height, type);
+                    break;
             }
+
+            // WindowRegistryに登録
+            if (window != null)
+            {
+                WindowRegistry.ByHwnd[hwnd] = window;
+            }
+
+            return window;
         }
 
         /// <summary>
@@ -176,6 +197,7 @@ namespace TechC.VBattle.Core.Window
                     CustomLogger.Info($"Destroying window: HWND={window.Hwnd}, Type={window.Type}", LogTagUtil.TagWidnow);
                     if (window.Hwnd != IntPtr.Zero)
                     {
+                        WindowRegistry.ByHwnd.Remove(window.Hwnd);
                         window.Destroy();
                     }
                 }
@@ -188,6 +210,7 @@ namespace TechC.VBattle.Core.Window
                 CustomLogger.Info($"Destroying active window: HWND={window.Hwnd}, Type={window.Type}", LogTagUtil.TagWidnow);
                 if (window.Hwnd != IntPtr.Zero)
                 {
+                    WindowRegistry.ByHwnd.Remove(window.Hwnd);
                     window.Destroy();
                 }
             }

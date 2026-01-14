@@ -1,8 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
+using UnityEngine;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -19,8 +19,7 @@ namespace TechC.VBattle.Core.Window
         private static string _imageClassName = "WindowClass_Image";
         private static string _webClassName = "WindowClass_Web";
 
-
-        // WndProcデリゲート保持（GC防止）
+        // WndProcデリゲート保持(GC防止)
         private static readonly WNDPROC _basicWndProc = BasicWndProc;
         private static readonly WNDPROC _imageWndProc = ImageWndProc;
         private static readonly WNDPROC _webWndProc = WebWndProc;
@@ -82,7 +81,7 @@ namespace TechC.VBattle.Core.Window
         /// </summary>
         /// <param name="className">クラス名</param>
         /// <param name="wndProc">ウィンドウプロシージャー</param>
-        /// <param name="hInstance">実行中のアプリやDLLを一位に識別するハンドル</param>
+        /// <param name="hInstance">実行中のアプリやDLLを一意に識別するハンドル</param>
         private static void RegisterClassEx(string className, WNDPROC wndProc, HMODULE hInstance)
         {
             unsafe
@@ -141,7 +140,6 @@ namespace TechC.VBattle.Core.Window
                 fixed (char* cName = className)
                 fixed (char* titleName = title)
                 {
-
                     hwnd = PInvoke.CreateWindowEx(
                         (WINDOW_EX_STYLE)exStyle,
                         new PCWSTR(cName),
@@ -155,6 +153,7 @@ namespace TechC.VBattle.Core.Window
                     );
                 }
             }
+
             if (hwnd == HWND.Null)
                 CustomLogger.Error($"CreateWindowEx failed, error: {Marshal.GetLastWin32Error()}", LogTagUtil.TagWidnow);
             else
@@ -163,6 +162,14 @@ namespace TechC.VBattle.Core.Window
             return hwnd;
         }
 
+        /// <summary>
+        /// 基本ウィンドウプロシージャ
+        /// </summary>
+        /// <param name="hwnd">ウィンドウハンドル</param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         private static LRESULT BasicWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
             switch (msg)
@@ -180,7 +187,7 @@ namespace TechC.VBattle.Core.Window
                     {
                         PInvoke.FillRect(hdc, &rcClient, hBrush);
                     }
-                    PInvoke.DeleteObject(hBrush); // 解放忘れ注意
+                    PInvoke.DeleteObject(hBrush);
 
                     // 黒枠を描画
                     Windows.Win32.Graphics.Gdi.HBRUSH hFrameBrush = PInvoke.CreateSolidBrush(new COLORREF(0x000000));
@@ -190,25 +197,76 @@ namespace TechC.VBattle.Core.Window
                     }
                     PInvoke.DeleteObject(hFrameBrush);
 
-                    // テキスト描画
-                    // PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);     // TRANSPARENT
-                    // PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
-                    // var text = "クラシック風ウィンドウ";
-                    // PInvoke.TextOut(hdc, 10, 10, text, text.Length);
+                    // テキスト描画 - WindowRegistryから対応するBasicWindowを取得
+                    string displayText = "クラシック風ウィンドウ";
+                    int fontSize = 16;
+                    int textX = 10;
+                    int textY = 10;
+                    string fontName = "MS Gothic";
+                    int fontWeight = 400;
+
+                    if (WindowRegistry.ByHwnd.TryGetValue(hwnd, out var nativeWindow))
+                    {
+                        if (nativeWindow is BasicWindow basicWindow)
+                        {
+                            displayText = basicWindow.DisplayText;
+                            fontSize = basicWindow.FontSize;
+                            textX = basicWindow.TextX;
+                            textY = basicWindow.TextY;
+                            fontName = basicWindow.FontName;
+                            fontWeight = basicWindow.FontWeight;
+                        }
+                    }
+
+                    // フォント作成
+                    Windows.Win32.Graphics.Gdi.HFONT hFont;
+                    unsafe
+                    {
+                        fixed (char* pFontName = fontName)
+                        {
+                            hFont = PInvoke.CreateFont(
+                                fontSize,                    // nHeight
+                                0,                           // nWidth
+                                0,                           // nEscapement
+                                0,                           // nOrientation
+                                fontWeight,                  // fnWeight
+                                0u,                          // fdwItalic
+                                0u,                          // fdwUnderline
+                                0u,                          // fdwStrikeOut
+                                1u,                          // fdwCharSet (SHIFTJIS_CHARSET)
+                                0u,                          // fdwOutputPrecision
+                                0u,                          // fdwClipPrecision
+                                0u,                          // fdwQuality
+                                0u,                          // fdwPitchAndFamily
+                                new PCWSTR(pFontName)        // lpszFace
+                            );
+                        }
+                    }
+
+                    // フォント選択
+                    var hOldFont = PInvoke.SelectObject(hdc, hFont);
+
+                    PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);
+                    PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
+                    PInvoke.TextOut(hdc, textX, textY, displayText, displayText.Length);
+
+                    // フォント復元と削除
+                    PInvoke.SelectObject(hdc, hOldFont);
+                    PInvoke.DeleteObject(hFont);
 
                     PInvoke.EndPaint(hwnd, ps);
                     return new LRESULT(0);
+                    
                 case PInvoke.WM_SIZE:
                     unsafe
                     {
-                        PInvoke.InvalidateRect(hwnd, (RECT*)null, true); // 全領域を再描画                    
+                        PInvoke.InvalidateRect(hwnd, (RECT*)null, true);
                     }
                     return new LRESULT(0);
             }
 
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
-
 
         private static LRESULT ImageWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
@@ -219,17 +277,9 @@ namespace TechC.VBattle.Core.Window
             }
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
+        
         private static LRESULT WebWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
         {
-            // switch (msg)
-            // {
-            //     case PInvoke.WM_PAINT:
-            //         // 描画処理
-            //         break;
-            //     case PInvoke.WM_DESTROY:
-            //         break;
-            // }
-
             return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
         }
     }
