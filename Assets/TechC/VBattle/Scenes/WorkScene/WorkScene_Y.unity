@@ -387,8 +387,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraShake:
-    shakeIntensity: 0.5
-    shakeDuration: 0.3
+    shakeIntensity: 0.3
+    shakeDuration: 0.1
     shakeCurve:
       serializedVersion: 2
       m_Curve:
