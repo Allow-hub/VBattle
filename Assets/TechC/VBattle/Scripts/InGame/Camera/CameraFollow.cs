@@ -34,8 +34,9 @@ namespace TechC.VBattle.InGame.Camera
         private Transform player2;
         private Vector3 targetPosition;
         private float targetFOV;
+        private CameraEffectState state = CameraEffectState.Idle;
 
-        public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
+        public CameraEffectState State => state;
 
         /// <summary>
         /// 初期化
@@ -57,7 +58,7 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void Apply()
         {
-            if (State != CameraEffectState.Active) return;
+            if (state != CameraEffectState.Active) return;
             if (InGameManager.I.IsPaused) return;
 
             UpdateFollow();
@@ -72,7 +73,7 @@ namespace TechC.VBattle.InGame.Camera
         {
             player1 = p1;
             player2 = p2;
-            State = CameraEffectState.Active;
+            state = CameraEffectState.Active;
 
             if (cameraTransform != null)
                 targetPosition = cameraTransform.position;
@@ -83,7 +84,7 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void UpdateFollow()
         {
-            if (State != CameraEffectState.Active || player1 == null || player2 == null || targetCamera == null) return;
+            if (state != CameraEffectState.Active || player1 == null || player2 == null || targetCamera == null) return;
 
             Vector3 centerPosition = (player1.position + player2.position) * HALF;
 
@@ -117,7 +118,7 @@ namespace TechC.VBattle.InGame.Camera
 
         public void Stop(Vector3 originalPosition)
         {
-            State = CameraEffectState.Idle;
+            state = CameraEffectState.Idle;
             Reset(originalPosition);
         }
 
@@ -126,7 +127,7 @@ namespace TechC.VBattle.InGame.Camera
             if (targetCamera != null)
                 targetCamera.fieldOfView = originalFOV;
 
-            State = CameraEffectState.Completed;
+            state = CameraEffectState.Completed;
         }
     }
 }

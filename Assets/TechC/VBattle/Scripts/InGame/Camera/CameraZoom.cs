@@ -22,8 +22,9 @@ namespace TechC.VBattle.InGame.Camera
         private float currentIntensity;
         private float currentDuration;
         private float elapsedZoomTime;  // 経過時間を自分で管理
+        private CameraEffectState state = CameraEffectState.Idle;
 
-        public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
+        public CameraEffectState State => state;
 
         /// <summary>
         /// 初期化
@@ -43,21 +44,21 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void Apply()
         {
-            if (State == CameraEffectState.Active)
+            if (state == CameraEffectState.Active)
                 Stop(Vector3.zero);
 
             currentIntensity = zoomIntensity;
             currentDuration = zoomDuration;
             elapsedZoomTime = 0f;  // 経過時間をリセット
 
-            State = CameraEffectState.Active;
+            state = CameraEffectState.Active;
 
             StartZoomAsync().Forget();
         }
 
         public void Stop(Vector3 originalPosition)
         {
-            State = CameraEffectState.Idle;
+            state = CameraEffectState.Idle;
             elapsedZoomTime = 0f;
             Reset(originalPosition);
         }
@@ -68,7 +69,7 @@ namespace TechC.VBattle.InGame.Camera
                 targetCamera.fieldOfView = originalFOV;
 
             elapsedZoomTime = 0f;
-            State = CameraEffectState.Completed;
+            state = CameraEffectState.Completed;
         }
 
         private async UniTaskVoid StartZoomAsync()
@@ -80,16 +81,16 @@ namespace TechC.VBattle.InGame.Camera
                 InGameManager.I.GetPauseStateFunc
             );
 
-            if (State == CameraEffectState.Active)
+            if (state == CameraEffectState.Active)
             {
-                State = CameraEffectState.Idle;
+                state = CameraEffectState.Idle;
                 Reset(Vector3.zero);
             }
         }
 
         private void PerformZoomStep()
         {
-            if (State != CameraEffectState.Active || targetCamera == null) return;
+            if (state != CameraEffectState.Active || targetCamera == null) return;
 
             // ポーズ中は進まないように経過時間を自分で加算
             elapsedZoomTime += Time.fixedDeltaTime;

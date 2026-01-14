@@ -18,8 +18,9 @@ namespace TechC.VBattle.InGame.Camera
         private Transform cameraTransform;
         private float elapsedShakeTime;  // 経過時間を自分で管理
         private Vector3 shakeBasePosition;
+        private CameraEffectState state = CameraEffectState.Idle;
 
-        public CameraEffectState State { get; private set; } = CameraEffectState.Idle;
+        public CameraEffectState State => state;
 
         /// <summary>
         /// 初期化
@@ -35,20 +36,20 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         public void Apply()
         {
-            if (State == CameraEffectState.Active)
+            if (state == CameraEffectState.Active)
                 Stop(cameraTransform.position);
 
             shakeBasePosition = cameraTransform.position;
             elapsedShakeTime = 0f;
 
-            State = CameraEffectState.Active;
+            state = CameraEffectState.Active;
 
             StartShakeAsync().Forget();
         }
 
         public void Stop(Vector3 originalPosition)
         {
-            State = CameraEffectState.Idle;
+            state = CameraEffectState.Idle;
             elapsedShakeTime = 0f;
             Reset(originalPosition);
         }
@@ -59,7 +60,7 @@ namespace TechC.VBattle.InGame.Camera
                 cameraTransform.position = originalPosition;
 
             elapsedShakeTime = 0f;
-            State = CameraEffectState.Completed;
+            state = CameraEffectState.Completed;
         }
 
         private async UniTaskVoid StartShakeAsync()
@@ -71,16 +72,16 @@ namespace TechC.VBattle.InGame.Camera
                 InGameManager.I.GetPauseStateFunc
             );
 
-            if (State == CameraEffectState.Active)
+            if (state == CameraEffectState.Active)
             {
-                State = CameraEffectState.Idle;
+                state = CameraEffectState.Idle;
                 Reset(shakeBasePosition);
             }
         }
 
         private async UniTask PerformShakeStep()
         {
-            if (State != CameraEffectState.Active) return;
+            if (state != CameraEffectState.Active) return;
 
             // ポーズ中は進まないように経過時間を自分で加算
             elapsedShakeTime += Time.fixedDeltaTime;
