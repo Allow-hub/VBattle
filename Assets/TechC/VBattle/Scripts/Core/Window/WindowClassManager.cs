@@ -187,7 +187,7 @@ namespace TechC.VBattle.Core.Window
                     {
                         PInvoke.FillRect(hdc, &rcClient, hBrush);
                     }
-                    PInvoke.DeleteObject(hBrush); // 解放忘れ注意
+                    PInvoke.DeleteObject(hBrush);
 
                     // 黒枠を描画
                     Windows.Win32.Graphics.Gdi.HBRUSH hFrameBrush = PInvoke.CreateSolidBrush(new COLORREF(0x000000));
@@ -198,25 +198,69 @@ namespace TechC.VBattle.Core.Window
                     PInvoke.DeleteObject(hFrameBrush);
 
                     // テキスト描画 - WindowRegistryから対応するBasicWindowを取得
-                    string displayText = "クラシック風ウィンドウ"; // デフォルト値
+                    string displayText = "クラシック風ウィンドウ";
+                    int fontSize = 16;
+                    int textX = 10;
+                    int textY = 10;
+                    string fontName = "MS Gothic";
+                    int fontWeight = 400;
+
                     if (WindowRegistry.ByHwnd.TryGetValue(hwnd, out var nativeWindow))
                     {
                         if (nativeWindow is BasicWindow basicWindow)
                         {
                             displayText = basicWindow.DisplayText;
+                            fontSize = basicWindow.FontSize;
+                            textX = basicWindow.TextX;
+                            textY = basicWindow.TextY;
+                            fontName = basicWindow.FontName;
+                            fontWeight = basicWindow.FontWeight;
                         }
                     }
 
-                    PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);     // TRANSPARENT
+                    // フォント作成
+                    Windows.Win32.Graphics.Gdi.HFONT hFont;
+                    unsafe
+                    {
+                        fixed (char* pFontName = fontName)
+                        {
+                            hFont = PInvoke.CreateFont(
+                                fontSize,                    // nHeight
+                                0,                           // nWidth
+                                0,                           // nEscapement
+                                0,                           // nOrientation
+                                fontWeight,                  // fnWeight
+                                0u,                          // fdwItalic
+                                0u,                          // fdwUnderline
+                                0u,                          // fdwStrikeOut
+                                1u,                          // fdwCharSet (SHIFTJIS_CHARSET)
+                                0u,                          // fdwOutputPrecision
+                                0u,                          // fdwClipPrecision
+                                0u,                          // fdwQuality
+                                0u,                          // fdwPitchAndFamily
+                                new PCWSTR(pFontName)        // lpszFace
+                            );
+                        }
+                    }
+
+                    // フォント選択
+                    var hOldFont = PInvoke.SelectObject(hdc, hFont);
+
+                    PInvoke.SetBkMode(hdc, Windows.Win32.Graphics.Gdi.BACKGROUND_MODE.TRANSPARENT);
                     PInvoke.SetTextColor(hdc, new COLORREF(0x000000)); // Black
-                    PInvoke.TextOut(hdc, 10, 10, displayText, displayText.Length);
+                    PInvoke.TextOut(hdc, textX, textY, displayText, displayText.Length);
+
+                    // フォント復元と削除
+                    PInvoke.SelectObject(hdc, hOldFont);
+                    PInvoke.DeleteObject(hFont);
+
                     PInvoke.EndPaint(hwnd, ps);
                     return new LRESULT(0);
                     
                 case PInvoke.WM_SIZE:
                     unsafe
                     {
-                        PInvoke.InvalidateRect(hwnd, (RECT*)null, true); // 全領域を再描画                    
+                        PInvoke.InvalidateRect(hwnd, (RECT*)null, true);
                     }
                     return new LRESULT(0);
             }
