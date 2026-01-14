@@ -18,10 +18,6 @@ namespace TechC.VBattle.InGame.Camera
         private Vector3 originalPosition;
         private BattleEventBus eventBus;
 
-        // プレイヤー参照
-        private Character.CharacterController player1;
-        private Character.CharacterController player2;
-
         /// <summary>
         /// カメラの元の位置（読み取り専用）
         /// </summary>
@@ -45,12 +41,8 @@ namespace TechC.VBattle.InGame.Camera
         /// <param name="p2">プレイヤー2</param>
         public void SetupPlayers(Character.CharacterController p1, Character.CharacterController p2)
         {
-            player1 = p1;
-            player2 = p2;
-
-            // プレイヤーが設定されたら自動で追従モード開始
-            if (player1 != null && player2 != null)
-                cameraFollow.StartFollowMode(player1.transform, player2.transform);
+            if (p1 != null && p2 != null)
+                cameraFollow.StartFollowMode(p1.transform, p2.transform);
         }
 
         /// <summary>

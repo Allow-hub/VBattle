@@ -1,7 +1,4 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
-using TechC.VBattle.Core.Util;
-using TechC.VBattle.InGame;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -59,7 +56,6 @@ namespace TechC.VBattle.InGame.Camera
         public void Apply()
         {
             if (state != CameraEffectState.Active) return;
-            if (InGameManager.I.IsPaused) return;
 
             UpdateFollow();
         }

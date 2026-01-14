@@ -16,7 +16,7 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private AnimationCurve shakeCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
 
         private Transform cameraTransform;
-        private float elapsedShakeTime;  // 経過時間を自分で管理
+        private float elapsedShakeTime;
         private Vector3 shakeBasePosition;
         private CameraEffectState state = CameraEffectState.Idle;
 
@@ -83,7 +83,6 @@ namespace TechC.VBattle.InGame.Camera
         {
             if (state != CameraEffectState.Active) return;
 
-            // ポーズ中は進まないように経過時間を自分で加算
             elapsedShakeTime += Time.fixedDeltaTime;
             float progress = elapsedShakeTime / shakeDuration;
 
