@@ -22,7 +22,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Rot;
         [SerializeField] private Vector3 p1Pos;
         [SerializeField] private Vector3 p2Pos;
-       
+
         [SerializeField] private GameObject ameObj;
         [SerializeField] private Camera.CameraController cameraController;
 
@@ -364,8 +364,9 @@ namespace TechC.VBattle.InGame
         {
 
         }
+
+        public void SetPauseState(bool pause) => isPaused = pause;
     }
- 
     /// <summary>
     /// インゲームのState
     /// </summary>

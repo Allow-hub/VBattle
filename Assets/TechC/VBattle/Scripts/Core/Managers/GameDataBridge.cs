@@ -14,9 +14,6 @@ namespace TechC.VBattle.Core.Managers
         [SerializeField] private bool isHighPerformanceMode = true;
         [SerializeField] private bool canConnectWifi = true;
 
-        public bool IsPaused => isPaused;
-        private bool isPaused = false;
-
         /// <summary>
         /// セレクト画面で設定される情報
         /// </summary>
@@ -43,7 +40,5 @@ namespace TechC.VBattle.Core.Managers
             if (playerIndex == 1) Player_1Setup = data;
             else Player_2Setup = data;
         }
-
-        public void SetPauseState(bool pause) => isPaused = pause;
     }
 }
