@@ -5,13 +5,12 @@ using TechC.VBattle.Core.Util;
 namespace TechC.VBattle.InGame.Camera
 {
     /// <summary>
-    /// カメラズームエフェクト専用クラス
-    /// 攻撃時などの一時的なズーム演出を担当
+    /// カメラズームの実装
     /// </summary>
     [System.Serializable]
     public class CameraZoom : ICameraEffect
     {
-        [Header("ズームエフェクト設定")]
+        [Header("ズーム設定")]
         [SerializeField] private float zoomIntensity = 10f;
         [SerializeField] private float zoomDuration = 0.5f;
 
@@ -22,10 +21,6 @@ namespace TechC.VBattle.InGame.Camera
 
         public CameraEffectState State => state;
 
-        /// <summary>
-        /// 初期化
-        /// </summary>
-        /// <param name="cameraTransform">対象のカメラTransform</param>
         public void Init(Transform cameraTransform)
         {
             targetCamera = cameraTransform.GetComponent<UnityEngine.Camera>();
@@ -34,9 +29,6 @@ namespace TechC.VBattle.InGame.Camera
                 originalFOV = targetCamera.fieldOfView;
         }
 
-        /// <summary>
-        /// デフォルト設定でズームエフェクトを実行
-        /// </summary>
         public void Apply()
         {
             if (state == CameraEffectState.Active)

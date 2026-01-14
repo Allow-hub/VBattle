@@ -1,7 +1,5 @@
 using UnityEngine;
 using TechC.VBattle.InGame.Events;
-using TechC.VBattle.InGame.Systems;
-using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Camera
 {
@@ -16,11 +14,8 @@ namespace TechC.VBattle.InGame.Camera
         [SerializeField] private CameraZoom cameraZoom = new CameraZoom();
 
         private Vector3 originalPosition;
-        private BattleEventBus eventBus;
 
-        /// <summary>
-        /// カメラの元の位置（読み取り専用）
-        /// </summary>
+        /// <summary> カメラの元の位置（読み取り専用）</summary>        
         public Vector3 OriginalPosition => originalPosition;
 
         private void Start()
@@ -50,14 +45,7 @@ namespace TechC.VBattle.InGame.Camera
         /// </summary>
         private void InitializeEventBus()
         {
-            var inGameManager = InGameManager.I;
-            if (inGameManager?.BattleBus == null)
-            {
-                CustomLogger.Error("InGameManager または BattleEventBus が見つかりません！カメラエフェクトは攻撃イベントに反応しません。");
-                return;
-            }
-
-            eventBus = inGameManager.BattleBus;
+            var eventBus = InGameManager.I?.BattleBus;
             eventBus.Subscribe<AttackResultEvent>(OnAttackResult);
         }
 
@@ -83,8 +71,7 @@ namespace TechC.VBattle.InGame.Camera
 
         private void OnDestroy()
         {
-            // イベント購読を解除
-            eventBus?.Unsubscribe<AttackResultEvent>(OnAttackResult);
+            InGameManager.I.BattleBus?.Unsubscribe<AttackResultEvent>(OnAttackResult);
         }
     }
 }

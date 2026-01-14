@@ -22,18 +22,11 @@ namespace TechC.VBattle.InGame.Camera
 
         public CameraEffectState State => state;
 
-        /// <summary>
-        /// 初期化
-        /// </summary>
-        /// <param name="cameraTransform">対象のカメラTransform</param>
         public void Init(Transform cameraTransform)
         {
             this.cameraTransform = cameraTransform;
         }
 
-        /// <summary>
-        /// シェイクを適用
-        /// </summary>
         public void Apply()
         {
             if (state == CameraEffectState.Active)

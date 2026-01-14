@@ -114,7 +114,7 @@ namespace TechC.VBattle.InGame.Character
                             DelayUtility.StartDelayedActionWithPauseAsync(
                             0.1f,
                             () => { EffectFactory.I.ReturnEffect(obj); },
-                            () => InGameManager.I.IsPaused);
+                            InGameManager.I.GetPauseStateFunc);
                         }
                     }
 

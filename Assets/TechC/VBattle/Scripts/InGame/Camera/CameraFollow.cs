@@ -4,14 +4,13 @@ namespace TechC.VBattle.InGame.Camera
 {
     /// <summary>
     /// カメラ追従エフェクトの実装
-    /// 格闘ゲーム用のプレイヤー追従機能を担当
     /// </summary>
     [System.Serializable]
     public class CameraFollow : ICameraEffect
     {
         private const float HALF = 0.5f;
 
-        [Header("格闘ゲーム追従設定")]
+        [Header("追従設定")]
         [SerializeField] private float followSpeed = 5f;
         [SerializeField] private float zoomSpeed = 3f;
         [SerializeField] private Vector2 marginSize = new Vector2(4f, 3f);
@@ -35,10 +34,6 @@ namespace TechC.VBattle.InGame.Camera
 
         public CameraEffectState State => state;
 
-        /// <summary>
-        /// 初期化
-        /// </summary>
-        /// <param name="cameraTransform">対象のカメラTransform</param>
         public void Init(Transform cameraTransform)
         {
 
@@ -50,9 +45,6 @@ namespace TechC.VBattle.InGame.Camera
             targetFOV = originalFOV;
         }
 
-        /// <summary>
-        /// 追従エフェクトを開始し、毎フレーム更新を実行
-        /// </summary>
         public void Apply()
         {
             if (state != CameraEffectState.Active) return;
@@ -61,7 +53,7 @@ namespace TechC.VBattle.InGame.Camera
         }
 
         /// <summary>
-        /// 格闘ゲーム用の追従モードを開始
+        /// 追従モードを開始
         /// </summary>
         /// <param name="p1">プレイヤー1のTransform</param>
         /// <param name="p2">プレイヤー2のTransform</param>
@@ -76,7 +68,7 @@ namespace TechC.VBattle.InGame.Camera
         }
 
         /// <summary>
-        /// 毎フレーム呼び出してカメラ位置とFOVを調整
+        /// カメラ位置とFOVを調整、更新
         /// </summary>
         public void UpdateFollow()
         {
