@@ -56,7 +56,7 @@ namespace TechC.VBattle.InGame.Character
                 hitTargets = new[] { other }
             });
             GameDataBridge.I.SetPauseState(true);
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, duration: 1f,tex: tex);
+            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, intervalPerWindow: 0.75f,tex: tex);
 
             DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
             {

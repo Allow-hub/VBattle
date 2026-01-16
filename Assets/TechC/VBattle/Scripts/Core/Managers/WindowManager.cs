@@ -137,7 +137,7 @@ namespace TechC.VBattle.Core.Managers
             Gizmos.DrawWireCube(new Vector3(areaCenter.x, areaCenter.y, -5.3f), new Vector3(areaSize.x, areaSize.y, 0.1f));
         }
 
-        public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float duration = 1f, Sprite tex = null)
+        public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float intervalPerWindow = 0.05f, Sprite tex = null)
         {
             // 画面サイズ取得
             var editorRect = GameViewUtils.GetGameViewWindowRect();
@@ -155,7 +155,7 @@ namespace TechC.VBattle.Core.Managers
             int yCount = Mathf.CeilToInt((float)unityScreenHeight / tileSize);
 
             int windowCount = xCount * yCount;
-            float interval = duration / windowCount;
+            float totalDuration = windowCount * intervalPerWindow; // 総実行時間を計算
 
             // グリッドの全パターンをリスト化してシャッフル
             List<(int xi, int yi)> gridList = new List<(int xi, int yi)>();
@@ -173,7 +173,7 @@ namespace TechC.VBattle.Core.Managers
             }
 
             int created = 0;
-            DelayUtility.StartRepeatedActionAsync(duration, interval, () =>
+            DelayUtility.StartRepeatedActionAsync(totalDuration, intervalPerWindow, () =>
             {
                 if (created >= gridList.Count)
                 {
