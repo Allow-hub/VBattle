@@ -59,6 +59,98 @@
 
 ## 4. アプローチの選択
 
+### 4.0 イベント駆動アーキテクチャ（InGameとの一貫性）
+**重要**: プロジェクトでは`IBattleEvent`を使ったパブサブパターンを採用しているため、Select画面でも同様の設計を採用します。
+
+ただし、Select画面はInGameほど複雑ではないため、**必要最小限のイベントのみ定義**します。
+
+#### `ISelectEvent`（新規作成）
+```csharp
+namespace TechC.VBattle.Select.Events
+{
+    // ISelectEventを継承させることで型安全を保障
+    public interface ISelectEvent { }
+}
+```
+
+#### `SelectEvents`（新規作成）
+```csharp
+namespace TechC.VBattle.Select.Events
+{
+    // 選択状態変更イベント（汎用）
+    public struct SelectionChangedEvent : ISelectEvent
+    {
+        public int PlayerId;
+    }
+    
+    // 両プレイヤー準備完了イベント
+    public struct BothPlayersReadyEvent : ISelectEvent { }
+}
+```
+
+**イベントを最小限にした理由**:
+- ✅ `SelectionChangedEvent`: プレイヤーの状態が変わった時に発行（デバイス/キャラ/確定すべて）
+- ✅ `BothPlayersReadyEvent`: ゲーム開始可能になった時のみ
+- ❌ ホバーイベント: UI内部で完結するので不要
+- ❌ キャンセルイベント: 必要になったら追加
+- ❌ デバイス選択表示イベント: UI内部で完結
+
+#### `SelectEventBus`（メッセージバス）
+```csharp
+namespace TechC.VBattle.Select.Events
+{
+    public class SelectEventBus : MonoBehaviour
+    {
+        private static SelectEventBus instance;
+        public static SelectEventBus Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = FindObjectOfType<SelectEventBus>();
+                return instance;
+            }
+        }
+        
+        private Dictionary<Type, Delegate> eventHandlers = new Dictionary<Type, Delegate>();
+        
+        public void Subscribe<T>(Action<T> handler) where T : ISelectEvent
+        {
+            var eventType = typeof(T);
+            if (eventHandlers.ContainsKey(eventType))
+                eventHandlers[eventType] = Delegate.Combine(eventHandlers[eventType], handler);
+            else
+                eventHandlers[eventType] = handler;
+        }
+        
+        public void Unsubscribe<T>(Action<T> handler) where T : ISelectEvent
+        {
+            var eventType = typeof(T);
+            if (eventHandlers.ContainsKey(eventType))
+            {
+                eventHandlers[eventType] = Delegate.Remove(eventHandlers[eventType], handler);
+                if (eventHandlers[eventType] == null)
+                    eventHandlers.Remove(eventType);
+            }
+        }
+        
+        public void Publish<T>(T eventData) where T : ISelectEvent
+        {
+            var eventType = typeof(T);
+            if (eventHandlers.TryGetValue(eventType, out var handler))
+                (handler as Action<T>)?.Invoke(eventData);
+        }
+        
+        private void OnDestroy()
+        {
+            eventHandlers.Clear();
+        }
+    }
+}
+```
+
+---
+
 ### 4.1 軽量MVC（推奨）★
 Select画面の複雑さを考慮すると、これが最適解です。
 
@@ -71,12 +163,14 @@ Select画面の複雑さを考慮すると、これが最適解です。
 
 #### `SelectionData`（データ層）
 ```csharp
+using TechC.VBattle.Select.Events;
+
 public class SelectionData
 {
     public PlayerData Player1 { get; private set; } = new();
     public PlayerData Player2 { get; private set; } = new();
     
-    public event Action OnDataChanged;
+    private SelectEventBus eventBus => SelectEventBus.Instance;
     
     public class PlayerData
     {
@@ -101,39 +195,72 @@ public class SelectionData
         if (Player2.Device == device) return 2;
         return null;
     }
+    
+    // データ更新時にイベント発行（シンプルに）
+    public void SetDevice(int playerId, InputDevice device)
+    {
+        GetPlayer(playerId).Device = device;
+        eventBus.Publish(new SelectionChangedEvent { PlayerId = playerId });
+    }
+    
+    public void SetCharacter(int playerId, CharacterData character)
+    {
+        GetPlayer(playerId).Character = character;
+        eventBus.Publish(new SelectionChangedEvent { PlayerId = playerId });
+    }
+    
+    public void ConfirmPick(int playerId)
+    {
+        GetPlayer(playerId).IsPicked = true;
+        eventBus.Publish(new SelectionChangedEvent { PlayerId = playerId });
+        
+        if (Player1.IsPicked && Player2.IsPicked)
+            eventBus.Publish(new BothPlayersReadyEvent());
+    }
 }
 ```
 
 #### `SelectionController`（ロジック+制御層）
 ```csharp
+using TechC.VBattle.Select.Events;
+
 public class SelectionController : MonoBehaviour
 {
     [SerializeField] private SelectionData data = new();
-    [SerializeField] private SelectionView view;
     [SerializeField] private DeviceSelectionPresenter player1DevicePresenter;
     [SerializeField] private DeviceSelectionPresenter player2DevicePresenter;
+    [SerializeField] private CharaButton[] charaButtons;
     
     // NPC関連データ
     [SerializeField] private CharacterData npcAmeData;
     [SerializeField] private CharacterData npcSyoData;
-    // ... 他のNPCデータ
     
     private void Start()
     {
-        data.OnDataChanged += () => view.Refresh(data);
-        
-        // イベント購読
+        // UIからの入力を購読
         player1DevicePresenter.OnDeviceSelected += (device) => HandleDeviceSelect(1, device);
         player2DevicePresenter.OnDeviceSelected += (device) => HandleDeviceSelect(2, device);
+        
+        foreach (var button in charaButtons)
+        {
+            button.OnCharacterClicked += HandleCharacterClick;
+        }
     }
     
-    public void OnCharacterClicked(InputDevice device, CharacterData character)
+    private void HandleDeviceSelect(int playerId, InputDevice device)
+    {
+        data.SetDevice(playerId, device);
+        // → SelectionChangedEventが自動発行される
+    }
+    
+    public void HandleCharacterClick(InputDevice device, CharacterData character)
     {
         // 通常の選択
         int? playerId = data.GetPlayerIdByDevice(device);
         if (playerId.HasValue)
         {
-            SetCharacterForPlayer(playerId.Value, character);
+            data.SetCharacter(playerId.Value, character);
+            // → SelectionChangedEventが自動発行される
             return;
         }
         
@@ -141,21 +268,19 @@ public class SelectionController : MonoBehaviour
         if (CanPlayer1SelectForNpc(device))
         {
             var npcCharacter = ConvertToNpcData(character);
-            SetCharacterForPlayer(2, npcCharacter);
+            data.SetCharacter(2, npcCharacter);
+            // → SelectionChangedEventが自動発行される（PlayerId=2）
         }
     }
     
-    private void HandleDeviceSelect(int playerId, InputDevice device)
-    {
-        data.GetPlayer(playerId).Device = device;
-        data.OnDataChanged?.Invoke();
-    }
-    
-    private void SetCharacterForPlayer(int playerId, CharacterData character)
+    public void OnConfirmPick(int playerId)
     {
         var player = data.GetPlayer(playerId);
-        player.Character = character;
-        data.OnDataChanged?.Invoke();
+        if (player.Character == null)
+            throw new InvalidOperationException($"Player{playerId}: Character not selected");
+        
+        data.ConfirmPick(playerId);
+        // → SelectionChangedEvent / BothPlayersReadyEventが自動発行される
     }
     
     // NPC処理の明示化
@@ -170,41 +295,65 @@ public class SelectionController : MonoBehaviour
     {
         if (playerCharacter.name.Contains("Ame")) return npcAmeData;
         if (playerCharacter.name.Contains("Syo")) return npcSyoData;
-        // ... 他のキャラ
         return playerCharacter;
-    }
-    
-    public void OnConfirmPick(int playerId)
-    {
-        var player = data.GetPlayer(playerId);
-        if (player.Character == null)
-            throw new InvalidOperationException($"Player{playerId}: Character not selected");
-        
-        player.IsPicked = true;
-        data.OnDataChanged?.Invoke();
-        
-        if (data.Player1.IsPicked && data.Player2.IsPicked)
-            OnBothPlayersReady();
-    }
-    
-    private void OnBothPlayersReady()
-    {
-        // スタートボタン表示など
-    }
-}
-```
+using TechC.VBattle.Select.Events;
 
-#### `SelectionView`（表示層）
-```csharp
 public class SelectionView : MonoBehaviour
 {
     [SerializeField] private PlayerView player1View;
     [SerializeField] private PlayerView player2View;
+    [SerializeField] private GameObject startButton;
     
-    public void Refresh(SelectionData data)
+    private SelectEventBus eventBus => SelectEventBus.Instance;
+    
+    private void OnEnable()
     {
-        player1View.UpdateDisplay(data.Player1);
-        player2View.UpdateDisplay(data.Player2);
+        // イベント購読
+        eventBus.Subscribe<DeviceSelectedEvent>(OnDeviceSelected);
+        eventBus.Subscribe<CharacterSelectedEvent>(OnCharacterSelected);
+        eventBus.Subscribe<CharacterHoveredEvent>(OnCharacterHovered);
+        eventBus.Subscribe<PickConfirmedEvent>(OnPickConfirmed);
+        eventBus.Subscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
+    }
+    
+    private void OnDisable()
+    {
+        // イベント購読解除
+        eventBus.Unsubscribe<DeviceSelectedEvent>(OnDeviceSelected);
+        eventBus.Unsubscribe<CharacterSelectedEvent>(OnCharacterSelected);
+        eventBus.Unsubscribe<CharacterHoveredEvent>(OnCharacterHovered);
+        eventBus.Unsubscribe<PickConfirmedEvent>(OnPickConfirmed);
+        eventBus.Unsubscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
+    }
+    
+    private void OnDeviceSelected(DeviceSelectedEvent e)
+    {
+        var view = e.PlayerId == 1 ? player1View : player2View;
+        view.ShowDeviceIcon(e.Device);
+    }
+    
+    private void OnCharacterSelected(CharacterSelectedEvent e)
+    {
+        var view = e.PlayerId == 1 ? player1View : player2View;
+        view.UpdateThumbnail(e.Character.thumbnail);
+        view.UpdateName(e.Character.nameSprite);
+    }
+    
+    private void OnCharacterHovered(CharacterHoveredEvent e)
+    {
+        var view = e.PlayerId == 1 ? player1View : player2View;
+        view.ShowPreview(e.Character);
+    }
+    
+    private void OnPickConfirmed(PickConfirmedEvent e)
+    {
+        var view = e.PlayerId == 1 ? player1View : player2View;
+        view.PlayPickAnimation();
+    }
+    
+    private void OnBothPlayersReady(BothPlayersReadyEvent e)
+    {
+        startButton.SetActive(true);
     }
 }
 
@@ -212,10 +361,32 @@ public class PlayerView : MonoBehaviour
 {
     [SerializeField] private Image thumbnailImage;
     [SerializeField] private Image nameImage;
+    [SerializeField] private Image deviceIcon;
     [SerializeField] private SelectPickAnim pickAnimation;
     
-    public void UpdateDisplay(SelectionData.PlayerData playerData)
+    public void ShowDeviceIcon(InputDevice device)
     {
+        // デバイスに応じたアイコン表示
+    }
+    
+    public void UpdateThumbnail(Sprite sprite)
+    {
+        thumbnailImage.sprite = sprite;
+    }
+    
+    public void UpdateName(Sprite nameSprite)
+    {
+        nameImage.sprite = nameSprite;
+    }
+    
+    public void ShowPreview(CharacterData character)
+    {
+        // プレビュー表示（ホバー時）
+    }
+    
+    public void PlayPickAnimation()
+    {
+{
         if (playerData.Character != null)
         {
             thumbnailImage.sprite = playerData.Character.thumbnail;
@@ -408,40 +579,52 @@ public class IconControllerView : MonoBehaviour
         {
             var icon = Instantiate(iconPrefab, iconParent);
             var button = icon.GetComponent<Button>();
-            button.onClick.AddListener(() => onSelected?.Invoke(device));
-            
-            // アイコン画像設定
-            SetIconSprite(icon, device);
-            
-            activeIcons.Add(icon);
-        }
-    }
-    
-    public void CloseIcons()
-    {
-        // アニメーション付きで閉じる
-        foreach (var icon in activeIcons)
-            Destroy(icon);
-        activeIcons.Clear();
-    }
-    
-    private void ClearIcons()
-    {
-        foreach (var icon in activeIcons)
-            Destroy(icon);
-        activeIcons.Clear();
-    }
-    
-    private void SetIconSprite(GameObject icon, InputDevice device)
-    {
-        // デバイスタイプに応じたスプライト設定
-    }
-}
+            （イベント駆動）
+
+### 5.1 キャラクター選択フロー
+```
+1. ユーザー入力
+   CharaButton.OnPointerClick
+         ↓
+2. Controllerで受付
+   SelectionController.HandleCharacterClick()
+         ↓
+3. データを更新
+   SelectionData.SetCharacter()
+         ↓
+4. イベント発行（SelectEventBus）
+   CharacterSelectedEvent.Publish()
+         ↓
+5. Viewが購読して更新
+   SelectionView.OnCharacterSelected()
+   → PlayerView.UpdateThumbnail()
 ```
 
-#### `CharacterSelectManager`（簡素化）
-```csharp
-public class CharacterSelectManager : MonoBehaviour
+### 5.2 デバイス選択フロー
+```
+1. アイコンクリック
+   IconControllerView → DeviceSelectionPresenter.OnIconClicked
+         ↓
+2. Controllerで受付
+   SelectionController.HandleDeviceSelect()
+         ↓
+3. データを更新
+   SelectionData.SetDevice()
+         ↓
+4. イベント発行（SelectEventBus）
+   DeviceSelectedEvent.Publish()
+         ↓
+5. Viewが購読して更新
+   SelectionView.OnDeviceSelected()
+   → PlayerView.ShowDeviceIcon()
+```
+
+### 5.3 イベント駆動のメリット
+✅ **疎結合**: ControllerとViewが直接依存しない  
+✅ **型安全**: ISelectEventで全イベントを明示的に定義  
+✅ **拡張性**: 新しいイベント購読者を簡単に追加可能  
+✅ **一貫性**: InGameのIBattleEventと同じパターン  
+✅ **デバッグ**: SelectEventBusでイベント流れを追跡可能lic class CharacterSelectManager : MonoBehaviour
 {
     [SerializeField] private SelectionController controller;
     
@@ -450,37 +633,67 @@ public class CharacterSelectManager : MonoBehaviour
         var data = controller.GetSelectionData();
         
         // DataBridgeに設定
-        GameDataBridge.I.SetupPlayer(1, CreatePlayerData(data.Player1));
-        GameDataBridge.I.SetupPlayer(2, CreatePlayerData(data.Player2));
-        
-        // シーン遷移
-        SceneLoader.I.LoadBattleSceneAsync();
-    }
-    
-    private PlayerData CreatePlayerData(SelectionData.PlayerData playerData)
+        イベント基盤を作成
+namespace TechC.VBattle.Select.Events
+{
+    public interface ISelectEvent { }
+    public struct CharacterSelectedEvent : ISelectEvent { /*...*/ }
+    public class SelectEventBus : MonoBehaviour { /*...*/ }
+}
+
+// 1-2. 新しいデータクラスを作成（既存コードは触らない）
+public class SelectionData 
+{ 
+    // イベント発行機能付き
+    public void SetCharacter(int playerId, CharacterData character, InputDevice device)
     {
-        return new PlayerData
-        {
-            characterData = playerData.Character,
-            inputDevice = playerData.Device,
-            isNpc = playerData.IsNpc
-        };
+        GetPlayer(playerId).Character = character;
+        SelectEventBus.Instance.Publish(new CharacterSelectedEvent { /*...*/ });
     }
 }
+
+// 1-3. SelectUIManagerで新旧両方を更新
+public class SelectUIManager
+{
+    private SelectionData newData = new(); // 追加
+    private CharacterPick[] currentPicks; // 既存
+    
+    public void SetCharacterPick(int playerId, CharacterData character, InputDevice device)
+    {
+        // 旧システム（既存の動作を保証）
+        currentPicks[playerId - 1] = new CharacterPick 
+        { 
+            playerId = playerId, 
+            characterData = character,
+            inputDevice = device
+        };
+        
+        // 新システム（イベント発行される）
+        newData.SetCharacter(playerId, character, device);
+        // → CharacterSelectedEventが発行される
+    }
+}
+
+// 1-4. デバッグ用のイベント監視クラスを作成
+public class SelectEventLogger : MonoBehaviour
+{
+    private void OnEnable()
+    {
+        var bus = SelectEventBus.Instance;
+        bus.Subscribe<CharacterSelectedEvent>(e => 
+            Debug.Log($"[SelectEvent] Player{e.PlayerId} selected {e.Character.name}"));
+        bus.Subscribe<DeviceSelectedEvent>(e => 
+            Debug.Log($"[SelectEvent] Player{e.PlayerId} device: {e.Device.displayName}"));
+    }
+}
+
+// 1-5. 動作確認（ログでイベントが正しく発行されているか検証）
 ```
 
----
-
-## 5. データフロー
-
-### 5.1 キャラクター選択フロー
-```
-1. ユーザー入力
-   CharaButton.OnPointerClick
-         ↓
-2. Controllerで受付
-   SelectSceneController.HandleCharacterClick()
-         ↓
+**Phase 1のゴール**: 
+- ✅ ISelectEvent / SelectEventBus が動作する
+- ✅ 既存コードと並行して新データクラスが更新される
+- ✅ イベントがログで確認できる
 3. Modelを更新
    SelectSceneModel.TrySetCharacter()
          ↓
@@ -570,21 +783,75 @@ public class SelectUIManager
     [SerializeField] private DeviceSelectionPresenter player1DevicePresenter; // 追加
     
     private vo・その他の課題
+- ✅ イベントが正しく発行される
 
-### 8.1 既存コードへの影響
-- ✅ Prefabの参照が変わる可能性 → Phase 2以降で段階的に更新
-- ✅ 既存のイベント購読コードの修正が必要 → 各Phase内で対応
-- ⚠️ GamepadPointerとの連携 → 既存の仕組みを維持
+```csharp
+[Test]
+public void Player2DataShouldNotBeNull_WhenBothPlayersSelectCharacters()
+{
+    var controller = new SelectionController();
+    controller.HandleCharacterClick(device1, character1);
+    controller.HandleCharacterClick(device2, character2);
+    
+    var data = controller.GetSelectionData();
+    
+    Assert.IsNotNull(data.Player1.Character);
+    Assert.IsNotNull(data.Player2.Character); // ★重要★
+}
 
-### 8.2 移行期間中のリスク
-- ⚠️ **最大のリスク**: Phase 3まで動作確認できない（旧計画）
-- ✅ **対策**: ストラングラーパターンで各Phase毎に動作確認
-- ✅ **ロールバック**: 問題があれば前のPhaseに戻せる
+[Test]
+public void CharacterSelectedEvent_ShouldBePublished_WhenCharacterIsSelected()
+{
+    var eventBus = new SelectEventBus();
+    var data = new SelectionData();
+    CharacterSelectedEvent? receivedEvent = null;
+    
+    eventBus.Subscribe<CharacterSelectedEvent>(e => receivedEvent = e);
+    data.SetCharacter(1, testCharacter, testDevice);
+    
+    Assert.IsNotNull(receivedEvent);
+    Assert.AreEqual(1, receivedEvent.Value.PlayerId);
+    Assert.AreEqual(testCharacter, receivedEvent.Value.Character);
+}
+```
 
-### 8.3 パフォーマンス
-- イベント駆動によるオーバーヘッドは微小（Select画面なので問題なし）
-- 必要に応じて最適化を検討（基本的には不要）
+### 8.7 ISelectEventとIBattleEventの一貫性
+プロジェクト全体でイベント駆動パターンを統一：
 
+| シーン | インターフェース | EventBus | イベント数 | 特徴 |
+|--------|-----------------|----------|-----------|------|
+| Select | `ISelectEvent` | `SelectEventBus` | **2個のみ** | シンプル・選択状態管理 |
+| InGame | `IBattleEvent` | `BattleEventBus` | 多数 | 複雑・バトルイベント |
+
+**SelectEventの設計方針**:
+- ✅ 最小限のイベント（SelectionChanged, BothPlayersReady）
+- ✅ View側でデータを取得（イベントに詳細を詰め込まない）
+- ✅ 必要になったら追加できる拡張性
+
+**共通の利点**:
+- ✅ 型安全性の保証
+- ✅ イベントの明示的な定義
+- ✅ デバッグのしやすさ
+- ✅ 新規メンバーの理解しやすさ
+- ✅ リファクタリングの安全性
+
+**InGameとの違いを明確に**:
+```csharp
+// InGame: イベントが多数で詳細な情報を運ぶ
+public struct AttackEvent : IBattleEvent 
+{ 
+    public Character Attacker;
+    public Character Target;
+    public int Damage;
+    public AttackType Type;
+}
+
+// Select: イベントは少なく、データは別途取得
+public struct SelectionChangedEvent : ISelectEvent 
+{ 
+    public int PlayerId; // これだけ
+}
+```
 ### 8.4 完全MVCが必要になるケース
 将来的に以下の要件が出た場合は、軽量MVCから完全MVCに移行：
 - オンライン対戦実装（状態同期が必要）
