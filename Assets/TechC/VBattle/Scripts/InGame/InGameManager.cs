@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Character;
@@ -26,6 +27,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private GameObject ameObj;
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
+        [SerializeField] private Camera.CameraController cameraController;
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
@@ -41,7 +43,7 @@ namespace TechC.VBattle.InGame
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
-
+ 
         public override void Init()
         {
             base.Init();
@@ -76,6 +78,7 @@ namespace TechC.VBattle.InGame
                         SelectedCharacter = teramiData
                     });
 
+                cameraController.SetupPlayers(p1, p2);
                 ChangeState(InGameState.Battle);
             }
             else
@@ -93,12 +96,12 @@ namespace TechC.VBattle.InGame
                 ChangeState(InGameState.Start);
             }
         }
-
+ 
         private void Update()
         {
             UpdateState();
         }
-
+ 
         protected override void OnRelease()
         {
             base.OnRelease();
@@ -107,8 +110,7 @@ namespace TechC.VBattle.InGame
             battleJudge?.Dispose();
             BattleBus?.Clear();
         }
-
-
+ 
         private void UpdateState()
         {
             switch (inGameState)
@@ -366,8 +368,12 @@ namespace TechC.VBattle.InGame
         private void UpdateBattleState()
         {
             if (UnityEngine.Input.GetKeyDown(KeyCode.R))
-            {
                 SceneLoader.I.LoadSceneAsync(0).Forget();
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+            {
+                isPaused = !isPaused;
+                // CustomLogger.Info($"ポーズ切り替え: {isPaused}");
             }
         }
 
@@ -380,8 +386,9 @@ namespace TechC.VBattle.InGame
         {
 
         }
-    }
 
+        public void SetPauseState(bool pause) => isPaused = pause;
+    }
     /// <summary>
     /// インゲームのState
     /// </summary>
