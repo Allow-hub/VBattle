@@ -743,6 +743,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2488364111787827233}
+  - component: {fileID: -7594328089178048569}
   m_Layer: 0
   m_Name: Ame_CloneAttack
   m_TagString: Untagged
@@ -766,3 +767,24 @@ Transform:
   - {fileID: 4178091355593953536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7594328089178048569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6231325556846580197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4576b7ad142573f429ce864f88ed57ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviours:
+  - rid: 7383766328177328131
+  references:
+    version: 2
+    RefIds:
+    - rid: 7383766328177328131
+      type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        lifeTime: 3.6
