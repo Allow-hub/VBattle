@@ -1,6 +1,9 @@
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
+using TechC.VBattle.Select.Events;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -29,8 +32,22 @@ namespace TechC.VBattle.Select.Core
             GameDataBridge.I.SetupPlayer(1, null);
             GameDataBridge.I.SetupPlayer(2, null);
 
-            // イベント購読
+            // ★イベント駆動に変更
+            SelectUIManager.I.EventBus.Subscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
             SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
+        }
+        
+        private void OnDestroy()
+        {
+            if (SelectUIManager.I != null)
+            {
+                SelectUIManager.I.EventBus.Unsubscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
+            }
+        }
+        
+        private void OnBothPlayersReady(BothPlayersReadyEvent e)
+        {
+            Debug.Log("[CharacterSelectManager] Both players ready!");
         }
 
         /// <summary>
@@ -40,7 +57,6 @@ namespace TechC.VBattle.Select.Core
         {
             if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1]) return;
 
-            // GameDataBridge にプレイヤー情報を設定
             var picks = SelectUIManager.I.CurrentPicks;
 
             // Player 1 の設定
@@ -49,7 +65,7 @@ namespace TechC.VBattle.Select.Core
                 PlayerIndex = 1,
                 DeviceName = picks[0].inputDevice,
                 IsNPC = picks[0].inputDevice == null,
-                SelectedCharacter = picks[0].characterData // TODO: CharacterDataの適切な取得方法を実装
+                SelectedCharacter = picks[0].characterData
             };
             GameDataBridge.I.SetupPlayer(1, player1Data);
 
@@ -59,13 +75,23 @@ namespace TechC.VBattle.Select.Core
                 PlayerIndex = 2,
                 DeviceName = picks[1].inputDevice,
                 IsNPC = picks[1].inputDevice == null,
-                SelectedCharacter = picks[1].characterData // TODO: CharacterDataの適切な取得方法を実装
+                SelectedCharacter = picks[1].characterData
             };
-            Debug.Log(player2Data.SelectedCharacter);
             GameDataBridge.I.SetupPlayer(2, player2Data);
 
-            // シーン遷移
-            SceneLoader.I.LoadBattleSceneAsync().Forget();
+            // GameStartEventを発行
+            SelectUIManager.I.EventBus.Publish(new GameStartEvent
+            {
+                Player1Character = picks[0].characterData,
+                Player2Character = picks[1].characterData,
+                Player1Device = picks[0].inputDevice,
+                Player2Device = picks[1].inputDevice,
+                IsPlayer2Npc = picks[1].inputDevice == null
+            });
+
+            // デバッグ用: 直接SceneManagerでシーン遷移
+            CustomLogger.Info("Loading WorkScene_Y...");
+            SceneManager.LoadScene("WorkScene_Y");
         }
     }
 }

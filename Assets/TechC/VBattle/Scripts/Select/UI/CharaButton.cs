@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Select.Core;
+using TechC.VBattle.Select.Events;
 using TechC.VBattle.InGame.Character;
 
 namespace TechC.VBattle.Select.UI
@@ -49,21 +50,25 @@ namespace TechC.VBattle.Select.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (SelectUIManager.I == null)
+            if (SelectUIManager.I == null || pickCharaData == null)
             {
-                CustomLogger.Error("SelectUIManager.I is null in OnPointerEnter!");
-                return;
-            }
-            
-            if (pickCharaData == null)
-            {
-                CustomLogger.Error("pickCharaData is null in OnPointerEnter!");
+                CustomLogger.Error("SelectUIManager or pickCharaData is null in OnPointerEnter!");
                 return;
             }
             
             var (device, deviceName) = ResolveDevice(eventData);
-            int id = SelectUIManager.I.SetCharacterPick(device, pickCharaData);
-            ChangePickThumbnail(id);
+            
+            // デバイスからPlayerIdを判定
+            int playerId = GetPlayerIdFromDevice(device);
+            if (playerId == 0) return; // 無効なデバイス
+            
+            // ホバーイベント発行
+            SelectUIManager.I.EventBus.Publish(new CharacterHoveredEvent
+            {
+                PlayerId = playerId,
+                Character = pickCharaData,
+                Device = device
+            });
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -73,25 +78,45 @@ namespace TechC.VBattle.Select.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (SelectUIManager.I == null)
+            if (SelectUIManager.I == null || pickCharaData == null)
             {
-                CustomLogger.Error("SelectUIManager.I is null in OnPointerClick!");
-                return;
-            }
-            
-            if (pickCharaData == null)
-            {
-                CustomLogger.Error("pickCharaPrefab is null in OnPointerClick!");
+                CustomLogger.Error("SelectUIManager or pickCharaData is null in OnPointerClick!");
                 return;
             }
             
             var (device, deviceName) = ResolveDevice(eventData);
+            if (device == null) return;
 
-            if (device != null)
+            // デバイスからPlayerIdを判定
+            int playerId = GetPlayerIdFromDevice(device);
+            if (playerId == 0) return; // 無効なデバイス
+            
+            // ★重要：NPC判定を含めた選択確定イベント発行
+            bool isNpc = SelectUIManager.I.GetIsNpc();
+            InputDevice targetDevice = device;
+            int targetId = playerId;
+            
+            // 1Pが確定済みで、2PがNPCの場合、2Pのキャラを選択できる
+            if (SelectUIManager.I.CheckPicked(1) && isNpc && playerId == 1)
             {
-                int id = SelectUIManager.I.SetCharacterPick(device, pickCharaData);
-                DicidePick(id);
+                targetId = 2;
+                targetDevice = null; // NPC
             }
+            
+            if (SelectUIManager.I.CheckPicked(targetId)) return;
+            
+            SelectUIManager.I.EventBus.Publish(new SelectionConfirmedEvent
+            {
+                PlayerId = targetId,
+                Character = pickCharaData,
+                Device = targetDevice,
+                IsNpc = targetDevice == null
+            });
+            
+            // UIアニメーションは残す
+            Image target = (targetId == 1) ? p1DisplayImage : p2DisplayImage;
+            if (target != null && explodeMaterial != null)
+                StartCoroutine(PlayExplodeAnimation(target, targetId));
         }
 
         private (InputDevice, string) ResolveDevice(PointerEventData eventData)
@@ -108,69 +133,14 @@ namespace TechC.VBattle.Select.UI
             }
             return (null, "旧InputSystem");
         }
-
-        private void ChangePickThumbnail(int id)
+        
+        /// <summary>
+        /// デバイスからプレイヤーIDを判定（SelectUIManagerに委譲）
+        /// </summary>
+        private int GetPlayerIdFromDevice(InputDevice device)
         {
-            if (id == 0) return;
-            
-            if (SelectUIManager.I == null)
-            {
-                CustomLogger.Error("SelectUIManager.I is null in ChangePickThumbnail!");
-                return;
-            }
-
-            if (id == 1)
-            {
-                if (SelectUIManager.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
-                {
-                    if (!SelectUIManager.I.GetIsNpc()) return;
-                    p2DisplayImage.sprite = p2CharaSprite;
-                    if (!SelectUIManager.I.CheckPicked(++id))
-                        p2NameImage.sprite = p2CharaName;
-                }
-                else
-                {
-                    p1DisplayImage.sprite = p1CharaSprite;
-                    if (!SelectUIManager.I.CheckPicked(id))
-                        p1NameImage.sprite = p1CharaName;
-                }
-            }
-            else
-            {
-                p2DisplayImage.sprite = p2CharaSprite;
-                if (!SelectUIManager.I.CheckPicked(id))
-                    p2NameImage.sprite = p2CharaName;
-            }
-        }
-
-        private void DicidePick(int id)
-        {
-            if (id == 0) return;
-            
-            if (SelectUIManager.I == null)
-            {
-                CustomLogger.Error("SelectUIManager.I is null in DicidePick!");
-                return;
-            }
-            if (SelectUIManager.I.CheckPicked(id))//1pが選択済みで2pがNPCのとき1pが2pのキャラを選択できるように
-            {
-                if (!SelectUIManager.I.GetIsNpc()) return;
-                id = 2;
-                if (SelectUIManager.I.CheckPicked(id)) return;
-                Image target = (id == 1) ? p1DisplayImage : p2DisplayImage;
-                if (target == null || explodeMaterial == null) return;
-
-                // 爆散アニメーションを開始
-                StartCoroutine(PlayExplodeAnimation(target, id));
-            }
-            else
-            {
-                Image target = (id == 1) ? p1DisplayImage : p2DisplayImage;
-                if (target == null || explodeMaterial == null) return;
-
-                // 爆散アニメーションを開始
-                StartCoroutine(PlayExplodeAnimation(target, id));
-            }
+            if (SelectUIManager.I == null) return 0;
+            return SelectUIManager.I.GetPlayerIdFromDevice(device);
         }
 
         private IEnumerator PlayExplodeAnimation(Image target, int id)
@@ -181,19 +151,11 @@ namespace TechC.VBattle.Select.UI
 
             float time = 0f;
             float duration = 1.2f;
-            if (id == 1 && p1SelectPickAnim != null)
-                p1SelectPickAnim.PlayAnim(pickCharaData.CharaPrefab);
-            else if (id == 2 && p2SelectPickAnim != null)
-                p2SelectPickAnim.PlayAnim(pickCharaData.CharaPrefab);
-            
-            if (SelectUIManager.I != null)
-                SelectUIManager.I.SetPicked(id, true);
 
             while (time < duration)
             {
                 time += Time.deltaTime;
                 float progress = Mathf.Clamp01(time / duration);
-
                 instMat.SetFloat("_Progress", progress);
                 yield return null;
             }
