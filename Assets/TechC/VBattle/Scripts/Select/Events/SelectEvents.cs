@@ -35,8 +35,7 @@ namespace TechC.VBattle.Select.Events
     }
 
     /// <summary>
-    /// 両プレイヤー準備完了イベント（SelectUIManager.SetPickedで発行）
-    /// スタートボタン表示のトリガー
+    /// 両プレイヤー準備完了イベント
     /// </summary>
     public struct BothPlayersReadyEvent : ISelectEvent
     {

@@ -1,9 +1,7 @@
-using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Select.Events;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -32,22 +30,12 @@ namespace TechC.VBattle.Select.Core
             GameDataBridge.I.SetupPlayer(1, null);
             GameDataBridge.I.SetupPlayer(2, null);
 
-            // ★イベント駆動に変更
-            SelectUIManager.I.EventBus.Subscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
+            SelectUIManager.I.EventBus.Subscribe<BothPlayersReadyEvent>(_ => { });
             SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
         }
         
         private void OnDestroy()
         {
-            if (SelectUIManager.I != null)
-            {
-                SelectUIManager.I.EventBus.Unsubscribe<BothPlayersReadyEvent>(OnBothPlayersReady);
-            }
-        }
-        
-        private void OnBothPlayersReady(BothPlayersReadyEvent e)
-        {
-            Debug.Log("[CharacterSelectManager] Both players ready!");
         }
 
         /// <summary>
@@ -79,7 +67,6 @@ namespace TechC.VBattle.Select.Core
             };
             GameDataBridge.I.SetupPlayer(2, player2Data);
 
-            // GameStartEventを発行
             SelectUIManager.I.EventBus.Publish(new GameStartEvent
             {
                 Player1Character = picks[0].characterData,
@@ -89,9 +76,6 @@ namespace TechC.VBattle.Select.Core
                 IsPlayer2Npc = picks[1].inputDevice == null
             });
 
-            // デバッグ用: 直接SceneManagerでシーン遷移
-            CustomLogger.Info("Loading WorkScene_Y...");
-            SceneManager.LoadScene("WorkScene_Y");
         }
     }
 }

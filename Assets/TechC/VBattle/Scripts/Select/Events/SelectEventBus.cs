@@ -58,22 +58,14 @@ namespace TechC.VBattle.Select.Events
 
         /// <summary>
         /// 指定したイベントをすべての登録リスナーに対して発行
-        /// 該当イベント型にリスナーが登録されていない場合は何も行わない
         /// </summary>
-        /// <typeparam name="T">発行するイベントの型</typeparam>
-        /// <param name="eventData">リスナーに渡されるイベントデータ</param>
         public void Publish<T>(T eventData) where T : ISelectEvent
         {
             var eventType = typeof(T);
-
-            CustomLogger.Info($"Publishing event of type {eventType.Name}", LogTagUtil.TagEvent);
             if (eventDictionary.TryGetValue(eventType, out var existingDelegate))
                 (existingDelegate as Action<T>)?.Invoke(eventData);
         }
 
-        /// <summary>
-        /// すべてのイベントリスナーを解除し、イベント辞書を初期化
-        /// </summary>
         public void Clear() => eventDictionary.Clear();
     }
 }
