@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TechC/VBattle/Scenes/ManagerScene.unity
     guid: 6a93ab701704a7e4dafe61433dffd31e
+  - enabled: 1
+    path: Assets/TechC/VBattle/Scenes/WorkScene/WorkScene_Y.unity
+    guid: 2fe7b01f1a0524148ba0cd43d82d0e46
   m_configObjects: {}
