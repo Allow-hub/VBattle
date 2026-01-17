@@ -23,18 +23,18 @@ MonoBehaviour:
   hitDetectionMode: 1
   targetLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
   radius: 1
   hitboxOffset: {x: 0, y: 1, z: 1.2}
-  hitTiming: 0
+  hitTiming: 0.1
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 3
   knockbackForce: 1
   isCounter: 0
   recoveryDuration: 0.05
-  cancelStartTime: 0
-  cancelEndTime: 0
+  cancelStartTime: 0.2
+  cancelEndTime: 0.3
   hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
   canChain: 1
