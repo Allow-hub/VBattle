@@ -55,7 +55,7 @@ namespace TechC.VBattle.InGame.Character
                 hitPosition = other.gameObject.transform.position,
                 hitTargets = new[] { other }
             });
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, intervalPerWindow: 0.75f,tex: tex);
+            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.07f,tex: tex);
 
             DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
             {
@@ -64,7 +64,6 @@ namespace TechC.VBattle.InGame.Character
                 UnityEngine.Camera.main.gameObject.SetActive(false);
             },InGameManager.I.GetPauseStateFunc);
             InGameManager.I.SetPauseState(true);
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 500, intervalPerWindow: 1f,tex: tex);
         }
     }
 }

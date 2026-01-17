@@ -150,13 +150,12 @@ namespace TechC.VBattle.Core.Managers
 
             var rnd = new System.Random();
 
-            // 横・縦に何枚並べるか
+            // グリッド配置でウィンドウ情報を事前計算
             int xCount = Mathf.CeilToInt((float)unityScreenWidth / tileSize);
             int yCount = Mathf.CeilToInt((float)unityScreenHeight / tileSize);
 
-            int windowCount = xCount * yCount;
-            float totalDuration = windowCount * intervalPerWindow; // 総実行時間を計算
-
+            List<(int x, int y, int w, int h)> windowLayouts = new();
+            
             // グリッドの全パターンをリスト化してシャッフル
             List<(int xi, int yi)> gridList = new List<(int xi, int yi)>();
             for (int xi = 0; xi < xCount; xi++)
@@ -172,17 +171,9 @@ namespace TechC.VBattle.Core.Managers
                 gridList[j] = tmp;
             }
 
-            int created = 0;
-            DelayUtility.StartRepeatedActionAsync(totalDuration, intervalPerWindow, () =>
+            // サイズと位置を事前計算
+            foreach (var (xi, yi) in gridList)
             {
-                if (created >= gridList.Count)
-                {
-                    allreadyPopup = true;
-                    return UniTask.CompletedTask;
-                }
-
-                var (xi, yi) = gridList[created];
-
                 int remainWidth = unityScreenWidth - xi * tileSize;
                 int remainHeight = unityScreenHeight - yi * tileSize;
 
@@ -197,13 +188,27 @@ namespace TechC.VBattle.Core.Managers
                 int x = unityScreenX + xi * tileSize;
                 int y = unityScreenY + yi * tileSize;
 
+                windowLayouts.Add((x, y, w, h));
+            }
+
+            int created = 0;
+            int windowCount = windowLayouts.Count;
+            float totalDuration = windowCount * intervalPerWindow;
+
+            DelayUtility.StartRepeatedActionAsync(totalDuration, intervalPerWindow, () =>
+            {
+                if (created >= windowLayouts.Count)
+                {
+                    allreadyPopup = true;
+                    return UniTask.CompletedTask;
+                }
+
+                var (x, y, w, h) = windowLayouts[created];
                 var win = WindowFactory.I.GetWindow(type);
 
-                // まずリサイズ
                 WindowUtility.ResizeWindow((HWND)win.Hwnd, w, h);
                 win.SetRect();
 
-                // ImageWindowの場合は専用メソッドで位置を設定
                 if (win is ImageWindow imageWindow)
                 {
                     imageWindow.SetPosition(x, y);
@@ -212,7 +217,6 @@ namespace TechC.VBattle.Core.Managers
                 }
                 else
                 {
-                    // 通常のウィンドウは従来通り
                     WindowUtility.MoveWindow((HWND)win.Hwnd, x, y);
                 }
 
