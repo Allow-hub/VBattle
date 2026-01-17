@@ -55,7 +55,7 @@ namespace TechC.VBattle.InGame.Character
                 hitPosition = other.gameObject.transform.position,
                 hitTargets = new[] { other }
             });
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.07f,tex: tex);
+            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.01f,tex: tex);
 
             DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
             {
