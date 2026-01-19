@@ -115,6 +115,6 @@ MonoBehaviour:
       data:
         rb: {fileID: 1208245583641169337}
         moveSpeed: 5
-        moveDir: {x: 0, y: 0, z: 0}
-        moverType: 1
-        characterYOffset: 0
+        moveDir: {x: 1, y: 0, z: 0}
+        moverType: 2
+        characterYOffset: 1
