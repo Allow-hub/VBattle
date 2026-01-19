@@ -39,7 +39,7 @@ namespace TechC.VBattle.InGame.Character
         public HitDetectionMode hitDetectionMode = HitDetectionMode.OverlapSphere;
 
         [Tooltip("攻撃が可能なレイヤー")]
-        public LayerMask targetLayers; 
+        public LayerMask targetLayers;
 
         [Tooltip("攻撃の半径")]
         public float radius;
