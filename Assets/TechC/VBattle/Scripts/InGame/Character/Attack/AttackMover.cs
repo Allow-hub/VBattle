@@ -14,6 +14,8 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private Vector3 moveDir = Vector3.forward;
         [SerializeField] private AttackMoverType moverType = AttackMoverType.None;
         [SerializeField] private float characterYOffset = 0f; // Y軸のオフセット
+        
+        private GameObject owner;
         private Vector3 currentMoveDir;
         private GameObject character;
         // 追従関連
@@ -21,14 +23,15 @@ namespace TechC.VBattle.InGame.Character
 
         public void Initialize(GameObject owner)
         {
+            this.owner = owner;
         }
 
         public void OnRelease()
         {
             rb.velocity = Vector3.zero; // リリース時に速度をリセット
             currentMoveDir = Vector3.zero; // 移動方向もリセット
-            if(characterTransform != null)
-                character.transform.position = characterTransform.position;
+            if(characterTransform == null || character == null)return;
+            character.transform.position = characterTransform.position;
             character = null;
             characterTransform = null;
         }
@@ -65,8 +68,10 @@ namespace TechC.VBattle.InGame.Character
         public void Activate(GameObject character)
         {
             if (rb == null) return;
-            if (moverType == AttackMoverType.CharacterFollowsObject)
+            if (moverType == AttackMoverType.CharacterFollowsObject || moverType == AttackMoverType.FollowCharacter)
                 characterTransform = character.transform;
+            if(characterTransform != null)
+                owner.transform.position = characterTransform.position; // 攻撃オブジェクトをキャラクター位置にセット
             this.character = character;
             currentMoveDir = new Vector3(moveDir.x * character.transform.forward.x, moveDir.y, moveDir.z); // キャラクターの前方向に移動
         }

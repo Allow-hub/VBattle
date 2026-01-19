@@ -159,6 +159,7 @@ namespace TechC.VBattle.InGame.Character
         private void CreateAttackObject()
         {
             if (currentAttackData.attackPrefab == null) return;
+            Debug.Log($"Creating Attack Object: {currentAttackData.attackPrefab.name}");
             Vector3 spawnPos = controller.transform.position +
                 controller.transform.TransformDirection(currentAttackData.prefabOffset);
             Quaternion spawnRot = controller.transform.rotation *
