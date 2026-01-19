@@ -16,21 +16,21 @@ MonoBehaviour:
   attackName: Right_S
   attackPrefab: {fileID: 7050212149494774861, guid: de5f91acb2e93ef4bb9d6b10077131e1,
     type: 3}
-  prefabOffset: {x: 0, y: 0, z: 2.8}
+  prefabOffset: {x: 0, y: 0, z: 3}
   prefabRotation: {x: 0, y: 0, z: 0}
-  animationSpeed: 1.4
-  attackDuration: 0.7
+  animationSpeed: 1.2
+  attackDuration: 1
   hitDetectionMode: 2
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
   radius: 0
-  hitboxOffset: {x: 0, y: 0, z: 0}
-  hitTiming: 0.5
+  hitboxOffset: {x: 0, y: 1, z: 1}
+  hitTiming: 0.45
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 10
-  knockbackForce: 5
+  knockbackForce: 10
   isCounter: 0
   recoveryDuration: 0.1
   cancelStartTime: 0.6
@@ -48,6 +48,8 @@ MonoBehaviour:
   canRepeat: 0
   repeatInterval: 0
   repeatDuration: 0
+  specialGaugeGain: 5
+  specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8
   wallBounceVerticalBoost: 2

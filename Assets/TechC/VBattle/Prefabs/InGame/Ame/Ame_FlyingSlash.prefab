@@ -57,16 +57,15 @@ MonoBehaviour:
     - rid: 5312645644256542751
       type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        lifeTime: 3
+        lifeTime: 1
     - rid: 5312645644256542752
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         rb: {fileID: 7542037042622624240}
-        moveSpeed: 1
+        moveSpeed: 10
         moveDir: {x: 1, y: 0, z: 0}
-        followMode: 0
-        smoothFollow: 0
-        useCharacterMove: 0
+        moverType: 0
+        characterYOffset: 0
     - rid: 5312645644256542753
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
@@ -91,8 +90,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.5, y: 2.5, z: 1}
-  m_Center: {x: 0, y: 2.5, z: 0}
+  m_Size: {x: 1.5, y: 1.8, z: 1}
+  m_Center: {x: 0.15, y: 1, z: 0}
 --- !u!54 &7542037042622624240
 Rigidbody:
   m_ObjectHideFlags: 0
