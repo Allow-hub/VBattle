@@ -53,7 +53,7 @@ MonoBehaviour:
     - rid: 3207819760628400131
       type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        lifeTime: 5
+        lifeTime: 1.5
 --- !u!1 &5602667979724728577
 GameObject:
   m_ObjectHideFlags: 0
