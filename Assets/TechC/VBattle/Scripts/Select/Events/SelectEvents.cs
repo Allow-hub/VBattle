@@ -20,6 +20,7 @@ namespace TechC.VBattle.Select.Events
         public int PlayerId;           // どのプレイヤーがホバーしているか
         public CharacterData Character;
         public InputDevice Device;
+        public UnityEngine.Sprite CharacterSprite;  // ホバー時に表示するスプライト
     }
 
     /// <summary>
@@ -32,14 +33,6 @@ namespace TechC.VBattle.Select.Events
         public CharacterData Character;
         public InputDevice Device;
         public bool IsNpc;  // 2PがNPCかどうか
-    }
-
-    /// <summary>
-    /// 両プレイヤー準備完了イベント
-    /// </summary>
-    public struct BothPlayersReadyEvent : ISelectEvent
-    {
-        // データなし（状態のみ通知）
     }
 
     /// <summary>

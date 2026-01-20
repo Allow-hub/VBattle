@@ -62,14 +62,23 @@ namespace TechC.VBattle.Select.UI
             
             var (device, deviceName) = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
-            if (playerId == 0) return;
+            
+            // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
+            if (playerId == 0)
+            {
+                playerId = !SelectUIManager.I.CheckPicked(1) ? 1 : 2;
+            }
+            
+            // プレイヤーIDに対応するスプライトを選択（2Pスプライトがない場合は1Pを使用）
+            Sprite targetSprite = (playerId == 1) ? p1CharaSprite : (p2CharaSprite != null ? p2CharaSprite : p1CharaSprite);
             
             // ホバーイベント発行
             SelectUIManager.I.EventBus.Publish(new CharacterHoveredEvent
             {
                 PlayerId = playerId,
                 Character = pickCharaData,
-                Device = device
+                Device = device,
+                CharacterSprite = targetSprite
             });
         }
 
@@ -90,7 +99,12 @@ namespace TechC.VBattle.Select.UI
             if (device == null) return;
 
             int playerId = GetPlayerIdFromDevice(device);
-            if (playerId == 0) return;
+            
+            // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
+            if (playerId == 0)
+            {
+                playerId = !SelectUIManager.I.CheckPicked(PLAYER_1_ID) ? PLAYER_1_ID : PLAYER_2_ID;
+            }
             
             bool isNpc = SelectUIManager.I.GetIsNpc();
             InputDevice targetDevice = device;

@@ -67,6 +67,7 @@ namespace TechC.VBattle.Select.Core
             eventBus.Subscribe<DeviceAssignedEvent>(OnDeviceAssigned);
             eventBus.Subscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
             eventBus.Subscribe<SelectionResetEvent>(OnSelectionReset);
+            eventBus.Subscribe<CharacterHoveredEvent>(OnCharacterHovered);
         }
         
         private void OnDestroy()
@@ -74,6 +75,7 @@ namespace TechC.VBattle.Select.Core
             eventBus.Unsubscribe<DeviceAssignedEvent>(OnDeviceAssigned);
             eventBus.Unsubscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
             eventBus.Unsubscribe<SelectionResetEvent>(OnSelectionReset);
+            eventBus.Unsubscribe<CharacterHoveredEvent>(OnCharacterHovered);
             eventBus.Clear();
         }
 
@@ -142,7 +144,6 @@ namespace TechC.VBattle.Select.Core
                         return;
                     }
                     startObj.SetActive(true);
-                    eventBus.Publish(new BothPlayersReadyEvent());
                 });
             }
         }
@@ -160,6 +161,17 @@ namespace TechC.VBattle.Select.Core
             selectPickAnim_2p.ResetAnim();
             p1DisplayImage.enabled = true;
             p2DisplayImage.enabled = true;
+        }
+        
+        private void OnCharacterHovered(CharacterHoveredEvent e)
+        {
+            // ホバーされたキャラクターの画像を表示
+            Image targetImage = e.PlayerId == 1 ? p1DisplayImage : p2DisplayImage;
+            
+            if (targetImage != null && e.CharacterSprite != null)
+            {
+                targetImage.sprite = e.CharacterSprite;
+            }
         }
     }
 }
