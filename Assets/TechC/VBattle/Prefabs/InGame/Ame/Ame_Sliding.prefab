@@ -108,7 +108,7 @@ MonoBehaviour:
     - rid: 7383766328177328129
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 11400000, guid: 22c0167e7ef38b241b63cfbaf43bedcf, type: 2}
+        attackData: {fileID: 11400000, guid: 1d4f58415ca710440b16700ae2c9b908, type: 2}
         col: {fileID: 5282953341439373956}
     - rid: 7383766328177328130
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}

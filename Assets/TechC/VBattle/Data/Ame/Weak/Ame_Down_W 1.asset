@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Ame_Down_W
+  m_Name: Ame_Down_W 1
   m_EditorClassIdentifier: 
   charaName: 0
   attackName: Down_W
-  attackPrefab: {fileID: 1720111611783576622, guid: ebf01a92a4468cc4f968578a1a6bc7e3,
-    type: 3}
+  attackPrefab: {fileID: 0}
   prefabOffset: {x: 0, y: 0, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
   animationSpeed: 1

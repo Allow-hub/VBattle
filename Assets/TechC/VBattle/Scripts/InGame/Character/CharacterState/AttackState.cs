@@ -18,6 +18,7 @@ namespace TechC.VBattle.InGame.Character
         private bool isAirAttack = false;
         private bool isChainRequested = false;
         private int chain = 0;
+        private int createAttackObjectCount = 0;
         public AttackState(CharacterController controller) : base(controller) { }
 
         public override bool CanExecuteCommand<T>(T command)
@@ -59,8 +60,11 @@ namespace TechC.VBattle.InGame.Character
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
             // 攻撃ループ
+            int loopCount = 0;
             while (true)
             {
+                loopCount++;
+                Debug.LogWarning($"[AttackState.OnUpdate] Loop {loopCount} - Chain: {chain}");
                 isChainRequested = false;
 
                 float attackTime = currentAttackData.attackDuration;
@@ -103,6 +107,7 @@ namespace TechC.VBattle.InGame.Character
                     continue;
                 }
 
+                Debug.LogWarning($"[AttackState.OnUpdate] Ending Attack Loop");
                 // 連鎖がない場合は残りの硬直を待つ
                 float remainingAttack = attackTime - currentAttackData.cancelEndTime;
                 if (remainingAttack > 0)
@@ -134,6 +139,7 @@ namespace TechC.VBattle.InGame.Character
         /// <returns></returns>
         private void PerformHitDetection()
         {
+            Debug.LogWarning($"[PerformHitDetection] Called");
             Vector3 hitPosition = controller.transform.position +
                 controller.transform.TransformDirection(currentAttackData.hitboxOffset);
 
@@ -158,15 +164,20 @@ namespace TechC.VBattle.InGame.Character
         /// </summary>
         private void CreateAttackObject()
         {
+            createAttackObjectCount++;
             if (currentAttackData.attackPrefab == null) return;
-            Debug.Log($"Creating Attack Object: {currentAttackData.attackPrefab.name}");
             Vector3 spawnPos = controller.transform.position +
                 controller.transform.TransformDirection(currentAttackData.prefabOffset);
             Quaternion spawnRot = controller.transform.rotation *
                 Quaternion.Euler(currentAttackData.prefabRotation);
             // 攻撃オブジェクトを取得
             var obj = CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
-            obj.GetComponent<AttackObjectController>()?.SetPlayer(controller.PlayerIndex, controller.gameObject);
+            var controller_comp = obj.GetComponent<AttackObjectController>();
+            if (controller_comp != null)
+            {
+                controller_comp.SetPlayer(controller.PlayerIndex, controller.gameObject);
+                Debug.LogWarning($"[CreateAttackObject #{createAttackObjectCount}] After SetPlayer");
+            }
         }
     }
 }
