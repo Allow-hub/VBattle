@@ -70,6 +70,10 @@ MonoBehaviour:
       data:
         attackData: {fileID: 11400000, guid: e96029342badc7f429c20520b3337f35, type: 2}
         tex: {fileID: 21300000, guid: d5edb5c12859204478a93387c710052a, type: 3}
+        ultPrefab: {fileID: 7206581417779508778, guid: f8a837eebaf99ca45a44144e75ac122e,
+          type: 3}
+        ultSpawnPos: {x: 0, y: 0, z: 130}
+        popupDelay: 1
 --- !u!54 &5508901849141189314
 Rigidbody:
   m_ObjectHideFlags: 0
