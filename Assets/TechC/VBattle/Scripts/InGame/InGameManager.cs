@@ -61,16 +61,18 @@ namespace TechC.VBattle.InGame
             }
             else
             {
-                if (GameDataBridge.I == null)
-                {
-                    Debug.LogError($"GameDataBridgeがnullです。Debugモードをオンにするか別シーンから開始してください");
-                    return;
-                }
-                // var p1 = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
-                // var p2 = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
+                var p1 = p1Obj.GetComponent<Character.CharacterController>();
 
-                // p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
-                // p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                var p2Obj = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot));
+                var p2 = p2Obj.GetComponent<Character.CharacterController>();
+
+                p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                
+                battleJudge = new BattleJudge(p1, p2, BattleBus);
+                cameraController.SetupPlayers(p1, p2);
+                
                 ChangeState(InGameState.Start);
             }
         }
