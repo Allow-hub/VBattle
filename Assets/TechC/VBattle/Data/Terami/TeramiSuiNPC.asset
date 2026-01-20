@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TeramiSuiNPC
   m_EditorClassIdentifier: 
   CharacterName: 1
-  CharaPrefab: {fileID: 2555610346197650956, guid: ac2615a83a77b5246b5a4f6160f6ae3d,
+  CharaPrefab: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
     type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8

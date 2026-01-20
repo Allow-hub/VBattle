@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38aa63540ac5bff44938f7b6da0f2d22, type: 3}
-  m_Name: AttackSet_Ame
+  m_Name: AttackSet_Terami
   m_EditorClassIdentifier: 
   charaName: 1
   attacks:
