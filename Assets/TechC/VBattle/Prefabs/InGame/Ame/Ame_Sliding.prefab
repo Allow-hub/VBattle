@@ -49,7 +49,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -108,13 +108,13 @@ MonoBehaviour:
     - rid: 7383766328177328129
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 11400000, guid: 22c0167e7ef38b241b63cfbaf43bedcf, type: 2}
+        attackData: {fileID: 11400000, guid: 1d4f58415ca710440b16700ae2c9b908, type: 2}
         col: {fileID: 5282953341439373956}
     - rid: 7383766328177328130
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         rb: {fileID: 1208245583641169337}
-        moveSpeed: 5
-        moveDir: {x: 0, y: 0, z: 0}
-        moverType: 1
-        characterYOffset: 0
+        moveSpeed: 8
+        moveDir: {x: 1, y: 0, z: 0}
+        moverType: 2
+        characterYOffset: 0.5
