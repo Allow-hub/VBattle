@@ -9,18 +9,10 @@ namespace TechC.VBattle.Select.UI
     /// </summary>
     public static class SelectUIAnimationUtility
     {
-        // フェードイン＆スケールアニメーションのデフォルト値
-        private const float DEFAULT_FADE_IN_DURATION = 0.3f;
-        private const float DEFAULT_FADE_IN_SCALE_FROM = 0.5f;
-        private const float DEFAULT_FADE_IN_SCALE_TO = 1.0f;
-        
-        // イージング関数の定数
-        private const float EASE_OUT_BACK_C1 = 1.70158f;
-        private const float EASE_OUT_BACK_C3 = EASE_OUT_BACK_C1 + 1f;
-        
-        // アルファ値の定数
-        private const float ALPHA_TRANSPARENT = 0f;
-        private const float SCALE_NORMAL = 1f;
+        // FadeInWithScaleのデフォルト引数用定数
+        private const float DEFAULT_FADE_DURATION = 0.3f;
+        private const float DEFAULT_SCALE_FROM = 0.5f;
+        private const float DEFAULT_SCALE_TO = 1.0f;
 
         /// <summary>
         /// 画像をフェードイン＆スケールアップアニメーションで表示
@@ -33,11 +25,13 @@ namespace TechC.VBattle.Select.UI
         public static IEnumerator FadeInWithScale(
             Image image, 
             Sprite newSprite, 
-            float duration = DEFAULT_FADE_IN_DURATION, 
-            float scaleFrom = DEFAULT_FADE_IN_SCALE_FROM, 
-            float scaleTo = DEFAULT_FADE_IN_SCALE_TO)
+            float duration = DEFAULT_FADE_DURATION, 
+            float scaleFrom = DEFAULT_SCALE_FROM, 
+            float scaleTo = DEFAULT_SCALE_TO)
         {
             if (image == null) yield break;
+
+            const float ALPHA_TRANSPARENT = 0f;
 
             // 初期状態：小さく＆透明
             Vector3 originalScale = image.transform.localScale;
@@ -71,6 +65,12 @@ namespace TechC.VBattle.Select.UI
         /// </summary>
         private static float EaseOutBack(float t)
         {
+            // EaseOutBackの標準的な係数定義（c1 = 1.70158, c3 = c1 + 1）
+            const float EASE_OUT_BACK_C1 = 1.70158f;
+            const float EASE_OUT_BACK_C3 = EASE_OUT_BACK_C1 + 1f;
+            const float SCALE_NORMAL = 1f;
+            
+            // 3次項と2次項の組み合わせによるイージング曲線（数学的な定義）
             return SCALE_NORMAL + EASE_OUT_BACK_C3 * Mathf.Pow(t - SCALE_NORMAL, 3f) + EASE_OUT_BACK_C1 * Mathf.Pow(t - SCALE_NORMAL, 2f);
         }
     }

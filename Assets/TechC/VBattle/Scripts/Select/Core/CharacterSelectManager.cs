@@ -31,16 +31,22 @@ namespace TechC.VBattle.Select.Core
         /// </summary>
         private void InitializeSelectSystem()
         {
-            GameDataBridge.I.SetupPlayer(1, null);
-            GameDataBridge.I.SetupPlayer(2, null);
-            SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
+            GameDataBridge.I.SetupPlayer(PLAYER_1_ID, null);
+            GameDataBridge.I.SetupPlayer(PLAYER_2_ID, null);
+            SelectUIManager.I.EventBus.Subscribe<StartGameRequestedEvent>(OnStartGameRequested);
+        }
+
+        private void OnDestroy()
+        {
+            if (SelectUIManager.I != null)
+                SelectUIManager.I.EventBus.Unsubscribe<StartGameRequestedEvent>(OnStartGameRequested);
         }
 
 
         /// <summary>
         /// ゲーム開始リクエスト処理
         /// </summary>
-        private void OnGameStartRequested()
+        private void OnStartGameRequested(StartGameRequestedEvent e)
         {
             if (!SelectUIManager.I.HasPicked[PLAYER_1_INDEX] || !SelectUIManager.I.HasPicked[PLAYER_2_INDEX]) return;
 

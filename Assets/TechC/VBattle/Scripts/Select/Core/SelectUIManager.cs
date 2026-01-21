@@ -1,8 +1,9 @@
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Character;
-using TechC.VBattle.Select.UI;
 using TechC.VBattle.Select.Events;
+using TechC.VBattle.Select.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ namespace TechC.VBattle.Select.Core
         private const int PLAYER_1_ID = 1;
         private const int PLAYER_2_ID = 2;
         private const int PLAYER_ID_UNKNOWN = 0;
+        private const int PLAYER_ID_TO_INDEX_OFFSET = 1;
         private const string CHARACTER_NAME_AME = "Ame";
         private const string CHARACTER_NAME_TERAMI = "Terami";
 
@@ -44,7 +46,6 @@ namespace TechC.VBattle.Select.Core
         [SerializeField] private CharacterData npcAmeData;
         [SerializeField] private CharacterData npcTeramiData;
 
-        public System.Action OnStartGamePicked;
         public bool[] HasPicked => hasPicked;
         public CharacterPick[] CurrentPicks => currentPicks;
         public SelectEventBus EventBus => eventBus;
@@ -64,10 +65,9 @@ namespace TechC.VBattle.Select.Core
             startButton.onClick.AddListener(StartGame);
             cancelButton.onClick.AddListener(ResetSelect);
             startObj.SetActive(false);
-            currentPicks[PLAYER_1_INDEX].playerId = PLAYER_1_INDEX;
-            currentPicks[PLAYER_2_INDEX].playerId = PLAYER_2_INDEX;
+            currentPicks[PLAYER_1_INDEX].playerId = PLAYER_1_ID;
+            currentPicks[PLAYER_2_INDEX].playerId = PLAYER_2_ID;
             
-            // イベント購読
             eventBus.Subscribe<DeviceAssignedEvent>(OnDeviceAssigned);
             eventBus.Subscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
             eventBus.Subscribe<SelectionResetEvent>(OnSelectionReset);
@@ -83,8 +83,11 @@ namespace TechC.VBattle.Select.Core
             eventBus.Clear();
         }
 
+        /// <summary>2PがNPCかどうかを判定</summary>
         public bool GetIsNpc() => iconController_2p.GetCurrentDevice() == null;
-        public bool CheckPicked(int id) => hasPicked[--id];
+
+        /// <summary>指定プレイヤーが選択済みかを確認</summary>
+        public bool CheckPicked(int id) => hasPicked[id - PLAYER_ID_TO_INDEX_OFFSET];
         
         /// <summary>
         /// デバイスからプレイヤーIDを判定
@@ -103,19 +106,19 @@ namespace TechC.VBattle.Select.Core
             return PLAYER_ID_UNKNOWN;
         }
 
-        private void StartGame() => OnStartGamePicked?.Invoke();
+        private void StartGame() => eventBus.Publish(new StartGameRequestedEvent());
         private void ResetSelect() => eventBus.Publish(new SelectionResetEvent());
         
         private void OnDeviceAssigned(DeviceAssignedEvent e)
         {
-            int index = e.PlayerId - 1;
+            int index = e.PlayerId - PLAYER_ID_TO_INDEX_OFFSET;
             currentPicks[index].inputDevice = e.Device;
         }
         
         
         private void OnSelectionConfirmed(SelectionConfirmedEvent e)
         {
-            int index = e.PlayerId - 1;
+            int index = e.PlayerId - PLAYER_ID_TO_INDEX_OFFSET;
             CharacterData finalCharacter = e.Character;
 
             if (e.IsNpc)
@@ -125,10 +128,16 @@ namespace TechC.VBattle.Select.Core
                 else if (e.Character.name.Contains(CHARACTER_NAME_TERAMI))
                     finalCharacter = npcTeramiData;
             }
+
+            if (finalCharacter.CharaPrefab == null)
+            {
+                CustomLogger.Error($"{finalCharacter.name}のCharaPrefabが設定されていません");
+                return;
+            }
             
             currentPicks[index] = new CharacterPick
             {
-                playerId = index,
+                playerId = e.PlayerId,
                 characterData = finalCharacter,
                 inputDevice = e.Device
             };
@@ -138,7 +147,6 @@ namespace TechC.VBattle.Select.Core
             var pickAnim = e.PlayerId == PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
             pickAnim.PlayAnim(finalCharacter.CharaPrefab);
             
-            // 状態更新完了を通知
             eventBus.Publish(new SelectionUpdatedEvent
             {
                 Player1SelectedCharacter = hasPicked[PLAYER_1_INDEX] ? currentPicks[PLAYER_1_INDEX].characterData : null,
@@ -151,7 +159,7 @@ namespace TechC.VBattle.Select.Core
                 {
                     if (startObj == null)
                     {
-                        Debug.LogError("startObjが設定されていません");
+                        CustomLogger.Error("startObjが設定されていません");
                         return;
                     }
                     startObj.SetActive(true);

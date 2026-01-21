@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TechC.VBattle.Core.Extensions;
-using TechC.VBattle.Core.Util;
 
 namespace TechC.VBattle.Select.Events
 {

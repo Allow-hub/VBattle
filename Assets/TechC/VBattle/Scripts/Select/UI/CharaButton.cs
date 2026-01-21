@@ -53,10 +53,8 @@ namespace TechC.VBattle.Select.UI
 
         private void Start()
         {
-            // スクリプトがアタッチされているObjectからImageコンポーネントを取得
             selectionIconImage = GetComponent<Image>();
             
-            // 初期状態のスプライトを保存
             if (selectionIconImage != null)
                 originalIconSprite = selectionIconImage.sprite;
 
@@ -152,7 +150,6 @@ namespace TechC.VBattle.Select.UI
 
             int playerId = GetPlayerIdFromDevice(device);
 
-            // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
             if (playerId == 0)
                 playerId = !SelectUIManager.I.CheckPicked(PLAYER_1_ID) ? PLAYER_1_ID : PLAYER_2_ID;
 
@@ -176,8 +173,6 @@ namespace TechC.VBattle.Select.UI
                 IsNpc = targetDevice == null
             });
 
-            // UpdateSelectionIconは呼ばない（OnSelectionConfirmedイベントで処理される）
-
             Image target = (targetId == PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
             if (target != null && explodeMaterial != null)
                 StartCoroutine(PlayExplodeAnimation(target));
@@ -187,7 +182,6 @@ namespace TechC.VBattle.Select.UI
         {
             if (selectionIconImage == null) return;
 
-            // このキャラが誰に選択されているかを確認（CharaNameで比較）
             bool isSelectedByP1 = player1Character != null && 
                                   player1Character.CharacterName == pickCharaData.CharacterName;
             bool isSelectedByP2 = player2Character != null && 
@@ -195,13 +189,10 @@ namespace TechC.VBattle.Select.UI
 
             Sprite targetSprite = null;
             
-            // 両方のプレイヤーがこのキャラを選択している場合
             if (isSelectedByP1 && isSelectedByP2 && bothSelectedIcon != null)
                 targetSprite = bothSelectedIcon;
-            // 1Pだけがこのキャラを選択している場合
             else if (isSelectedByP1 && p1SelectedIcon != null)
                 targetSprite = p1SelectedIcon;
-            // 2Pだけがこのキャラを選択している場合
             else if (isSelectedByP2 && p2SelectedIcon != null)
                 targetSprite = p2SelectedIcon;
 
@@ -211,13 +202,11 @@ namespace TechC.VBattle.Select.UI
 
         private void OnSelectionUpdated(SelectionUpdatedEvent e)
         {
-            // 状態更新通知を受け取ったら、このキャラが選択されているか確認してアイコン更新
             UpdateSelectionIcon(e.Player1SelectedCharacter, e.Player2SelectedCharacter);
         }
 
         private void OnSelectionReset(SelectionResetEvent e)
         {
-            // リセット時は元のスプライトに戻す
             if (selectionIconImage != null)
                 selectionIconImage.sprite = originalIconSprite;
         }
@@ -229,10 +218,8 @@ namespace TechC.VBattle.Select.UI
                 var device = extended.device;
                 if (device is Mouse)
                     return Keyboard.current;
-                else if (device != null)
+                if (device != null)
                     return device;
-                else
-                    return null;
             }
             return null;
         }

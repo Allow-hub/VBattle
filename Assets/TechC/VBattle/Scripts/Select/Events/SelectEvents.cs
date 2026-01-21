@@ -67,4 +67,12 @@ namespace TechC.VBattle.Select.Events
     {
         // データなし（リセット指示のみ）
     }
+
+    /// <summary>
+    /// ゲーム開始リクエストイベント（Startボタンで発行）
+    /// </summary>
+    public struct StartGameRequestedEvent : ISelectEvent
+    {
+        // データなし（リクエスト指示のみ）
+    }
 }

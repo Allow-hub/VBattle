@@ -10,7 +10,7 @@ namespace TechC.VBattle.Select.UI
     /// アイコン表示用のデータセット
     /// </summary>
     [System.Serializable]
-    public class IconData
+    public struct IconData
     {
         public GameObject iconObject;
         public Sprite iconSprite;
@@ -161,8 +161,6 @@ namespace TechC.VBattle.Select.UI
 
             for (int i = 0; i < generatedIcons.Count; i++)
             {
-                if (generatedIcons[i] == null) continue;
-
                 var rect = generatedIcons[i].iconObject.GetComponent<RectTransform>();
                 StartCoroutine(MoveToPosition(rect, Vector2.zero, animDuration, i * animDelay, true));
             }
@@ -206,11 +204,8 @@ namespace TechC.VBattle.Select.UI
 
         private void ChildClickEvent(IconData clickedIconData)
         {
-            if (clickedIconData != null)
-            {
-                iconImage.sprite = clickedIconData.iconSprite;
-                currentIconData = clickedIconData; // 選択情報を更新
-            }
+            iconImage.sprite = clickedIconData.iconSprite;
+            currentIconData = clickedIconData;
             StartCoroutine(ClearIcons());
         }
 
