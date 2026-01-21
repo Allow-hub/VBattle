@@ -169,6 +169,12 @@ namespace TechC.VBattle.Select.UI
 
             if (SelectUIManager.I.CheckPicked(targetId)) return;
 
+            // 名前画像の更新
+            Image targetNameImage = targetId == PLAYER_1_ID ? p1CharaNameImage : p2CharaNameImage;
+            Sprite targetNameSprite = targetId == PLAYER_1_ID ? p1CharaNameSprite : p2CharaNameSprite;
+            if (targetNameImage != null && targetNameSprite != null)
+                targetNameImage.sprite = targetNameSprite;
+
             SelectUIManager.I.EventBus.Publish(new SelectionConfirmedEvent
             {
                 PlayerId = targetId,
