@@ -76,7 +76,7 @@ namespace TechC.VBattle.Select.UI
         {
             if (SelectUIManager.I == null || pickCharaData == null) return;
 
-            var (device, deviceName) = ResolveDevice(eventData);
+            var device = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
 
             if (!SelectUIManager.I.CheckPicked(PLAYER_1_ID))
@@ -132,7 +132,7 @@ namespace TechC.VBattle.Select.UI
                 return;
             }
 
-            var (device, deviceName) = ResolveDevice(eventData);
+            var device = ResolveDevice(eventData);
             if (device == null) return;
 
             int playerId = GetPlayerIdFromDevice(device);
@@ -172,10 +172,19 @@ namespace TechC.VBattle.Select.UI
         {
             if (selectionIconImage == null) return;
 
-            if (playerId == PLAYER_1_ID && p1SelectedIcon != null)
-                selectionIconImage.sprite = p1SelectedIcon;
+            bool player1Picked = SelectUIManager.I.CheckPicked(PLAYER_1_ID);
+            bool player2Picked = SelectUIManager.I.CheckPicked(PLAYER_2_ID);
+
+            Sprite targetSprite = null;
+            if (player1Picked && player2Picked && bothSelectedIcon != null)
+                targetSprite = bothSelectedIcon;
+            else if (playerId == PLAYER_1_ID && p1SelectedIcon != null)
+                targetSprite = p1SelectedIcon;
             else if (playerId == PLAYER_2_ID && p2SelectedIcon != null)
-                selectionIconImage.sprite = p2SelectedIcon;
+                targetSprite = p2SelectedIcon;
+
+            if (targetSprite != null)
+                StartCoroutine(SelectUIAnimationUtility.FadeInWithScale(selectionIconImage, targetSprite));
         }
 
         private void OnSelectionReset(SelectionResetEvent e)
@@ -184,19 +193,19 @@ namespace TechC.VBattle.Select.UI
                 selectionIconImage.sprite = bothSelectedIcon;
         }
 
-        private (InputDevice, string) ResolveDevice(PointerEventData eventData)
+        private InputDevice ResolveDevice(PointerEventData eventData)
         {
             if (eventData is UnityEngine.InputSystem.UI.ExtendedPointerEventData extended)
             {
                 var device = extended.device;
                 if (device is Mouse)
-                    return (Keyboard.current, "Keyboard");
+                    return Keyboard.current;
                 else if (device != null)
-                    return (device, device.displayName);
+                    return device;
                 else
-                    return (null, "不明");
+                    return null;
             }
-            return (null, "旧InputSystem");
+            return null;
         }
 
         private int GetPlayerIdFromDevice(InputDevice device)
