@@ -31,6 +31,16 @@ namespace TechC.VBattle.Select.UI
         [SerializeField] private Sprite p2CharaNameSprite;
         [SerializeField] private Image p1CharaNameImage;
         [SerializeField] private Image p2CharaNameImage;
+
+        
+        [Header("1P / 2P / 両方の場合のアイコン")]
+        [SerializeField] private Image selectionIconImage;
+        [SerializeField] private Sprite p1SelectedIcon;
+        [SerializeField] private Sprite p2SelectedIcon;
+        [SerializeField] private Sprite bothSelectedIcon;
+
+
+        [Header("キャラのデータ")]
         [SerializeField] private CharacterData pickCharaData;
 
         [Header("アイコンの後ろのSpriteの表示 / 非表示")]
@@ -38,6 +48,18 @@ namespace TechC.VBattle.Select.UI
 
         [Header("爆散用マテリアル")]
         [SerializeField] private Material explodeMaterial;
+
+        private void Start()
+        {
+            if (SelectUIManager.I != null)
+                SelectUIManager.I.EventBus.Subscribe<SelectionResetEvent>(OnSelectionReset);
+        }
+
+        private void OnDestroy()
+        {
+            if (SelectUIManager.I != null)
+                SelectUIManager.I.EventBus.Unsubscribe<SelectionResetEvent>(OnSelectionReset);
+        }
 
         private void OnValidate()
         {
@@ -139,9 +161,27 @@ namespace TechC.VBattle.Select.UI
                 IsNpc = targetDevice == null
             });
 
+            UpdateSelectionIcon(targetId);
+
             Image target = (targetId == PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
             if (target != null && explodeMaterial != null)
                 StartCoroutine(PlayExplodeAnimation(target));
+        }
+
+        private void UpdateSelectionIcon(int playerId)
+        {
+            if (selectionIconImage == null) return;
+
+            if (playerId == PLAYER_1_ID && p1SelectedIcon != null)
+                selectionIconImage.sprite = p1SelectedIcon;
+            else if (playerId == PLAYER_2_ID && p2SelectedIcon != null)
+                selectionIconImage.sprite = p2SelectedIcon;
+        }
+
+        private void OnSelectionReset(SelectionResetEvent e)
+        {
+            if (selectionIconImage != null && bothSelectedIcon != null)
+                selectionIconImage.sprite = bothSelectedIcon;
         }
 
         private (InputDevice, string) ResolveDevice(PointerEventData eventData)
