@@ -89,6 +89,10 @@ namespace TechC.VBattle.Select.UI
         {
             if (SelectUIManager.I == null || pickCharaData == null) return;
 
+            // 両者選択済みの場合はホバー処理を無効化
+            if (SelectUIManager.I.CheckPicked(PLAYER_1_ID) && SelectUIManager.I.CheckPicked(PLAYER_2_ID))
+                return;
+
             var device = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
 
