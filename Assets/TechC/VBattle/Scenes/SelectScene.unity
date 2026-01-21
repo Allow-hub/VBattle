@@ -210,6 +210,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unknown (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3148930152194095279, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_Name
+      value: Pannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3148930152194095279, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3903786155858596513, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_Name
+      value: Pannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3903786155858596513, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781191386566072046, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_Name
+      value: Pannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4781191386566072046, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452188483435841741, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_Name
+      value: Pannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452188483435841741, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6020748180272391456, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
         type: 3}
       propertyPath: m_Name
