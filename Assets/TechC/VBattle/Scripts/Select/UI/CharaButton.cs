@@ -27,6 +27,10 @@ namespace TechC.VBattle.Select.UI
         [SerializeField] private Image p2DisplayImage;
         [SerializeField] private Sprite p1CharaSprite;
         [SerializeField] private Sprite p2CharaSprite;
+        [SerializeField] private Sprite p1CharaNameSprite;
+        [SerializeField] private Sprite p2CharaNameSprite;
+        [SerializeField] private Image p1CharaNameImage;
+        [SerializeField] private Image p2CharaNameImage;
         [SerializeField] private CharacterData pickCharaData;
 
         [Header("アイコンの後ろのSpriteの表示 / 非表示")]
@@ -61,15 +65,28 @@ namespace TechC.VBattle.Select.UI
                 playerId = PLAYER_1_ID;
 
             Sprite targetSprite;
+            Image targetNameImage;
+            Sprite targetNameSprite;
+            
             if (playerId == PLAYER_2_ID && p2CharaSprite != null)
+            {
                 targetSprite = p2CharaSprite;
+                targetNameImage = p2CharaNameImage;
+                targetNameSprite = p2CharaNameSprite;
+            }
             else
+            {
                 targetSprite = p1CharaSprite;
+                targetNameImage = p1CharaNameImage;
+                targetNameSprite = p1CharaNameSprite;
+            }
+
+            if (targetNameImage != null && targetNameSprite != null)
+                targetNameImage.sprite = targetNameSprite;
 
             if (iconBackImage != null)
                 iconBackImage.enabled = true;
 
-            // ホバーイベント発行
             SelectUIManager.I.EventBus.Publish(new CharacterHoveredEvent
             {
                 PlayerId = playerId,
