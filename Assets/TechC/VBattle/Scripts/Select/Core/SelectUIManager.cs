@@ -1,5 +1,3 @@
-using TechC.VBattle.Audio;
-using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Character;
@@ -19,6 +17,12 @@ namespace TechC.VBattle.Select.Core
         private const int PLAYER_COUNT = 2;
         private const int PLAYER_1_INDEX = 0;
         private const int PLAYER_2_INDEX = 1;
+        private const int PLAYER_1_ID = 1;
+        private const int PLAYER_2_ID = 2;
+        private const int PLAYER_ID_UNKNOWN = 0;
+        private const string CHARACTER_NAME_AME = "Ame";
+        private const string CHARACTER_NAME_TERAMI = "Terami";
+
 
         public struct CharacterPick
         {
@@ -88,19 +92,18 @@ namespace TechC.VBattle.Select.Core
         public int GetPlayerIdFromDevice(InputDevice device)
         {
             if (iconController_1p.GetCurrentDevice() == device)
-                return 1;
+                return PLAYER_1_ID;
             
             if (iconController_2p.GetCurrentDevice() == device)
-                return 2;
+                return PLAYER_2_ID;
             
-            if (iconController_2p.GetCurrentDevice() == null && iconController_1p.GetCurrentDevice() == device && CheckPicked(1))
-                return 2;
+            if (iconController_2p.GetCurrentDevice() == null && iconController_1p.GetCurrentDevice() == device && CheckPicked(PLAYER_1_ID))
+                return PLAYER_2_ID;
             
-            return 0;
+            return PLAYER_ID_UNKNOWN;
         }
 
         private void StartGame() => OnStartGamePicked?.Invoke();
-
         private void ResetSelect() => eventBus.Publish(new SelectionResetEvent());
         
         private void OnDeviceAssigned(DeviceAssignedEvent e)
@@ -109,16 +112,17 @@ namespace TechC.VBattle.Select.Core
             currentPicks[index].inputDevice = e.Device;
         }
         
+        
         private void OnSelectionConfirmed(SelectionConfirmedEvent e)
         {
             int index = e.PlayerId - 1;
-            
             CharacterData finalCharacter = e.Character;
+
             if (e.IsNpc)
             {
-                if (e.Character.name.Contains("Ame"))
+                if (e.Character.name.Contains(CHARACTER_NAME_AME))
                     finalCharacter = npcAmeData;
-                else if (e.Character.name.Contains("Terami"))
+                else if (e.Character.name.Contains(CHARACTER_NAME_TERAMI))
                     finalCharacter = npcTeramiData;
             }
             
@@ -131,8 +135,8 @@ namespace TechC.VBattle.Select.Core
             
             hasPicked[index] = true;
             
-            var pickAnim = e.PlayerId == 1 ? selectPickAnim_1p : selectPickAnim_2p;
-            pickAnim?.PlayAnim(finalCharacter.CharaPrefab);
+            var pickAnim = e.PlayerId == PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
+            pickAnim.PlayAnim(finalCharacter.CharaPrefab);
             
             if (hasPicked[PLAYER_1_INDEX] && hasPicked[PLAYER_2_INDEX])
             {
@@ -165,13 +169,9 @@ namespace TechC.VBattle.Select.Core
         
         private void OnCharacterHovered(CharacterHoveredEvent e)
         {
-            // ホバーされたキャラクターの画像を表示
-            Image targetImage = e.PlayerId == 1 ? p1DisplayImage : p2DisplayImage;
-            
-            if (targetImage != null && e.CharacterSprite != null)
-            {
-                targetImage.sprite = e.CharacterSprite;
-            }
+            Image targetImage = e.PlayerId == PLAYER_1_ID ? p1DisplayImage : p2DisplayImage;
+            if (targetImage == null || e.CharacterSprite == null) return;
+            targetImage.sprite = e.CharacterSprite;
         }
     }
 }

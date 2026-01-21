@@ -275,6 +275,11 @@ PrefabInstance:
       propertyPath: iconBackImage
       value: 
       objectReference: {fileID: 2066808079}
+    - target: {fileID: 7426342516633577792, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+        type: 3}
+      propertyPath: characterSelectManager
+      value: 
+      objectReference: {fileID: 1360270144}
     - target: {fileID: 8672701068581600492, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
         type: 3}
       propertyPath: iconBackImage
@@ -305,6 +310,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1125234161}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1360270144 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4931608610676093527, guid: 3cc55ed4e314c5049be1b3e4c71f79f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1125234161}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04453b6d7397fab4c89691323626c854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2066808078
 GameObject:
   m_ObjectHideFlags: 0

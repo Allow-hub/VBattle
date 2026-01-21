@@ -21,19 +21,13 @@ namespace TechC.VBattle.Select.UI
         private const int PLAYER_1_ID = 1;
         private const int PLAYER_2_ID = 2;
         private const float EXPLODE_DURATION = 1.2f;
+        private const string PROGRESS_SHADER_PROPERTY = "_Progress";
 
         [SerializeField] private Image p1DisplayImage;
         [SerializeField] private Image p2DisplayImage;
-        [SerializeField] private Image p1NameImage;
-        [SerializeField] private Image p2NameImage;
-        [SerializeField] private SelectPickAnim p1SelectPickAnim;
-        [SerializeField] private SelectPickAnim p2SelectPickAnim;
-        [SerializeField] private Sprite p1CharaName;
-        [SerializeField] private Sprite p2CharaName;
-
-        [SerializeField] private Sprite p1CharaSprite;       // このボタンで選べるキャラのサムネ
-        [SerializeField] private Sprite p2CharaSprite;       // このボタンで選べるキャラのサムネ
-        [SerializeField] private CharacterData pickCharaData; // このボタンで選べるキャラ
+        [SerializeField] private Sprite p1CharaSprite;
+        [SerializeField] private Sprite p2CharaSprite;
+        [SerializeField] private CharacterData pickCharaData;
 
         [Header("アイコンの後ろのSpriteの表示 / 非表示")]
         [SerializeField] private Image iconBackImage;
@@ -46,45 +40,34 @@ namespace TechC.VBattle.Select.UI
 #if UNITY_EDITOR
             if (p1DisplayImage == null)
                 p1DisplayImage = GameObject.Find("p1DisplayImage")?.GetComponent<Image>();
-            if (p1CharaName == null)
-                p1NameImage = GameObject.Find("p1CharaName")?.GetComponent<Image>();
 
             if (p2DisplayImage == null)
                 p2DisplayImage = GameObject.Find("p2DisplayImage")?.GetComponent<Image>();
-            if (p2CharaName == null)
-                p1NameImage = GameObject.Find("p2CharaName")?.GetComponent<Image>();
 #endif
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (SelectUIManager.I == null || pickCharaData == null)
-            {
-                CustomLogger.Error("SelectUIManager or pickCharaData is null");
-                return;
-            }
+            if (SelectUIManager.I == null || pickCharaData == null) return;
 
             var (device, deviceName) = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
 
-            // まだ選択していない方のプレイヤーを対象にする
             if (!SelectUIManager.I.CheckPicked(PLAYER_1_ID))
                 playerId = PLAYER_1_ID;
             else if (!SelectUIManager.I.CheckPicked(PLAYER_2_ID))
                 playerId = PLAYER_2_ID;
-            // 両方選択済みの場合は元のplayerIdを維持（または1Pをデフォルト）
             else if (playerId == 0)
                 playerId = PLAYER_1_ID;
 
-            // プレイヤーIDに対応するスプライトを選択（2Pスプライトがない場合は1Pを使用）
             Sprite targetSprite;
             if (playerId == PLAYER_2_ID && p2CharaSprite != null)
                 targetSprite = p2CharaSprite;
             else
                 targetSprite = p1CharaSprite;
 
-            // アイコンの後ろのスプライトを表示
-            iconBackImage.enabled = true;
+            if (iconBackImage != null)
+                iconBackImage.enabled = true;
 
             // ホバーイベント発行
             SelectUIManager.I.EventBus.Publish(new CharacterHoveredEvent
@@ -98,10 +81,8 @@ namespace TechC.VBattle.Select.UI
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            var (device, deviceName) = ResolveDevice(eventData);
-
-            // アイコンの後ろのスプライトを非表示
-            iconBackImage.enabled = false;
+            if (iconBackImage != null)
+                iconBackImage.enabled = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -119,9 +100,7 @@ namespace TechC.VBattle.Select.UI
 
             // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
             if (playerId == 0)
-            {
                 playerId = !SelectUIManager.I.CheckPicked(PLAYER_1_ID) ? PLAYER_1_ID : PLAYER_2_ID;
-            }
 
             bool isNpc = SelectUIManager.I.GetIsNpc();
             InputDevice targetDevice = device;
@@ -145,7 +124,7 @@ namespace TechC.VBattle.Select.UI
 
             Image target = (targetId == PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
             if (target != null && explodeMaterial != null)
-                StartCoroutine(PlayExplodeAnimation(target, targetId));
+                StartCoroutine(PlayExplodeAnimation(target));
         }
 
         private (InputDevice, string) ResolveDevice(PointerEventData eventData)
@@ -169,19 +148,18 @@ namespace TechC.VBattle.Select.UI
             return SelectUIManager.I.GetPlayerIdFromDevice(device);
         }
 
-        private IEnumerator PlayExplodeAnimation(Image target, int id)
+        private IEnumerator PlayExplodeAnimation(Image target)
         {
             var originalMat = target.material;
             var instMat = new Material(explodeMaterial);
             target.material = instMat;
 
             float time = 0f;
-
             while (time < EXPLODE_DURATION)
             {
                 time += Time.deltaTime;
                 float progress = Mathf.Clamp01(time / EXPLODE_DURATION);
-                instMat.SetFloat("_Progress", progress);
+                instMat.SetFloat(PROGRESS_SHADER_PROPERTY, progress);
                 yield return null;
             }
 
