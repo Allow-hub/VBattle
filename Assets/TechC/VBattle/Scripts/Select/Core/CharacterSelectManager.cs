@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Select.Events;
-using UnityEngine.SceneManagement;
 
 namespace TechC.VBattle.Select.Core
 {

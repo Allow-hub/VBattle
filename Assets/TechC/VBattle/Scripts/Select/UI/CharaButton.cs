@@ -35,8 +35,12 @@ namespace TechC.VBattle.Select.UI
         [SerializeField] private Sprite p2CharaSprite;       // このボタンで選べるキャラのサムネ
         [SerializeField] private CharacterData pickCharaData; // このボタンで選べるキャラ
 
+        [Header("アイコンの後ろのSpriteの表示 / 非表示")]
+        [SerializeField] private Image iconBackImage;
+
         [Header("爆散用マテリアル")]
         [SerializeField] private Material explodeMaterial;
+
         private void OnValidate()
         {
 #if UNITY_EDITOR
@@ -59,19 +63,29 @@ namespace TechC.VBattle.Select.UI
                 CustomLogger.Error("SelectUIManager or pickCharaData is null");
                 return;
             }
-            
+
             var (device, deviceName) = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
-            
-            // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
-            if (playerId == 0)
-            {
-                playerId = !SelectUIManager.I.CheckPicked(1) ? 1 : 2;
-            }
-            
+
+            // まだ選択していない方のプレイヤーを対象にする
+            if (!SelectUIManager.I.CheckPicked(PLAYER_1_ID))
+                playerId = PLAYER_1_ID;
+            else if (!SelectUIManager.I.CheckPicked(PLAYER_2_ID))
+                playerId = PLAYER_2_ID;
+            // 両方選択済みの場合は元のplayerIdを維持（または1Pをデフォルト）
+            else if (playerId == 0)
+                playerId = PLAYER_1_ID;
+
             // プレイヤーIDに対応するスプライトを選択（2Pスプライトがない場合は1Pを使用）
-            Sprite targetSprite = (playerId == 1) ? p1CharaSprite : (p2CharaSprite != null ? p2CharaSprite : p1CharaSprite);
-            
+            Sprite targetSprite;
+            if (playerId == PLAYER_2_ID && p2CharaSprite != null)
+                targetSprite = p2CharaSprite;
+            else
+                targetSprite = p1CharaSprite;
+
+            // アイコンの後ろのスプライトを表示
+            iconBackImage.enabled = true;
+
             // ホバーイベント発行
             SelectUIManager.I.EventBus.Publish(new CharacterHoveredEvent
             {
@@ -85,6 +99,9 @@ namespace TechC.VBattle.Select.UI
         public void OnPointerExit(PointerEventData eventData)
         {
             var (device, deviceName) = ResolveDevice(eventData);
+
+            // アイコンの後ろのスプライトを非表示
+            iconBackImage.enabled = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -94,30 +111,30 @@ namespace TechC.VBattle.Select.UI
                 CustomLogger.Error("SelectUIManager or pickCharaData is null");
                 return;
             }
-            
+
             var (device, deviceName) = ResolveDevice(eventData);
             if (device == null) return;
 
             int playerId = GetPlayerIdFromDevice(device);
-            
+
             // PlayerIdが0の場合、まだ選択していない方のプレイヤーを対象にする
             if (playerId == 0)
             {
                 playerId = !SelectUIManager.I.CheckPicked(PLAYER_1_ID) ? PLAYER_1_ID : PLAYER_2_ID;
             }
-            
+
             bool isNpc = SelectUIManager.I.GetIsNpc();
             InputDevice targetDevice = device;
             int targetId = playerId;
-            
+
             if (SelectUIManager.I.CheckPicked(PLAYER_1_ID) && isNpc && playerId == PLAYER_1_ID)
             {
                 targetId = PLAYER_2_ID;
                 targetDevice = null;
             }
-            
+
             if (SelectUIManager.I.CheckPicked(targetId)) return;
-            
+
             SelectUIManager.I.EventBus.Publish(new SelectionConfirmedEvent
             {
                 PlayerId = targetId,
@@ -125,7 +142,7 @@ namespace TechC.VBattle.Select.UI
                 Device = targetDevice,
                 IsNpc = targetDevice == null
             });
-            
+
             Image target = (targetId == PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
             if (target != null && explodeMaterial != null)
                 StartCoroutine(PlayExplodeAnimation(target, targetId));
@@ -145,7 +162,7 @@ namespace TechC.VBattle.Select.UI
             }
             return (null, "旧InputSystem");
         }
-        
+
         private int GetPlayerIdFromDevice(InputDevice device)
         {
             if (SelectUIManager.I == null) return 0;
@@ -171,6 +188,5 @@ namespace TechC.VBattle.Select.UI
             target.enabled = false;
             target.material = originalMat;
         }
-
     }
 }
