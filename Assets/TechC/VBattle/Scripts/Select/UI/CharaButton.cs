@@ -32,7 +32,7 @@ namespace TechC.VBattle.Select.UI
         [SerializeField] private Image p1CharaNameImage;
         [SerializeField] private Image p2CharaNameImage;
 
-        
+
         [Header("1P / 2P / 両方の場合のアイコン")]
         [SerializeField] private Sprite p1SelectedIcon;
         [SerializeField] private Sprite p2SelectedIcon;
@@ -54,7 +54,7 @@ namespace TechC.VBattle.Select.UI
         private void Start()
         {
             selectionIconImage = GetComponent<Image>();
-            
+
             if (selectionIconImage != null)
                 originalIconSprite = selectionIconImage.sprite;
 
@@ -106,7 +106,7 @@ namespace TechC.VBattle.Select.UI
             Sprite targetSprite;
             Image targetNameImage;
             Sprite targetNameSprite;
-            
+
             if (playerId == PLAYER_2_ID && p2CharaSprite != null)
             {
                 targetSprite = p2CharaSprite;
@@ -169,7 +169,7 @@ namespace TechC.VBattle.Select.UI
 
             if (SelectUIManager.I.CheckPicked(targetId)) return;
 
-            // 名前画像の更新
+            // 名前画像の更新（OnPointerEnterが呼ばれない場合に対応）
             Image targetNameImage = targetId == PLAYER_1_ID ? p1CharaNameImage : p2CharaNameImage;
             Sprite targetNameSprite = targetId == PLAYER_1_ID ? p1CharaNameSprite : p2CharaNameSprite;
             if (targetNameImage != null && targetNameSprite != null)
@@ -192,13 +192,13 @@ namespace TechC.VBattle.Select.UI
         {
             if (selectionIconImage == null) return;
 
-            bool isSelectedByP1 = player1Character != null && 
+            bool isSelectedByP1 = player1Character != null &&
                                   player1Character.CharacterName == pickCharaData.CharacterName;
-            bool isSelectedByP2 = player2Character != null && 
+            bool isSelectedByP2 = player2Character != null &&
                                   player2Character.CharacterName == pickCharaData.CharacterName;
 
             Sprite targetSprite = null;
-            
+
             if (isSelectedByP1 && isSelectedByP2 && bothSelectedIcon != null)
                 targetSprite = bothSelectedIcon;
             else if (isSelectedByP1 && p1SelectedIcon != null)
