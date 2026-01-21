@@ -58,61 +58,69 @@ namespace TechC.VBattle.InGame.Character
 
         public override async UniTask<CharacterState> OnUpdate(CancellationToken ct)
         {
-            // 攻撃ループ
-            while (true)
+            try
             {
-                isChainRequested = false;
-
-                float attackTime = currentAttackData.attackDuration;
-                float recoveryTime = currentAttackData.recoveryDuration;
-
-                // 攻撃開始（キャンセル不可）
-                canCancel = false;
-
-                // hitTimingまで待機
-                await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
-
-                // 攻撃Prefab生成と判定を実行
-                CreateAttackObject();
-                PerformHitDetection();
-
-                // cancelStartTimeまでの残り時間を待機
-                float remainingToCancelStart = currentAttackData.cancelStartTime - currentAttackData.hitTiming;
-                if (remainingToCancelStart > 0)
-                    await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
-
-                // キャンセル可能タイミング
-                canCancel = true;
-                float cancelWindow = currentAttackData.cancelEndTime - currentAttackData.cancelStartTime;
-                if (cancelWindow > 0)
-                    await UniTask.Delay(TimeSpan.FromSeconds(cancelWindow), cancellationToken: ct);
-
-                // キャンセル可能時間が終了
-                canCancel = false;
-                // 連鎖攻撃がリクエストされているかチェック
-                if (isChainRequested && currentAttackData.canChain && currentAttackData.nextChain != null)
+                // 攻撃ループ
+                while (true)
                 {
-                    // 次の連鎖攻撃に移行
-                    currentAttackData = currentAttackData.nextChain;
+                    isChainRequested = false;
 
-                    chain++;
-                    // アニメーションを更新
-                    controller.Anim.SetInteger(AnimatorParam.Chain, chain);
-                    controller.Anim.speed = currentAttackData.animationSpeed;
-                    // 次のループで新しい攻撃を実行
-                    continue;
+                    float attackTime = currentAttackData.attackDuration;
+                    float recoveryTime = currentAttackData.recoveryDuration;
+
+                    // 攻撃開始（キャンセル不可）
+                    canCancel = false;
+
+                    // hitTimingまで待機
+                    await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
+
+                    // 攻撃Prefab生成と判定を実行
+                    CreateAttackObject();
+                    PerformHitDetection();
+
+                    // cancelStartTimeまでの残り時間を待機
+                    float remainingToCancelStart = currentAttackData.cancelStartTime - currentAttackData.hitTiming;
+                    if (remainingToCancelStart > 0)
+                        await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
+
+                    // キャンセル可能タイミング
+                    canCancel = true;
+                    float cancelWindow = currentAttackData.cancelEndTime - currentAttackData.cancelStartTime;
+                    if (cancelWindow > 0)
+                        await UniTask.Delay(TimeSpan.FromSeconds(cancelWindow), cancellationToken: ct);
+
+                    // キャンセル可能時間が終了
+                    canCancel = false;
+                    // 連鎖攻撃がリクエストされているかチェック
+                    if (isChainRequested && currentAttackData.canChain && currentAttackData.nextChain != null)
+                    {
+                        // 次の連鎖攻撃に移行
+                        currentAttackData = currentAttackData.nextChain;
+
+                        chain++;
+                        // アニメーションを更新
+                        controller.Anim.SetInteger(AnimatorParam.Chain, chain);
+                        controller.Anim.speed = currentAttackData.animationSpeed;
+                        // 次のループで新しい攻撃を実行
+                        continue;
+                    }
+
+                    // 連鎖がない場合は残りの硬直を待つ
+                    float remainingAttack = attackTime - currentAttackData.cancelEndTime;
+                    if (remainingAttack > 0)
+                        await UniTask.Delay(TimeSpan.FromSeconds(remainingAttack), cancellationToken: ct);
+
+                    // 硬直フレーム（recoveryDuration）
+                    await UniTask.Delay(TimeSpan.FromSeconds(recoveryTime), cancellationToken: ct);
+
+                    // 攻撃終了
+                    break;
                 }
-
-                // 連鎖がない場合は残りの硬直を待つ
-                float remainingAttack = attackTime - currentAttackData.cancelEndTime;
-                if (remainingAttack > 0)
-                    await UniTask.Delay(TimeSpan.FromSeconds(remainingAttack), cancellationToken: ct);
-
-                // 硬直フレーム（recoveryDuration）
-                await UniTask.Delay(TimeSpan.FromSeconds(recoveryTime), cancellationToken: ct);
-
-                // 攻撃終了
-                break;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"AttackState error: {ex.Message}\n{ex.StackTrace}");
+                return isAirAttack ? controller.GetState<AirState>() : controller.GetState<NeutralState>();
             }
 
             // 攻撃終了後の状態遷移
@@ -134,23 +142,31 @@ namespace TechC.VBattle.InGame.Character
         /// <returns></returns>
         private void PerformHitDetection()
         {
-            Vector3 hitPosition = controller.transform.position +
-                controller.transform.TransformDirection(currentAttackData.hitboxOffset);
-
-            Collider[] hits = Physics.OverlapSphere(
-                hitPosition,
-                currentAttackData.radius,
-                currentAttackData.targetLayers
-            );
-            AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
-            // BattleJudgeに判定を依頼
-            InGameManager.I.BattleBus.Publish(new AttackRequestEvent
+            try
             {
-                attacker = controller,
-                attackData = currentAttackData,
-                hitPosition = hitPosition,
-                hitTargets = hits
-            });
+                Vector3 hitPosition = controller.transform.position +
+                    controller.transform.TransformDirection(currentAttackData.hitboxOffset);
+
+                Collider[] hits = Physics.OverlapSphere(
+                    hitPosition,
+                    currentAttackData.radius,
+                    currentAttackData.targetLayers
+                );
+                AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
+                
+                // BattleJudgeに判定を依頼
+                InGameManager.I.BattleBus.Publish(new AttackRequestEvent
+                {
+                    attacker = controller,
+                    attackData = currentAttackData,
+                    hitPosition = hitPosition,
+                    hitTargets = hits
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"PerformHitDetection failed: {ex.Message}\n{ex.StackTrace}");
+            }
         }
 
         /// <summary>
@@ -159,7 +175,6 @@ namespace TechC.VBattle.InGame.Character
         private void CreateAttackObject()
         {
             if (currentAttackData.attackPrefab == null) return;
-            Debug.Log($"Creating Attack Object: {currentAttackData.attackPrefab.name}");
             Vector3 spawnPos = controller.transform.position +
                 controller.transform.TransformDirection(currentAttackData.prefabOffset);
             Quaternion spawnRot = controller.transform.rotation *
