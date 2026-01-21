@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace TechC.VBattle.Select.Events
 {
     /// <summary>
-    /// デバイス割り当てイベント（IconControllerで発行）
+    /// デバイス割り当てイベント
     /// </summary>
     public struct DeviceAssignedEvent : ISelectEvent
     {
@@ -33,6 +33,18 @@ namespace TechC.VBattle.Select.Events
         public CharacterData Character;
         public InputDevice Device;
         public bool IsNpc;  // 2PがNPCかどうか
+    }
+
+    /// <summary>
+    /// 選択状態更新イベント（SelectUIManagerが状態更新後に発行）
+    /// SelectionConfirmedEventはキャラ選択の「アクション」を通知するイベントで、
+    /// このイベントはSelectUIManagerが内部状態（CurrentPicks）を更新した「結果」を通知する
+    /// UI要素が最新の選択状態を取得する際に使用し、イベント処理順序の問題を解決する
+    /// </summary>
+    public struct SelectionUpdatedEvent : ISelectEvent
+    {
+        public CharacterData Player1SelectedCharacter;
+        public CharacterData Player2SelectedCharacter;
     }
 
     /// <summary>

@@ -138,6 +138,13 @@ namespace TechC.VBattle.Select.Core
             var pickAnim = e.PlayerId == PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
             pickAnim.PlayAnim(finalCharacter.CharaPrefab);
             
+            // 状態更新完了を通知
+            eventBus.Publish(new SelectionUpdatedEvent
+            {
+                Player1SelectedCharacter = hasPicked[PLAYER_1_INDEX] ? currentPicks[PLAYER_1_INDEX].characterData : null,
+                Player2SelectedCharacter = hasPicked[PLAYER_2_INDEX] ? currentPicks[PLAYER_2_INDEX].characterData : null
+            });
+            
             if (hasPicked[PLAYER_1_INDEX] && hasPicked[PLAYER_2_INDEX])
             {
                 _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
