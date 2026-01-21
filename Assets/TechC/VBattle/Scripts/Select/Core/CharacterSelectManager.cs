@@ -1,7 +1,7 @@
-using TechC.VBattle.Core.Extensions;
+using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Select.Events;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -30,7 +30,6 @@ namespace TechC.VBattle.Select.Core
             GameDataBridge.I.SetupPlayer(1, null);
             GameDataBridge.I.SetupPlayer(2, null);
 
-            SelectUIManager.I.EventBus.Subscribe<BothPlayersReadyEvent>(_ => { });
             SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
         }
         
@@ -76,6 +75,7 @@ namespace TechC.VBattle.Select.Core
                 IsPlayer2Npc = picks[1].inputDevice == null
             });
 
+            SceneLoader.I.LoadBattleSceneAsync().Forget();
         }
     }
 }

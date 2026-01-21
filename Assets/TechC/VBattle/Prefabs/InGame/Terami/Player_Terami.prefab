@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e48d3ea9cdf1914da7ff1f79ebbe004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 0}
+  characterController: {fileID: 1799950009941420780}
   shieldObj:
   - {fileID: 4224412695670883962}
   - {fileID: 2351984431207238696}
