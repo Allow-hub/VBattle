@@ -1,3 +1,4 @@
+using TechC.VBattle.Core;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
@@ -16,10 +17,6 @@ namespace TechC.VBattle.Select.Core
     public class SelectUIManager : Singleton<SelectUIManager>
     {
         private const int PLAYER_COUNT = 2;
-        private const int PLAYER_1_INDEX = 0;
-        private const int PLAYER_2_INDEX = 1;
-        private const int PLAYER_1_ID = 1;
-        private const int PLAYER_2_ID = 2;
         private const int PLAYER_ID_UNKNOWN = 0;
         private const int PLAYER_ID_TO_INDEX_OFFSET = 1;
         private const string CHARACTER_NAME_AME = "Ame";
@@ -65,8 +62,8 @@ namespace TechC.VBattle.Select.Core
             startButton.onClick.AddListener(StartGame);
             cancelButton.onClick.AddListener(ResetSelect);
             startObj.SetActive(false);
-            currentPicks[PLAYER_1_INDEX].playerId = PLAYER_1_ID;
-            currentPicks[PLAYER_2_INDEX].playerId = PLAYER_2_ID;
+            currentPicks[PlayerConstants.PLAYER_1_INDEX].playerId = PlayerConstants.PLAYER_1_ID;
+            currentPicks[PlayerConstants.PLAYER_2_INDEX].playerId = PlayerConstants.PLAYER_2_ID;
             
             eventBus.Subscribe<DeviceAssignedEvent>(OnDeviceAssigned);
             eventBus.Subscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
@@ -95,13 +92,13 @@ namespace TechC.VBattle.Select.Core
         public int GetPlayerIdFromDevice(InputDevice device)
         {
             if (iconController_1p.GetCurrentDevice() == device)
-                return PLAYER_1_ID;
+                return PlayerConstants.PLAYER_1_ID;
             
             if (iconController_2p.GetCurrentDevice() == device)
-                return PLAYER_2_ID;
+                return PlayerConstants.PLAYER_2_ID;
             
-            if (iconController_2p.GetCurrentDevice() == null && iconController_1p.GetCurrentDevice() == device && CheckPicked(PLAYER_1_ID))
-                return PLAYER_2_ID;
+            if (iconController_2p.GetCurrentDevice() == null && iconController_1p.GetCurrentDevice() == device && CheckPicked(PlayerConstants.PLAYER_1_ID))
+                return PlayerConstants.PLAYER_2_ID;
             
             return PLAYER_ID_UNKNOWN;
         }
@@ -144,16 +141,16 @@ namespace TechC.VBattle.Select.Core
             
             hasPicked[index] = true;
             
-            var pickAnim = e.PlayerId == PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
+            var pickAnim = e.PlayerId == PlayerConstants.PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
             pickAnim.PlayAnim(finalCharacter.CharaPrefab);
             
             eventBus.Publish(new SelectionUpdatedEvent
             {
-                Player1SelectedCharacter = hasPicked[PLAYER_1_INDEX] ? currentPicks[PLAYER_1_INDEX].characterData : null,
-                Player2SelectedCharacter = hasPicked[PLAYER_2_INDEX] ? currentPicks[PLAYER_2_INDEX].characterData : null
+                Player1SelectedCharacter = hasPicked[PlayerConstants.PLAYER_1_INDEX] ? currentPicks[PlayerConstants.PLAYER_1_INDEX].characterData : null,
+                Player2SelectedCharacter = hasPicked[PlayerConstants.PLAYER_2_INDEX] ? currentPicks[PlayerConstants.PLAYER_2_INDEX].characterData : null
             });
             
-            if (hasPicked[PLAYER_1_INDEX] && hasPicked[PLAYER_2_INDEX])
+            if (hasPicked[PlayerConstants.PLAYER_1_INDEX] && hasPicked[PlayerConstants.PLAYER_2_INDEX])
             {
                 _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
                 {
@@ -170,10 +167,10 @@ namespace TechC.VBattle.Select.Core
         private void OnSelectionReset(SelectionResetEvent e)
         {
             startObj.SetActive(false);
-            hasPicked[PLAYER_1_INDEX] = false;
-            hasPicked[PLAYER_2_INDEX] = false;
-            currentPicks[PLAYER_1_INDEX].characterData = null;
-            currentPicks[PLAYER_2_INDEX].characterData = null;
+            hasPicked[PlayerConstants.PLAYER_1_INDEX] = false;
+            hasPicked[PlayerConstants.PLAYER_2_INDEX] = false;
+            currentPicks[PlayerConstants.PLAYER_1_INDEX].characterData = null;
+            currentPicks[PlayerConstants.PLAYER_2_INDEX].characterData = null;
             iconController_1p.InitIcon();
             iconController_2p.InitIcon();
             selectPickAnim_1p.ResetAnim();
@@ -184,7 +181,7 @@ namespace TechC.VBattle.Select.Core
         
         private void OnCharacterHovered(CharacterHoveredEvent e)
         {
-            Image targetImage = e.PlayerId == PLAYER_1_ID ? p1DisplayImage : p2DisplayImage;
+            Image targetImage = e.PlayerId == PlayerConstants.PLAYER_1_ID ? p1DisplayImage : p2DisplayImage;
             if (targetImage == null || e.CharacterSprite == null) return;
             targetImage.sprite = e.CharacterSprite;
         }

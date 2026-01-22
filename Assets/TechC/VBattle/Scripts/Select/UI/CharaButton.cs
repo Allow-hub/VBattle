@@ -7,6 +7,7 @@ using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Select.Core;
 using TechC.VBattle.Select.Events;
 using TechC.VBattle.InGame.Character;
+using TechC.VBattle.Core;
 
 namespace TechC.VBattle.Select.UI
 {
@@ -18,8 +19,6 @@ namespace TechC.VBattle.Select.UI
         IPointerExitHandler,
         IPointerClickHandler
     {
-        private const int PLAYER_1_ID = 1;
-        private const int PLAYER_2_ID = 2;
         private const float EXPLODE_DURATION = 1.2f;
         private const string PROGRESS_SHADER_PROPERTY = "_Progress";
 
@@ -90,24 +89,24 @@ namespace TechC.VBattle.Select.UI
             if (SelectUIManager.I == null || pickCharaData == null) return;
 
             // 両者選択済みの場合はホバー処理を無効化
-            if (SelectUIManager.I.CheckPicked(PLAYER_1_ID) && SelectUIManager.I.CheckPicked(PLAYER_2_ID))
+            if (SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID) && SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_2_ID))
                 return;
 
             var device = ResolveDevice(eventData);
             int playerId = GetPlayerIdFromDevice(device);
 
-            if (!SelectUIManager.I.CheckPicked(PLAYER_1_ID))
-                playerId = PLAYER_1_ID;
-            else if (!SelectUIManager.I.CheckPicked(PLAYER_2_ID))
-                playerId = PLAYER_2_ID;
+            if (!SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID))
+                playerId = PlayerConstants.PLAYER_1_ID;
+            else if (!SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_2_ID))
+                playerId = PlayerConstants.PLAYER_2_ID;
             else if (playerId == 0)
-                playerId = PLAYER_1_ID;
+                playerId = PlayerConstants.PLAYER_1_ID;
 
             Sprite targetSprite;
             Image targetNameImage;
             Sprite targetNameSprite;
 
-            if (playerId == PLAYER_2_ID && p2CharaSprite != null)
+            if (playerId == PlayerConstants.PLAYER_2_ID && p2CharaSprite != null)
             {
                 targetSprite = p2CharaSprite;
                 targetNameImage = p2CharaNameImage;
@@ -155,23 +154,23 @@ namespace TechC.VBattle.Select.UI
             int playerId = GetPlayerIdFromDevice(device);
 
             if (playerId == 0)
-                playerId = !SelectUIManager.I.CheckPicked(PLAYER_1_ID) ? PLAYER_1_ID : PLAYER_2_ID;
+                playerId = !SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID) ? PlayerConstants.PLAYER_1_ID : PlayerConstants.PLAYER_2_ID;
 
             bool isNpc = SelectUIManager.I.GetIsNpc();
             InputDevice targetDevice = device;
             int targetId = playerId;
 
-            if (SelectUIManager.I.CheckPicked(PLAYER_1_ID) && isNpc && playerId == PLAYER_1_ID)
+            if (SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID) && isNpc && playerId == PlayerConstants.PLAYER_1_ID)
             {
-                targetId = PLAYER_2_ID;
+                targetId = PlayerConstants.PLAYER_2_ID;
                 targetDevice = null;
             }
 
             if (SelectUIManager.I.CheckPicked(targetId)) return;
 
             // 名前画像の更新（OnPointerEnterが呼ばれない場合に対応）
-            Image targetNameImage = targetId == PLAYER_1_ID ? p1CharaNameImage : p2CharaNameImage;
-            Sprite targetNameSprite = targetId == PLAYER_1_ID ? p1CharaNameSprite : p2CharaNameSprite;
+            Image targetNameImage = targetId == PlayerConstants.PLAYER_1_ID ? p1CharaNameImage : p2CharaNameImage;
+            Sprite targetNameSprite = targetId == PlayerConstants.PLAYER_1_ID ? p1CharaNameSprite : p2CharaNameSprite;
             if (targetNameImage != null && targetNameSprite != null)
                 targetNameImage.sprite = targetNameSprite;
 
@@ -183,7 +182,7 @@ namespace TechC.VBattle.Select.UI
                 IsNpc = targetDevice == null
             });
 
-            Image target = (targetId == PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
+            Image target = (targetId == PlayerConstants.PLAYER_1_ID) ? p1DisplayImage : p2DisplayImage;
             if (target != null && explodeMaterial != null)
                 StartCoroutine(PlayExplodeAnimation(target));
         }
