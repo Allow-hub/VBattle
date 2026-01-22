@@ -17,7 +17,7 @@ namespace TechC.VBattle.InGame.Character
         private string playerTag = "Player";
         private GameObject character;
 
-        private void Start()
+        private void Awake()
         {
             if (behaviours == null) return;
 
