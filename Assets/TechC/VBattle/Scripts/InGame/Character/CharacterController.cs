@@ -76,13 +76,8 @@ namespace TechC.VBattle.InGame.Character
         bool IDamageable.IsInvincible => isInvincible;
         bool IDamageable.IsGuarding => isGuarding;
 
-        // ===== マテリアル実装 =====
-        [Header("アウトライン設定")]
-        [SerializeField] private Material outlineMaterialBase;
-        [SerializeField] private Color player1OutlineColor;
-        [SerializeField] private Color player2OutlineColor;
-        [SerializeField] private SkinnedMeshRenderer[] targetRenderers;
-        private Material outlineMaterialInstance;
+        // ===== アウトライン管理 =====
+        [SerializeField] private CharacterOutlineController outlineController;
 
         private void Awake()
         {
@@ -115,7 +110,7 @@ namespace TechC.VBattle.InGame.Character
             CurrentHP = characterData.MaxHP;
             currentGuardPower = characterData.GuardPower;
             
-            ApplyOutline(playerIndex);
+            outlineController?.ApplyOutline(playerIndex);
             
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
@@ -300,37 +295,7 @@ namespace TechC.VBattle.InGame.Character
         private void OnDestroy()
         {
             stateMachine?.Cancel();
-        }
-
-        /// <summary>
-        /// プレイヤーIDに応じたアウトラインを適用
-        /// </summary>
-        private void ApplyOutline(int playerIndex)
-        {
-            if (outlineMaterialBase == null || targetRenderers == null) return;
-
-            // Material複製
-            outlineMaterialInstance = Instantiate(outlineMaterialBase);
-
-            // プレイヤーIDに応じた色設定
-            Color targetColor = playerIndex == 1 ? player1OutlineColor : player2OutlineColor;
-            if (outlineMaterialInstance.HasProperty("_OutlineColor"))
-                outlineMaterialInstance.SetColor("_OutlineColor", targetColor);
-
-            // SerializeField配列を使用
-            foreach (var smr in targetRenderers)
-            {
-                if (smr == null) continue;
-
-                Material[] mats = smr.materials;
-                for (int i = 0; i < mats.Length; i++)
-                {
-                    // 既存のOutline Materialを置き換え
-                    if (mats[i] != null && mats[i].name.Contains("Outline"))
-                        mats[i] = outlineMaterialInstance;
-                }
-                smr.materials = mats;
-            }
+            outlineController?.Cleanup();
         }
     }
 }
