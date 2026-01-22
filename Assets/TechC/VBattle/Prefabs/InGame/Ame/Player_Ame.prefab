@@ -135,17 +135,19 @@ MonoBehaviour:
   playerIndex: 0
   playerTag: Player
   idleAnimSpeed: 1.1
-  outlineMaterialBase: {fileID: 2100000, guid: fc75c05700c521449b5b07e1c3f0661f, type: 2}
-  player1OutlineColor: {r: 1, g: 0.68073195, b: 0.24528301, a: 1}
-  player2OutlineColor: {r: 0.25943398, g: 1, b: 0.99333096, a: 0}
-  targetRenderers:
-  - {fileID: 9093634338485137641}
-  - {fileID: 3954086047197047397}
-  - {fileID: 799664974275295674}
-  - {fileID: 2987580074048387760}
-  - {fileID: 3096460618362625379}
-  - {fileID: 2621490344677243043}
-  - {fileID: 6205764603962398598}
+  outlineController:
+    outlineMaterialBase: {fileID: 2100000, guid: fc75c05700c521449b5b07e1c3f0661f,
+      type: 2}
+    player1OutlineColor: {r: 0.26, g: 1, b: 0.99, a: 1}
+    player2OutlineColor: {r: 1, g: 0.68, b: 0.25, a: 1}
+    targetRenderers:
+    - {fileID: 9093634338485137641}
+    - {fileID: 3954086047197047397}
+    - {fileID: 799664974275295674}
+    - {fileID: 2987580074048387760}
+    - {fileID: 3096460618362625379}
+    - {fileID: 2621490344677243043}
+    - {fileID: 6205764603962398598}
 --- !u!54 &1628242938499199573
 Rigidbody:
   m_ObjectHideFlags: 0

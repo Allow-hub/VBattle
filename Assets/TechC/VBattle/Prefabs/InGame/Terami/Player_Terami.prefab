@@ -74,18 +74,21 @@ MonoBehaviour:
   playerIndex: 0
   playerTag: Player
   idleAnimSpeed: 1.1
-  outlineMaterialBase: {fileID: 2100000, guid: fc75c05700c521449b5b07e1c3f0661f, type: 2}
-  player1OutlineColor: {r: 1, g: 0.68235296, b: 0.24705882, a: 1}
-  player2OutlineColor: {r: 0.25882354, g: 1, b: 0.99215686, a: 0}
-  targetRenderers:
-  - {fileID: 2705767947861770584}
-  - {fileID: 1620659293436432656}
-  - {fileID: 1683753651482472568}
-  - {fileID: 239544614222863929}
-  - {fileID: 1526524639396507344}
-  - {fileID: 4724697328281840545}
-  - {fileID: 464522908792593699}
-  - {fileID: 3031320568637629649}
+  outlineController:
+    outlineMaterialBase: {fileID: 2100000, guid: fc75c05700c521449b5b07e1c3f0661f,
+      type: 2}
+    player1OutlineColor: {r: 0.26, g: 1, b: 0.99, a: 1}
+    player2OutlineColor: {r: 1, g: 0.68, b: 0.25, a: 1}
+    targetRenderers:
+    - {fileID: 2705767947861770584}
+    - {fileID: 1620659293436432656}
+    - {fileID: 1683753651482472568}
+    - {fileID: 239544614222863929}
+    - {fileID: 1526524639396507344}
+    - {fileID: 4724697328281840545}
+    - {fileID: 3107453018189018520}
+    - {fileID: 464522908792593699}
+    - {fileID: 3031320568637629649}
 --- !u!54 &1628242938499199573
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -746,6 +749,12 @@ SkinnedMeshRenderer:
 --- !u!137 &3031320568637629649 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1461115064702038282, guid: ec31cf3449def3a47ae71d8d31cabe22,
+    type: 3}
+  m_PrefabInstance: {fileID: 4492206040845276635}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3107453018189018520 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1533582985883639875, guid: ec31cf3449def3a47ae71d8d31cabe22,
     type: 3}
   m_PrefabInstance: {fileID: 4492206040845276635}
   m_PrefabAsset: {fileID: 0}
