@@ -29096,8 +29096,8 @@ MonoBehaviour:
   lowHpThreshold: 0.3
   normalHpColor: {r: 1, g: 1, b: 1, a: 1}
   lowHpColor: {r: 1, g: 1, b: 1, a: 1}
-  color1p: {r: 0.94509804, g: 0.5882353, b: 0.20784314, a: 1}
-  color2p: {r: 0.16470589, g: 0.8980392, b: 0.8627451, a: 1}
+  color1p: {r: 0.16470589, g: 0.8980392, b: 0.8627451, a: 1}
+  color2p: {r: 0.94509804, g: 0.5882353, b: 0.20784314, a: 1}
   specialGaugeSlider: {fileID: 1326846248828080683}
   specialGaugeText: {fileID: 2921482478222161633}
   specialGaugeFillImage: {fileID: 1789154290355614640}
@@ -29402,8 +29402,8 @@ MonoBehaviour:
   lowHpThreshold: 0.3
   normalHpColor: {r: 1, g: 1, b: 1, a: 1}
   lowHpColor: {r: 1, g: 1, b: 1, a: 1}
-  color1p: {r: 0.94509804, g: 0.5882353, b: 0.20784314, a: 1}
-  color2p: {r: 0.16470589, g: 0.8980392, b: 0.8627451, a: 1}
+  color1p: {r: 0.16470589, g: 0.8980392, b: 0.8627451, a: 1}
+  color2p: {r: 0.94509804, g: 0.5882353, b: 0.20784314, a: 1}
   specialGaugeSlider: {fileID: 7520446994942017895}
   specialGaugeText: {fileID: 3649883162492147701}
   specialGaugeFillImage: {fileID: 743365442626430240}
