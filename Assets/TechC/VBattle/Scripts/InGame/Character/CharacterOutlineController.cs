@@ -52,15 +52,16 @@ namespace TechC.VBattle.InGame.Character
                 if (smr == null) continue;
 
                 Material[] materials = smr.sharedMaterials;
-                int outlineIndex = materials.Length;
 
                 if (materials.Length == 0 || materials[materials.Length - 1] != outlineMaterialBase)
                 {
+                    int currentLength = materials.Length;
                     System.Array.Resize(ref materials, materials.Length + OUTLINE_MATERIAL_COUNT);
-                    materials[materials.Length - 1] = outlineMaterialBase;
+                    materials[currentLength] = outlineMaterialBase;
                     smr.materials = materials;
                 }
 
+                int outlineIndex = materials.Length - 1;
                 smr.SetPropertyBlock(propertyBlock, outlineIndex);
             }
 
