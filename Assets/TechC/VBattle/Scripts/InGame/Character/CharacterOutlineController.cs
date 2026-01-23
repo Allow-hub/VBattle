@@ -21,12 +21,19 @@ namespace TechC.VBattle.InGame.Character
 
         private MaterialPropertyBlock propertyBlock;
         private static readonly int OutlineColorID = Shader.PropertyToID("_OutlineColor");
+        private bool isApplied = false;
 
         /// <summary>
         /// プレイヤーIDに応じたアウトラインを適用
         /// </summary>
         public void ApplyOutline(int playerIndex)
         {
+            if (isApplied)
+            {
+                CustomLogger.Warning("[CharacterOutlineController] Outline already applied");
+                return;
+            }
+
             if (outlineMaterialBase == null || targetRenderers == null || targetRenderers.Length == 0)
             {
                 CustomLogger.Error("[CharacterOutlineController] Invalid configuration");
@@ -56,9 +63,15 @@ namespace TechC.VBattle.InGame.Character
 
                 smr.SetPropertyBlock(propertyBlock, outlineIndex);
             }
+
+            isApplied = true;
         }
 
         /// <summary>リソースのクリーンアップ</summary>
-        public void Cleanup() => propertyBlock = null;
+        public void Cleanup()
+        {
+            propertyBlock = null;
+            isApplied = false;
+        }
     }
 }
