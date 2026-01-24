@@ -10,10 +10,10 @@ namespace TechC.VBattle.Wine5
     public static class Wine5Utility
     {
         /// <summary>
-        /// テスト用のシーン切り替え（Battle直接起動など）
+        /// 自分用のシーン切り替え
         /// </summary>
-        public static void LoadTestScene(string sceneName) =>
-            SceneManager.LoadSceneAsync(sceneName);
+        public static void LoadMyScene() =>
+            SceneManager.LoadSceneAsync("WorkScene_Y");
     }
 }
 #endif
