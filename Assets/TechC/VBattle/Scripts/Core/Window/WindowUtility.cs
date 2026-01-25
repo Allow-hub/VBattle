@@ -370,7 +370,7 @@ namespace TechC.VBattle.Core.Window
                     MoveWindow(hWnd, targetX, targetY);
                     break;
                 }
-
+                Debug.Log($"Moving window: currentPos={currentPos}, targetPos={targetPos}, distance={distance}");
                 Vector2 direction = toTarget.normalized;
                 Vector2 newPos = currentPos + direction * moveSpeedPerFrame;
 
@@ -382,6 +382,45 @@ namespace TechC.VBattle.Core.Window
                 await UniTask.Delay(intervalMs);
             }
         }
+
+        public static async UniTask MoveWindowToTarget(
+            NativeWindow nativeWindow,
+            int targetX,
+            int targetY,
+            float moveSpeedPerFrame = 10f,
+            int intervalMs = 16)
+        {
+            if (!IsValidWindow(new HWND(nativeWindow.Hwnd))) return;
+
+            HWND hWnd = HWND.Null;
+            if (nativeWindow is WebWindow webWindow)
+                hWnd = webWindow.WebWindowHwnd;
+            else
+                hWnd = (HWND)nativeWindow.Hwnd;
+
+            while (true)
+            {
+                var rect = GetWindowRect(hWnd);
+                Vector2 currentPos = new Vector2(rect.left, rect.top);
+                Vector2 targetPos = new Vector2(targetX, targetY);
+                Vector2 toTarget = targetPos - currentPos;
+                float distance = toTarget.magnitude;
+
+                if (distance < moveSpeedPerFrame)
+                {
+                    MoveWindow(hWnd, targetX, targetY);
+                    break;
+                }
+
+                Vector2 direction = toTarget.normalized;
+                Vector2 newPos = currentPos + direction * moveSpeedPerFrame;
+
+                MoveWindow(hWnd, Mathf.RoundToInt(newPos.x), Mathf.RoundToInt(newPos.y));
+
+                await UniTask.Delay(intervalMs);
+            }
+        }
+        
         public static async UniTask MoveWindowInDirectionAsync(
             NativeWindow nativeWindow,
             Vector2 direction,

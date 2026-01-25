@@ -65,6 +65,8 @@ MonoBehaviour:
         moveDir: {x: 1, y: 0, z: 0}
         moverType: 2
         characterYOffset: -1.7
+        followDelay: 0.1
+        followSmoothness: 5
     - rid: 175954964878196736
       type: {class: AttackAmeSpecial, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
@@ -73,7 +75,7 @@ MonoBehaviour:
         ultPrefab: {fileID: 7206581417779508778, guid: f8a837eebaf99ca45a44144e75ac122e,
           type: 3}
         ultSpawnPos: {x: 0, y: 0, z: 130}
-        popupDelay: 1
+        popupDelay: 2
 --- !u!54 &5508901849141189314
 Rigidbody:
   m_ObjectHideFlags: 0

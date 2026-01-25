@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
@@ -55,14 +56,15 @@ namespace TechC.VBattle.InGame.Character
                 hitPosition = other.gameObject.transform.position,
                 hitTargets = new[] { other }
             });
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.01f,tex: tex);
+            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.01f,tex: tex).Forget();
 
-            DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
+            DelayUtility.StartDelayedActionAsync(popupDelay, () =>
             {
                 GameObject ult = Object.Instantiate(ultPrefab);
                 ult.transform.position = ultSpawnPos;
                 UnityEngine.Camera.main.gameObject.SetActive(false);
-            },InGameManager.I.GetPauseStateFunc);
+                Debug.Log("Ultimate Activated");
+            });
             InGameManager.I.SetPauseState(true);
         }
     }

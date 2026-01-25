@@ -5,6 +5,7 @@ using Windows.Win32;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.Core.Util;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.Core.Managers
 {
@@ -137,7 +138,14 @@ namespace TechC.VBattle.Core.Managers
             Gizmos.DrawWireCube(new Vector3(areaCenter.x, areaCenter.y, -5.3f), new Vector3(areaSize.x, areaSize.y, 0.1f));
         }
 
-        public void PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float intervalPerWindow = 0.05f, Sprite tex = null)
+        /// <summary>
+        /// ウィンドウをポップアップ表示する
+        /// </summary>
+        /// <param name="type">ウィンドウタイプ</param>
+        /// <param name="maxSize">最大サイズ</param>
+        /// <param name="intervalPerWindow">ウィンドウごとの間隔(秒)</param>
+        /// <param name="tex">テクスチャ</param>
+        public async UniTask PopupWindow(WindowFactory.WindowType type, int maxSize = 500, float intervalPerWindow = 0.05f, Sprite tex = null)
         {
             // 画面サイズ取得
             var editorRect = GameViewUtils.GetGameViewWindowRect();
@@ -151,7 +159,7 @@ namespace TechC.VBattle.Core.Managers
             var rnd = new System.Random();
 
             // グリッド配置でウィンドウ情報を事前計算
-            // 修正: 画面を完全に覆うために、余りも1セルとしてカウント
+            // 画面を完全に覆うために、余りも1セルとしてカウント
             int xCount = (unityScreenWidth + tileSize - 1) / tileSize;
             int yCount = (unityScreenHeight + tileSize - 1) / tileSize;
 
@@ -179,8 +187,8 @@ namespace TechC.VBattle.Core.Managers
                 int y = unityScreenY + yi * tileSize;
 
                 // 修正: 画面端までの残り距離を正確に計算
-                int remainWidth = (unityScreenX + unityScreenWidth) - x;
-                int remainHeight = (unityScreenY + unityScreenHeight) - y;
+                int remainWidth = unityScreenX + unityScreenWidth - x;
+                int remainHeight = unityScreenY + unityScreenHeight - y;
 
                 // 最小サイズは残り幅/高さとtileSizeの小さい方
                 int wMin = Mathf.Min(tileSize, remainWidth);
@@ -196,19 +204,17 @@ namespace TechC.VBattle.Core.Managers
                 windowLayouts.Add((x, y, w, h));
             }
 
-            int created = 0;
-            int windowCount = windowLayouts.Count;
-            float totalDuration = windowCount * intervalPerWindow;
-
-            DelayUtility.StartRepeatedActionAsync(totalDuration, intervalPerWindow, () =>
+            if (windowLayouts.Count == 0)
             {
-                if (created >= windowLayouts.Count)
-                {
-                    allreadyPopup = true;
-                    return UniTask.CompletedTask;
-                }
+                CustomLogger.Warning("No windows to popup");
+                allreadyPopup = true;
+                return;
+            }
 
-                var (x, y, w, h) = windowLayouts[created];
+            // 各ウィンドウを順々に表示
+            for (int i = 0; i < windowLayouts.Count; i++)
+            {
+                var (x, y, w, h) = windowLayouts[i];
                 var win = WindowFactory.I.GetWindow(type);
 
                 WindowUtility.ResizeWindow((HWND)win.Hwnd, w, h);
@@ -221,15 +227,50 @@ namespace TechC.VBattle.Core.Managers
                         imageWindow.SetTextureToBitmap(tex.texture);
                 }
                 else
-                {
                     WindowUtility.MoveWindow((HWND)win.Hwnd, x, y);
-                }
 
                 normalWindows.Add(win);
-                created++;
 
-                return UniTask.CompletedTask;
-            });
+                // 次のウィンドウまで待機
+                await UniTask.Delay(System.TimeSpan.FromSeconds(intervalPerWindow));
+            }
+
+            allreadyPopup = true;
+        }
+        /// <summary>
+        /// PopupWindowで出したウィンドウを順々に消す
+        /// </summary>
+        /// <param name="intervalPerWindow">ウィンドウごとの間隔(秒)</param>
+        public async UniTask DismissPopupWindowsAsync(float intervalPerWindow = 0.05f)
+        {
+            // 処理中に更新されないようにコピーを作成
+            var windowsToDissmiss = new List<NativeWindow>(normalWindows);
+            int windowCount = windowsToDissmiss.Count;
+
+            if (windowCount == 0)
+            {
+                CustomLogger.Warning("No windows to dismiss");
+                return;
+            }
+
+
+            // 各ウィンドウを順々に消す
+            for (int i = 0; i < windowsToDissmiss.Count; i++)
+            {
+                var window = windowsToDissmiss[i];
+                if (window != null)
+                {
+                    window.Hide();
+                    normalWindows.Remove(window);
+                    WindowFactory.I.ReturnWindow(window);
+                }
+
+                // 次のウィンドウまで待機
+                await UniTask.Delay(System.TimeSpan.FromSeconds(intervalPerWindow));
+            }
+
+            // 念のため残りをクリア
+            normalWindows.Clear();
         }
         public void ResetAllreasyPopup() => allreadyPopup = false;
 
