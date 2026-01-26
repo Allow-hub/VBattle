@@ -170,19 +170,19 @@ namespace TechC.VBattle.InGame.Gimmick
             switch (direction)
             {
                 case WindowDirection.LeftToRight:
-                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width / 3, 0, 10, 16, wallSprite.texture);
+                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width / 3, 0, 10, 16);
                     break;
                     
                 case WindowDirection.RightToLeft:
-                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width * 2 / 3, 0, 10, 16, wallSprite.texture);
+                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width * 2 / 3, 0, 10, 16);
                     break;
                     
                 case WindowDirection.TopToBottom:
-                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height / 3, 16, 10, wallSprite.texture);
+                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height / 3, 16, 10);
                     break;
                     
                 case WindowDirection.BottomToTop:
-                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height * 2 / 3, 16, 10, wallSprite.texture);
+                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height * 2 / 3, 16, 10);
                     break;
             }
         }

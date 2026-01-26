@@ -178,8 +178,17 @@ namespace TechC.VBattle.Core.Window
             int width = rect.right - rect.left;
             int height = rect.bottom - rect.top;
 
-            return PInvoke.MoveWindow(hwnd, x, y, width, height, true);
+            // レイヤードウィンドウでも動作するようSetWindowPosを使用
+            return PInvoke.SetWindowPos(
+                hwnd,
+                HWND.Null,
+                x, y,
+                width, height,
+                SET_WINDOW_POS_FLAGS.SWP_NOZORDER |
+                SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE
+            );
         }
+
         #endregion
 
         #region ウィンドウ状態操作
@@ -196,7 +205,7 @@ namespace TechC.VBattle.Core.Window
             var rect = GetWindowRect(hwnd);
             return PInvoke.MoveWindow(hwnd, rect.left, rect.top, width, height, true);
         }
- 
+
         /// <summary>
         /// ウィンドウを再描画する
         /// </summary>
@@ -331,32 +340,25 @@ namespace TechC.VBattle.Core.Window
 
         #region アニメーション用メソッド
 
-        /// <summary>
-        /// ウィンドウを目標位置にアニメーションで移動
-        /// </summary>
-        /// <param name="nativeWindow"></param>
-        /// <param name="targetX"></param>
-        /// <param name="targetY"></param>
-        /// <param name="moveSpeedPerFrame"></param>
-        /// <param name="intervalMs"></param>
-        /// <param name="texture"></param>
-        /// <returns></returns>
         public static async UniTask MoveWindowToTargetAsync(
             NativeWindow nativeWindow,
             int targetX,
             int targetY,
             float moveSpeedPerFrame = 10f,
-            int intervalMs = 16,
-            Texture2D texture = null)
+            int intervalMs = 16)
         {
-            if (!IsValidWindow(new HWND(nativeWindow.Hwnd))) return;
+            if (!IsValidWindow(new HWND(nativeWindow.Hwnd)))
+            {
+                Debug.LogWarning("Invalid window");
+                return;
+            }
 
             HWND hWnd = HWND.Null;
             if (nativeWindow is WebWindow webWindow)
                 hWnd = webWindow.WebWindowHwnd;
             else
                 hWnd = (HWND)nativeWindow.Hwnd;
-
+            int frameCount = 0;
             while (true)
             {
                 var rect = GetWindowRect(hWnd);
@@ -370,16 +372,21 @@ namespace TechC.VBattle.Core.Window
                     MoveWindow(hWnd, targetX, targetY);
                     break;
                 }
-                Debug.Log($"Moving window: currentPos={currentPos}, targetPos={targetPos}, distance={distance}");
+
                 Vector2 direction = toTarget.normalized;
                 Vector2 newPos = currentPos + direction * moveSpeedPerFrame;
 
                 MoveWindow(hWnd, Mathf.RoundToInt(newPos.x), Mathf.RoundToInt(newPos.y));
 
-                if (nativeWindow is ImageWindow imageWindow)
-                    imageWindow.SetImage(texture);
-
                 await UniTask.Delay(intervalMs);
+                frameCount++;
+
+                // 無限ループ防止
+                if (frameCount > 1000)
+                {
+                    CustomLogger.Error($"Too many frames, breaking", LogTagUtil.TagWidnow);
+                    break;
+                }
             }
         }
 
@@ -420,7 +427,7 @@ namespace TechC.VBattle.Core.Window
                 await UniTask.Delay(intervalMs);
             }
         }
-        
+
         public static async UniTask MoveWindowInDirectionAsync(
             NativeWindow nativeWindow,
             Vector2 direction,

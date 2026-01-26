@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
+using TechC.VBattle.Systems;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -63,9 +64,9 @@ namespace TechC.VBattle.InGame.Character
                 GameObject ult = Object.Instantiate(ultPrefab);
                 ult.transform.position = ultSpawnPos;
                 UnityEngine.Camera.main.gameObject.SetActive(false);
-                Debug.Log("Ultimate Activated");
             });
             InGameManager.I.SetPauseState(true);
+            EffectFactory.I.ReturnEffect(AttackerObj);
         }
     }
 }
