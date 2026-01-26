@@ -42,7 +42,6 @@ namespace TechC.VBattle.InGame.Character
 
             // 位置確認
             var rect = WindowUtility.GetWindowRect((HWND)w.Hwnd);
-            Debug.Log($"Window position after MoveWindow: ({rect.left}, {rect.top})");
 
             // 画面内(0, 0)にアニメーション移動
             await WindowUtility.MoveWindowToTargetAsync(w, 0, 0, moveSpeedPerFrame: 30, intervalMs: 16);
