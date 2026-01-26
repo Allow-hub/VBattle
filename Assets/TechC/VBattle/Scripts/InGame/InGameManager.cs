@@ -18,6 +18,9 @@ namespace TechC.VBattle.InGame
     /// </summary>
     public class InGameManager : Singleton<InGameManager>
     {
+        private const string KEYBOARD_CONTROL_SCHEME = "KeyboardScheme";
+        private const string GAMEPAD_CONTROL_SCHEME = "PadScheme";
+        
         [SerializeField] private bool isDebug = true;
         [SerializeField] private Vector3 p1Rot;
         [SerializeField] private Vector3 p2Rot;
@@ -83,16 +86,40 @@ namespace TechC.VBattle.InGame
             }
             else
             {
-                if (GameDataBridge.I == null)
+                var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
+                var p1 = p1Obj.GetComponent<Character.CharacterController>();
+                
+                // Player1のコントロールスキーム設定
+                if (GameDataBridge.I.Player_1Setup.DeviceName != null)
                 {
-                    Debug.LogError($"GameDataBridgeがnullです。Debugモードをオンにするか別シーンから開始してください");
-                    return;
+                    var p1Input = p1Obj.GetComponent<PlayerInput>();
+                    if (p1Input != null)
+                    {
+                        string p1Scheme = GameDataBridge.I.Player_1Setup.DeviceName is Gamepad ? GAMEPAD_CONTROL_SCHEME : KEYBOARD_CONTROL_SCHEME;
+                        p1Input.SwitchCurrentControlScheme(p1Scheme, GameDataBridge.I.Player_1Setup.DeviceName);
+                    }
                 }
-                // var p1 = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
-                // var p2 = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                
+                var p2Obj = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot));
+                var p2 = p2Obj.GetComponent<Character.CharacterController>();
+                
+                // Player2のコントロールスキーム設定
+                if (GameDataBridge.I.Player_2Setup.DeviceName != null)
+                {
+                    var p2Input = p2Obj.GetComponent<PlayerInput>();
+                    if (p2Input != null)
+                    {
+                        string p2Scheme = GameDataBridge.I.Player_2Setup.DeviceName is Gamepad ? GAMEPAD_CONTROL_SCHEME : KEYBOARD_CONTROL_SCHEME;
+                        p2Input.SwitchCurrentControlScheme(p2Scheme, GameDataBridge.I.Player_2Setup.DeviceName);
+                    }
+                }
 
-                // p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
-                // p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                
+                battleJudge = new BattleJudge(p1, p2, BattleBus);
+                cameraController.SetupPlayers(p1, p2);
+                
                 ChangeState(InGameState.Start);
             }
         }

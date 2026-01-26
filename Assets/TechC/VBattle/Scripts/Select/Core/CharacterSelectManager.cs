@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core;
 using TechC.VBattle.Core.Managers;
-using UnityEngine;
+using TechC.VBattle.Select.Events;
 
 namespace TechC.VBattle.Select.Core
 {
@@ -26,45 +27,54 @@ namespace TechC.VBattle.Select.Core
         /// </summary>
         private void InitializeSelectSystem()
         {
-            GameDataBridge.I.SetupPlayer(1, null);
-            GameDataBridge.I.SetupPlayer(2, null);
-
-            // イベント購読
-            SelectUIManager.I.OnStartGamePicked += OnGameStartRequested;
+            GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_1_ID, null);
+            GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_2_ID, null);
+            SelectUIManager.I.EventBus.Subscribe<StartGameRequestedEvent>(OnStartGameRequested);
         }
+
+        private void OnDestroy()
+        {
+            if (SelectUIManager.I != null)
+                SelectUIManager.I.EventBus.Unsubscribe<StartGameRequestedEvent>(OnStartGameRequested);
+        }
+
 
         /// <summary>
         /// ゲーム開始リクエスト処理
         /// </summary>
-        private void OnGameStartRequested()
+        private void OnStartGameRequested(StartGameRequestedEvent e)
         {
-            if (!SelectUIManager.I.HasPicked[0] || !SelectUIManager.I.HasPicked[1]) return;
+            if (!SelectUIManager.I.HasPicked[PlayerConstants.PLAYER_1_INDEX] || !SelectUIManager.I.HasPicked[PlayerConstants.PLAYER_2_INDEX]) return;
 
-            // GameDataBridge にプレイヤー情報を設定
             var picks = SelectUIManager.I.CurrentPicks;
 
-            // Player 1 の設定
             var player1Data = new GameDataBridge.PlayerSetupData
             {
-                PlayerIndex = 1,
-                DeviceName = picks[0].inputDevice,
-                IsNPC = picks[0].inputDevice == null,
-                SelectedCharacter = picks[0].characterData // TODO: CharacterDataの適切な取得方法を実装
+                PlayerIndex = PlayerConstants.PLAYER_1_ID,
+                DeviceName = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice,
+                IsNPC = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice == null,
+                SelectedCharacter = picks[PlayerConstants.PLAYER_1_INDEX].characterData
             };
-            GameDataBridge.I.SetupPlayer(1, player1Data);
+            GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_1_ID, player1Data);
 
-            // Player 2 の設定
             var player2Data = new GameDataBridge.PlayerSetupData
             {
-                PlayerIndex = 2,
-                DeviceName = picks[1].inputDevice,
-                IsNPC = picks[1].inputDevice == null,
-                SelectedCharacter = picks[1].characterData // TODO: CharacterDataの適切な取得方法を実装
+                PlayerIndex = PlayerConstants.PLAYER_2_ID,
+                DeviceName = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice,
+                IsNPC = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice == null,
+                SelectedCharacter = picks[PlayerConstants.PLAYER_2_INDEX].characterData
             };
-            Debug.Log(player2Data.SelectedCharacter);
-            GameDataBridge.I.SetupPlayer(2, player2Data);
+            GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_2_ID, player2Data);
 
-            // シーン遷移
+            SelectUIManager.I.EventBus.Publish(new GameStartEvent
+            {
+                Player1Character = picks[PlayerConstants.PLAYER_1_INDEX].characterData,
+                Player2Character = picks[PlayerConstants.PLAYER_2_INDEX].characterData,
+                Player1Device = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice,
+                Player2Device = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice,
+                IsPlayer2Npc = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice == null
+            });
+
             SceneLoader.I.LoadBattleSceneAsync().Forget();
         }
     }

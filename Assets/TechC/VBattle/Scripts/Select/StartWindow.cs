@@ -14,6 +14,9 @@ namespace TechC.VBattle.Select
     /// </summary>
     public class StartWindow : Singleton<StartWindow>
     {
+        private const int INITIAL_WINDOW_POS_X = -1920;
+        private const int INITIAL_WINDOW_POS_Y = -1080;
+
         [SerializeField, ReadOnly] private string appearChars = "Start?";
         private string[] chars;//appearCharsが一文字づつ入る
         private int windowCount;
@@ -41,7 +44,7 @@ namespace TechC.VBattle.Select
                 var window = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
                 windows.Add(window);
                 WindowUtility.ResizeWindow((HWND)window.Hwnd, 0, 0);
-                WindowUtility.MoveWindow((HWND)window.Hwnd, -1920, -1080);//初期値を画面外に
+                WindowUtility.MoveWindow((HWND)window.Hwnd, INITIAL_WINDOW_POS_X, INITIAL_WINDOW_POS_Y);
                 var setting = (window, chars[i], windowTop[i], windowHeight[i], windowWidth[i], windowImage[i]);
                 windowSettings.Add(setting);
             }
