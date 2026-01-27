@@ -95,7 +95,7 @@ namespace TechC.VBattle.InGame.Gimmick
             SetupWindowByDirection((HWND)nativeWindow.Hwnd, direction);
             var image = nativeWindow as ImageWindow;
             nativeWindow.SetRect();
-            image.SetImage(wallSprite.texture);
+            image.SetTextureToBitmap(wallSprite.texture);
             MoveWindowByDirectionWithTexture(nativeWindow, direction).Forget();
             // }
 

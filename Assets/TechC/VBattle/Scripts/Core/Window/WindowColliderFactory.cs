@@ -15,6 +15,11 @@ namespace TechC.VBattle.Core.Window
         [SerializeField] private GameObject colliderPrefab;
         protected override bool UseDontDestroyOnLoad => false;
 
+        public override  void Init()
+        {
+            base.Init();
+        }
+
         /// <summary>
         /// ウィンドウ用コライダーを取得
         /// </summary>
