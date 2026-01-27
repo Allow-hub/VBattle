@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TeramiSui
   m_EditorClassIdentifier: 
   CharacterName: 1
-  CharaPrefab: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
+  CharaPrefab: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
     type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8
@@ -27,3 +27,5 @@ MonoBehaviour:
   GuardRecoverySpeed: 20
   GuardRecoveryInterval: 2
   GuardBreakDuration: 2
+  specialGaugeChargeRate: 1
+  maxSpecialGauge: 100

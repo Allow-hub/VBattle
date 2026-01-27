@@ -76,6 +76,9 @@ namespace TechC.VBattle.InGame.Character
         bool IDamageable.IsInvincible => isInvincible;
         bool IDamageable.IsGuarding => isGuarding;
 
+        // ===== アウトライン管理 =====
+        [SerializeField] private CharacterOutlineController outlineController;
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -106,6 +109,9 @@ namespace TechC.VBattle.InGame.Character
             IsNPC = isNPC;
             CurrentHP = characterData.MaxHP;
             currentGuardPower = characterData.GuardPower;
+            
+            outlineController?.ApplyOutline(playerIndex);
+            
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
         }
@@ -126,6 +132,7 @@ namespace TechC.VBattle.InGame.Character
         private void FixedUpdate()
         {
             commandInvoker.FixedUpdate();
+            if (stateMachine.CurrentState == GetState<AttackState>()) return;
             if (!IsGrounded() && stateMachine.CurrentState != GetState<AirState>())
                 stateMachine.ChangeState(GetState<AirState>());
         }
@@ -288,6 +295,7 @@ namespace TechC.VBattle.InGame.Character
         private void OnDestroy()
         {
             stateMachine?.Cancel();
+            outlineController?.Cleanup();
         }
     }
 }

@@ -11,14 +11,13 @@ namespace TechC.VBattle.Select.Core
         [Header("セレクトシーンのシングルトン管理")]
         [SerializeField] private SelectUIManager selectUIManager;
         [SerializeField] private StartWindow startWindow;
-        [SerializeField] private CharacterSelectManager CharacterSelectManager;
+        [SerializeField] private CharacterSelectManager characterSelectManager;
 
         private void Awake()
         {
-            // 各シングルトンの初期化を順番に実行
             selectUIManager.Init();
             startWindow.Init();
-            CharacterSelectManager.Init();
+            characterSelectManager.Init();
         }
     }
 }
