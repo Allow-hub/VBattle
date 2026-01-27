@@ -25,7 +25,9 @@ namespace TechC.VBattle.InGame.Gimmick
         private float currentInterval;
         private bool isEventRunning = false;
         private NativeWindow nativeWindow;
-        private int height = 50;
+        private int height = 100;
+        private const float lowerTargetRate = 0.5f;
+
 
         /// <summary>
         /// ウィンドウの出現方向
@@ -95,7 +97,7 @@ namespace TechC.VBattle.InGame.Gimmick
             SetupWindowByDirection((HWND)nativeWindow.Hwnd, direction);
             var image = nativeWindow as ImageWindow;
             nativeWindow.SetRect();
-            image.SetTextureToBitmap(wallSprite.texture);
+            image.SetImage(wallSprite.texture);
             MoveWindowByDirectionWithTexture(nativeWindow, direction).Forget();
             // }
 
@@ -118,17 +120,17 @@ namespace TechC.VBattle.InGame.Gimmick
                     WindowUtility.ResizeWindow(hwnd, 10, Screen.height);
                     WindowUtility.MoveWindow(hwnd, initWindowPosX, 0);
                     break;
-                    
+
                 case WindowDirection.RightToLeft:
                     WindowUtility.ResizeWindow(hwnd, 10, Screen.height);
                     WindowUtility.MoveWindow(hwnd, Screen.width + Math.Abs(initWindowPosX), 0);
                     break;
-                    
+
                 case WindowDirection.TopToBottom:
                     WindowUtility.ResizeWindow(hwnd, Screen.width, height);
                     WindowUtility.MoveWindow(hwnd, 0, initWindowPosY);
                     break;
-                    
+
                 case WindowDirection.BottomToTop:
                     WindowUtility.ResizeWindow(hwnd, Screen.width, height);
                     WindowUtility.MoveWindow(hwnd, 0, Screen.height + Math.Abs(initWindowPosY));
@@ -162,29 +164,36 @@ namespace TechC.VBattle.InGame.Gimmick
             }
         }
 
+        private Vector2Int GetTargetPosition(WindowDirection direction)
+        {
+            return direction switch
+            {
+                WindowDirection.LeftToRight => new Vector2Int(Screen.width / 3, 0),
+                WindowDirection.RightToLeft => new Vector2Int(Screen.width * 2 / 3, 0),
+                WindowDirection.TopToBottom => new Vector2Int(0, Screen.height / 6),
+                WindowDirection.BottomToTop => new Vector2Int(0, (int)(Screen.height * lowerTargetRate)),//1080 × 0.57 = 615
+                _ => Vector2Int.zero
+            };
+        }
+
         /// <summary>
         /// 方向に応じてImageウィンドウを移動（テクスチャ付き）
         /// </summary>
         private async UniTask MoveWindowByDirectionWithTexture(NativeWindow window, WindowDirection direction)
         {
-            switch (direction)
-            {
-                case WindowDirection.LeftToRight:
-                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width / 3, 0, 10, 16, wallSprite.texture);
-                    break;
-                    
-                case WindowDirection.RightToLeft:
-                    await WindowUtility.MoveWindowToTargetAsync(window, Screen.width * 2 / 3, 0, 10, 16, wallSprite.texture);
-                    break;
-                    
-                case WindowDirection.TopToBottom:
-                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height / 3, 16, 10, wallSprite.texture);
-                    break;
-                    
-                case WindowDirection.BottomToTop:
-                    await WindowUtility.MoveWindowToTargetAsync(window, 0, Screen.height * 2 / 3, 16, 10, wallSprite.texture);
-                    break;
-            }
+            var targetPos = GetTargetPosition(direction);
+
+            int moveSpeed = (direction == WindowDirection.LeftToRight || direction == WindowDirection.RightToLeft) ? 10 : 16;
+            int interval = (direction == WindowDirection.LeftToRight || direction == WindowDirection.RightToLeft) ? 16 : 10;
+
+            await WindowUtility.MoveWindowToTargetAsync(
+                window,
+                targetPos.x,
+                targetPos.y,
+                moveSpeedPerFrame: moveSpeed,
+                intervalMs: interval,
+                wallSprite.texture
+            );
         }
     }
 }
