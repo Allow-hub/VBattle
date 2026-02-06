@@ -49,7 +49,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 2.5, y: 2.5}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -107,7 +107,7 @@ Material:
     - _GlowFalloff: 2
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OverallAlpha: 0.8
+    - _OverallAlpha: 0.2
     - _Parallax: 0.005
     - _PulseSpeed: 0.86
     - _QueueOffset: 0
