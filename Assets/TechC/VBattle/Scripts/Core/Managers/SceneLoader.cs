@@ -136,7 +136,7 @@ namespace TechC.VBattle.Core.Managers
                 OnSceneLoadStarted?.Invoke(sceneName);
 
                 // 遷移前処理
-                await ExecuteBeforeSceneTransition(previousScene.name, sceneName);
+                await ExecuteBeforeSceneTransition(previousScene.name);
 
                 // === LoadingSceneの準備 ===
                 Scene loadingScene;
@@ -225,7 +225,7 @@ namespace TechC.VBattle.Core.Managers
 
             while (loadingManager == null && attempts < maxAttempts)
             {
-                loadingManager = UnityEngine.Object.FindObjectOfType<LoadingManager>();
+                loadingManager = FindObjectOfType<LoadingManager>();
                 if (loadingManager == null)
                 {
                     attempts++;
@@ -240,7 +240,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// シーン遷移前の処理
         /// </summary>
-        private async UniTask ExecuteBeforeSceneTransition(string fromScene, string toScene)
+        private async UniTask ExecuteBeforeSceneTransition(string fromScene)
         {
             // シーン別の前処理
             switch (fromScene)
@@ -314,7 +314,7 @@ namespace TechC.VBattle.Core.Managers
         /// <summary>
         /// カーソル表示設定
         /// </summary>
-        private void SetCursorMode(bool visible, CursorLockMode lockMode)
+        public void SetCursorMode(bool visible, CursorLockMode lockMode)
         {
             Cursor.visible = visible;
             Cursor.lockState = lockMode;
