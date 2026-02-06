@@ -170,7 +170,7 @@ namespace TechC.VBattle.InGame.Gimmick
             {
                 WindowDirection.LeftToRight => new Vector2Int(Screen.width / 3, 0),
                 WindowDirection.RightToLeft => new Vector2Int(Screen.width * 2 / 3, 0),
-                WindowDirection.TopToBottom => new Vector2Int(0, Screen.height / 6),
+                WindowDirection.TopToBottom => new Vector2Int(0, Screen.height / 20),
                 WindowDirection.BottomToTop => new Vector2Int(0, (int)(Screen.height * lowerTargetRate)),//1080 × 0.57 = 615
                 _ => Vector2Int.zero
             };
