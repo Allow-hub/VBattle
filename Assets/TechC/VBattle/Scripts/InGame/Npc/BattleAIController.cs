@@ -14,8 +14,8 @@ namespace TechC.VBattle.InGame.Npc
     {
         [Header("AI設定")]
         private Transform opponent;
-        [SerializeField] private AIInputManager inputManager;
-        [SerializeField] private BattleAIStrategy strategy;
+        private AIInputManager inputManager;
+        private BattleAIStrategy strategy;
 
         [Header("行動設定")]
         [SerializeField] private float actionInterval = 0.5f;

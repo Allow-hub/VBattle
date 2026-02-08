@@ -15,6 +15,8 @@ MonoBehaviour:
   CharacterName: 1
   CharaPrefab: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
     type: 3}
+  NpcPrefab: {fileID: 2916867313761328699, guid: 2024d82812307e7488242229ae57479e,
+    type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8
   JumpPower: 6

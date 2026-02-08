@@ -255,6 +255,29 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: ameObj
+      value: 
+      objectReference: {fileID: 2916867313761328699, guid: 5818857d965dfdf4da6914617c6d3300,
+        type: 3}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: isDebug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: npcAmeObj
+      value: 
+      objectReference: {fileID: 2916867313761328699, guid: 5818857d965dfdf4da6914617c6d3300,
+        type: 3}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: npcTeramiObj
+      value: 
+      objectReference: {fileID: 2916867313761328699, guid: 2024d82812307e7488242229ae57479e,
+        type: 3}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
