@@ -28,8 +28,10 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Pos;
 
         [SerializeField] private GameObject ameObj;
+        
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
+        
         [SerializeField] private Camera.CameraController cameraController;
 
         [SerializeField] private Vector2[] countdownPosition;
@@ -86,6 +88,7 @@ namespace TechC.VBattle.InGame
             }
             else
             {
+                // Player1は常にプレイヤー用プレハブ
                 var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
                 var p1 = p1Obj.GetComponent<Character.CharacterController>();
                 
@@ -100,11 +103,14 @@ namespace TechC.VBattle.InGame
                     }
                 }
                 
-                var p2Obj = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot));
+                // Player2はNPCの場合、NPC専用プレハブを使用
+                var p2Setup = GameDataBridge.I.Player_2Setup;
+                GameObject p2Prefab = p2Setup.IsNPC ? p2Setup.SelectedCharacter.NpcPrefab : p2Setup.SelectedCharacter.CharaPrefab;
+                var p2Obj = Instantiate(p2Prefab, p2Pos, Quaternion.Euler(p2Rot));
                 var p2 = p2Obj.GetComponent<Character.CharacterController>();
                 
-                // Player2のコントロールスキーム設定
-                if (GameDataBridge.I.Player_2Setup.DeviceName != null)
+                // Player2のコントロールスキーム設定（プレイヤーの場合のみ）
+                if (!GameDataBridge.I.Player_2Setup.IsNPC && GameDataBridge.I.Player_2Setup.DeviceName != null)
                 {
                     var p2Input = p2Obj.GetComponent<PlayerInput>();
                     if (p2Input != null)
@@ -119,7 +125,10 @@ namespace TechC.VBattle.InGame
                 
                 battleJudge = new BattleJudge(p1, p2, BattleBus);
                 cameraController.SetupPlayers(p1, p2);
-                
+
+                // NPC初期化
+                SetupNpc(p2, p1.transform);
+
                 ChangeState(InGameState.Start);
             }
         }
@@ -415,6 +424,19 @@ namespace TechC.VBattle.InGame
         }
 
         public void SetPauseState(bool pause) => isPaused = pause;
+
+        private void SetupNpc(Character.CharacterController character, Transform opponent)
+        {
+            if (character == null || !character.IsNPC) return;
+
+            var aiController = character.GetComponent<Npc.BattleAIController>();
+
+            var playerInput = character.GetComponent<PlayerInput>();
+            if (playerInput != null)
+                playerInput.enabled = false;
+
+            aiController.Init(opponent);
+        }
     }
     /// <summary>
     /// インゲームのState

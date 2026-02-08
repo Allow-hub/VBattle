@@ -60,8 +60,8 @@ namespace TechC.VBattle.Select.Core
             var player2Data = new GameDataBridge.PlayerSetupData
             {
                 PlayerIndex = PlayerConstants.PLAYER_2_ID,
-                DeviceName = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice,
-                IsNPC = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice == null,
+                DeviceName = picks[PlayerConstants.PLAYER_2_INDEX].isNpc ? null : picks[PlayerConstants.PLAYER_2_INDEX].inputDevice,
+                IsNPC = picks[PlayerConstants.PLAYER_2_INDEX].isNpc,  // 明示的なフラグを使用
                 SelectedCharacter = picks[PlayerConstants.PLAYER_2_INDEX].characterData
             };
             GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_2_ID, player2Data);
@@ -72,7 +72,7 @@ namespace TechC.VBattle.Select.Core
                 Player2Character = picks[PlayerConstants.PLAYER_2_INDEX].characterData,
                 Player1Device = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice,
                 Player2Device = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice,
-                IsPlayer2Npc = picks[PlayerConstants.PLAYER_2_INDEX].inputDevice == null
+                IsPlayer2Npc = picks[PlayerConstants.PLAYER_2_INDEX].isNpc
             });
 
             SceneLoader.I.LoadBattleSceneAsync().Forget();
