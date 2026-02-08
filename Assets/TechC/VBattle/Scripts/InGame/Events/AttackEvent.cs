@@ -48,4 +48,9 @@ namespace TechC.VBattle.InGame.Events
         public float MaxGauge;
         public float Percentage; // 0-1
     }
+
+    public class PlayerOnDeathEvent : IBattleEvent
+    {
+        public int PlayerIndex;
+    }
 }

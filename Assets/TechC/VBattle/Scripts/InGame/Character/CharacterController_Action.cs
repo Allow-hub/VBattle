@@ -148,6 +148,11 @@ namespace TechC.VBattle.InGame.Character
             var damageState = GetState<DamageState>();
             damageState.SetDamageInfo(attackData, attackerPosition);
             CurrentHP -= damage;
+            if(CurrentHP < 0)
+            {
+                 CurrentHP = 0;
+                InGameManager.I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = PlayerIndex });
+            }
             stateMachine.ChangeState(damageState);
         }
 

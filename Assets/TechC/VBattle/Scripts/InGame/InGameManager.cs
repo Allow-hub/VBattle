@@ -6,7 +6,10 @@ using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Character;
+using TechC.VBattle.InGame.Events;
 using TechC.VBattle.InGame.Systems;
+using TechC.VBattle.InGame.UI;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Windows.Win32.Foundation;
@@ -20,7 +23,11 @@ namespace TechC.VBattle.InGame
     {
         private const string KEYBOARD_CONTROL_SCHEME = "KeyboardScheme";
         private const string GAMEPAD_CONTROL_SCHEME = "PadScheme";
-        
+        [SerializeField] private float battleTimeLimit = 60f; // 制限時間（秒）
+        public float BattleTimeLimit => battleTimeLimit;
+        private float remainingBattleTime;
+        public float RemainingBattleTime => remainingBattleTime;
+        private bool isTimeUpTriggered = false;
         [SerializeField] private bool isDebug = true;
         [SerializeField] private Vector3 p1Rot;
         [SerializeField] private Vector3 p2Rot;
@@ -33,6 +40,8 @@ namespace TechC.VBattle.InGame
         [SerializeField] private CharacterData teramiData;
         
         [SerializeField] private Camera.CameraController cameraController;
+        [SerializeField] private PlayerUIController player1UIController;
+        [SerializeField] private PlayerUIController player2UIController;
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
@@ -41,6 +50,8 @@ namespace TechC.VBattle.InGame
         private CancellationTokenSource countdownCts;
         public InGameState InGameState => inGameState;
         private InGameState inGameState = InGameState.None;
+        private Character.CharacterController p1Controller;
+        private Character.CharacterController p2Controller;
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
         private HitStopController hitStopController;//イベントを使用しているので保持しておく必要がある
@@ -48,7 +59,7 @@ namespace TechC.VBattle.InGame
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
- 
+
         public override void Init()
         {
             base.Init();
@@ -56,14 +67,14 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                var p1 = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
-                var p2 = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                p1Controller = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p2Controller = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
 
-                p1.Init(1, Keyboard.current, false);
-                p2.Init(2, Keyboard.current, false);
-                p2.GetComponent<PlayerInput>().enabled = false;
+                p1Controller.Init(1, Keyboard.current, false);
+                p2Controller.Init(2, Keyboard.current, false);
+                p2Controller.GetComponent<PlayerInput>().enabled = false;
 
-                battleJudge = new BattleJudge(p1, p2, BattleBus);
+                battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
 
                 if (GameDataBridge.I != null)
                     GameDataBridge.I.SetupPlayer(1, new GameDataBridge.PlayerSetupData
@@ -83,15 +94,20 @@ namespace TechC.VBattle.InGame
                         SelectedCharacter = teramiData
                     });
 
-                cameraController.SetupPlayers(p1, p2);
+                if (GameDataBridge.I != null)
+                {
+                    player1UIController.SetCharacterIcon(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharacterName);
+                    player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
+                }
+                cameraController.SetupPlayers(p1Controller, p2Controller);
                 ChangeState(InGameState.Battle);
             }
             else
             {
                 // Player1は常にプレイヤー用プレハブ
                 var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
-                var p1 = p1Obj.GetComponent<Character.CharacterController>();
-                
+                p1Controller = p1Obj.GetComponent<Character.CharacterController>();
+
                 // Player1のコントロールスキーム設定
                 if (GameDataBridge.I.Player_1Setup.DeviceName != null)
                 {
@@ -102,13 +118,13 @@ namespace TechC.VBattle.InGame
                         p1Input.SwitchCurrentControlScheme(p1Scheme, GameDataBridge.I.Player_1Setup.DeviceName);
                     }
                 }
-                
+
                 // Player2はNPCの場合、NPC専用プレハブを使用
                 var p2Setup = GameDataBridge.I.Player_2Setup;
                 GameObject p2Prefab = p2Setup.IsNPC ? p2Setup.SelectedCharacter.NpcPrefab : p2Setup.SelectedCharacter.CharaPrefab;
                 var p2Obj = Instantiate(p2Prefab, p2Pos, Quaternion.Euler(p2Rot));
-                var p2 = p2Obj.GetComponent<Character.CharacterController>();
-                
+                p2Controller = p2Obj.GetComponent<Character.CharacterController>();
+
                 // Player2のコントロールスキーム設定（プレイヤーの場合のみ）
                 if (!GameDataBridge.I.Player_2Setup.IsNPC && GameDataBridge.I.Player_2Setup.DeviceName != null)
                 {
@@ -120,24 +136,37 @@ namespace TechC.VBattle.InGame
                     }
                 }
 
-                p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
-                p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
-                
-                battleJudge = new BattleJudge(p1, p2, BattleBus);
-                cameraController.SetupPlayers(p1, p2);
+                p1Controller.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2Controller.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                player1UIController.SetCharacterIcon(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharacterName);
+                player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
+                battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
+                cameraController.SetupPlayers(p1Controller, p2Controller);
 
                 // NPC初期化
-                SetupNpc(p2, p1.transform);
+                SetupNpc(p2Controller, p1Controller.transform);
 
                 ChangeState(InGameState.Start);
             }
         }
- 
+
+        private void Start()
+        {
+            BattleBus.Subscribe<PlayerOnDeathEvent>(e =>
+            {
+                if (!isTimeUpTriggered)
+                {
+                    isTimeUpTriggered = true;
+                    ChangeState(InGameState.Result);
+                }
+            });
+        }
+
         private void Update()
         {
             UpdateState();
         }
- 
+
         protected override void OnRelease()
         {
             base.OnRelease();
@@ -146,7 +175,7 @@ namespace TechC.VBattle.InGame
             battleJudge?.Dispose();
             BattleBus?.Clear();
         }
- 
+
         private void UpdateState()
         {
             switch (inGameState)
@@ -186,6 +215,8 @@ namespace TechC.VBattle.InGame
 
         private void InitStartState()
         {
+            if (InGameUIController.I != null)
+                InGameUIController.I.SetResultCanvasActive(false);
             // 既存のカウントダウンをキャンセル
             countdownCts?.Cancel();
             countdownCts?.Dispose();
@@ -391,37 +422,60 @@ namespace TechC.VBattle.InGame
             }
         }
 
-        private void UpdateStartState()
-        {
-
-        }
+        private void UpdateStartState() { }
 
         private void InitBattleState()
         {
-
+            remainingBattleTime = battleTimeLimit;
+            isTimeUpTriggered = false;
         }
 
         private void UpdateBattleState()
         {
+            if (isPaused) return;
+
+            // ----- 制限時間減算 -----
+            if (!isTimeUpTriggered)
+            {
+                remainingBattleTime -= Time.deltaTime;
+
+                if (remainingBattleTime <= 0f)
+                {
+                    remainingBattleTime = 0f;
+                    isTimeUpTriggered = true;
+
+                    ChangeState(InGameState.Result);
+                }
+            }
+
             if (UnityEngine.Input.GetKeyDown(KeyCode.R))
                 SceneLoader.I.LoadSceneAsync(0).Forget();
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
-            {
                 isPaused = !isPaused;
-                // CustomLogger.Info($"ポーズ切り替え: {isPaused}");
-            }
         }
 
         private void InitResultState()
         {
-
+            if (p1Controller.CurrentHP > p2Controller.CurrentHP)
+            {
+                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 2 });
+            }
+            else if (p2Controller.CurrentHP > p1Controller.CurrentHP)
+            {
+                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 1 });
+            }
+            BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 0 }); // 全員停止
+            SceneLoader.I.SetCursorMode(true, CursorLockMode.None);
+            if (InGameUIController.I != null)
+                InGameUIController.I.SetResultCanvasActive(true);
         }
 
         private void UpdateResultState()
         {
 
         }
+
 
         public void SetPauseState(bool pause) => isPaused = pause;
 

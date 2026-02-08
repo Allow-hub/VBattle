@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using TechC.VBattle.InGame.Character;
+using TechC.VBattle.Core.Managers;
 
 namespace TechC.VBattle.InGame.UI
 {
@@ -68,6 +69,11 @@ namespace TechC.VBattle.InGame.UI
             
             if (hpFillImage != null)
                 hpFillImage.color = normalHpColor;
+
+            GameDataBridge.PlayerSetupData playerData = targetPlayerIndex == 1
+                ? GameDataBridge.I.Player_1Setup
+                : GameDataBridge.I.Player_2Setup;
+            UpdateHP(playerData.SelectedCharacter.MaxHP, playerData.SelectedCharacter.MaxHP);
             
             // TODO: キャラクタータイプを取得して設定
             // SetCharacterIcon(characterType);
@@ -132,7 +138,7 @@ namespace TechC.VBattle.InGame.UI
                 specialReadyEffect.SetActive(percentage >= 1f);
         }
 
-        private void SetCharacterIcon(CharaName charaName)
+        public void SetCharacterIcon(CharaName charaName)
         {
             ameIconImage.gameObject.SetActive(false);
             teramiIconImage.gameObject.SetActive(false);
