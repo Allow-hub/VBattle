@@ -116,6 +116,13 @@ namespace TechC.VBattle.InGame.Npc
         {
             while (!token.IsCancellationRequested)
             {
+                // バトル状態になるまで待機
+                while (InGameManager.I != null && InGameManager.I.InGameState != InGameState.Battle)
+                {
+                    await UniTask.Yield(token);
+                }
+
+                // ポーズ中は待機
                 while (InGameManager.I != null && InGameManager.I.IsPaused)
                 {
                     await UniTask.Yield(token);
