@@ -71,35 +71,10 @@ namespace TechC.VBattle.InGame.Npc
             {
                 currentWeight += weight.weight;
                 if (randomValue <= currentWeight)
-                {
                     return weight.actionType;
-                }
             }
 
             return weights[weights.Count - 1].actionType;
-        }
-
-        /// <summary>
-        /// 重み付けリストをデバッグ表示用文字列に変換
-        /// </summary>
-        /// <param name="weights">重み付けリスト</param>
-        /// <returns>デバッグ文字列</returns>
-        public static string GetWeightDebugString(List<AIActionWeight> weights)
-        {
-            if (weights == null || weights.Count == 0)
-                return "No weights defined";
-
-            string result = "Action Weights:\n";
-            float total = GetTotalWeight(weights);
-
-            foreach (var weight in weights)
-            {
-                float percentage = total > 0 ? (weight.weight / total) * 100f : 0f;
-                result += $"  {weight.actionType}: {weight.weight:F2} ({percentage:F0}%)\n";
-            }
-
-            result += $"Total Weight: {total:F2}";
-            return result;
         }
     }
 }

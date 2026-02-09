@@ -20,6 +20,8 @@ namespace TechC.VBattle.InGame.Npc
     [System.Serializable]
     public class AIActionWeight
     {
+        private const float DEFAULT_WEIGHT = 0.1f;
+
         [Header("行動設定")]
         [Tooltip("実行する行動の種類")]
         public AIActionType actionType;
@@ -47,19 +49,10 @@ namespace TechC.VBattle.InGame.Npc
         public AIActionWeight()
         {
             this.actionType = AIActionType.Wait;
-            this.weight = 0.1f;
+            this.weight = DEFAULT_WEIGHT;
         }
 
-        /// <summary>
-        /// 重みを設定（範囲チェック付き）
-        /// </summary>
+        /// <summary>重みを設定（範囲チェック付き）</summary>
         public void SetWeight(float newWeight) => weight = Mathf.Clamp01(newWeight);
-
-        /// <summary>
-        /// 重みを相対的に調整
-        /// </summary>
-        public void AdjustWeight(float multiplier) => weight = Mathf.Clamp01(weight * multiplier);
-
-        public override string ToString() => $"{actionType}: {weight:F2} ({weight * 100:F0}%)";
     }
 }

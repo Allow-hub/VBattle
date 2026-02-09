@@ -9,6 +9,7 @@ namespace TechC.VBattle.InGame.Npc
     /// </summary>
     public class AIInputManager : BaseInputManager
     {
+        private const float INPUT_THRESHOLD = 0.1f;
         /// <summary>
         /// 移動入力を設定
         /// </summary>
@@ -17,14 +18,10 @@ namespace TechC.VBattle.InGame.Npc
         {
             SetMove(direction);
 
-            if (Mathf.Abs(direction.x) > 0.1f)
-            {
+            if (Mathf.Abs(direction.x) > INPUT_THRESHOLD)
                 OnButtonDown(InputButton.Move);
-            }
             else
-            {
                 OnButtonUp(InputButton.Move);
-            }
         }
 
         /// <summary>
@@ -85,7 +82,7 @@ namespace TechC.VBattle.InGame.Npc
         /// <param name="direction">攻撃方向（オプション）</param>
         public void SetWeakAttackInput(Vector2 direction = default)
         {
-            if (direction != default && direction.magnitude > 0.1f)
+            if (direction != default && direction.magnitude > INPUT_THRESHOLD)
             {
                 SetMove(direction);
             }
@@ -107,7 +104,7 @@ namespace TechC.VBattle.InGame.Npc
         /// <param name="direction">攻撃方向（オプション）</param>
         public void SetStrongAttackInput(Vector2 direction = default)
         {
-            if (direction != default && direction.magnitude > 0.1f)
+            if (direction != default && direction.magnitude > INPUT_THRESHOLD)
             {
                 SetMove(direction);
             }
