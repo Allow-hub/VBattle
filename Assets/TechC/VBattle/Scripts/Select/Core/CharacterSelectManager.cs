@@ -51,8 +51,8 @@ namespace TechC.VBattle.Select.Core
             var player1Data = new GameDataBridge.PlayerSetupData
             {
                 PlayerIndex = PlayerConstants.PLAYER_1_ID,
-                DeviceName = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice,
-                IsNPC = picks[PlayerConstants.PLAYER_1_INDEX].inputDevice == null,
+                DeviceName = picks[PlayerConstants.PLAYER_1_INDEX].isNpc ? null : picks[PlayerConstants.PLAYER_1_INDEX].inputDevice,
+                IsNPC = picks[PlayerConstants.PLAYER_1_INDEX].isNpc,  // 明示的なフラグを使用
                 SelectedCharacter = picks[PlayerConstants.PLAYER_1_INDEX].characterData
             };
             GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_1_ID, player1Data);
