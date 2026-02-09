@@ -35,11 +35,26 @@ namespace TechC.VBattle.InGame.Systems
         {
             // 対戦相手の特定
             var target = GetOpponent(attackEvent.attacker);
+            CustomLogger.Info($"攻撃リクエスト: 攻撃者={attackEvent.attacker?.Owner?.PlayerIndex}, ターゲット={target}", LogTagUtil.TagAttack);
 
             if (target == null)
             {
+                CustomLogger.Warning("ターゲットが見つかりません", LogTagUtil.TagAttack);
                 PublishAttackResult(attackEvent, null, false, false, false, 0);
                 return;
+            }
+
+            // カウンター判定を最優先で実行
+            if (target is CharacterController character && character.CanCounter)
+            {
+                CustomLogger.Info($"カウンター判定成功: {character.PlayerIndex}, 攻撃データ: {attackEvent.attackData.attackName}", LogTagUtil.TagAttack);
+                character.UseCounter();
+                PublishAttackResult(attackEvent, target, false, true, false, 0); // isCounter=true
+                return;
+            }
+            else if (target is CharacterController character2)
+            {
+                CustomLogger.Info($"Player {character2.PlayerIndex}: CanCounter={character2.CanCounter}", LogTagUtil.TagAttack);
             }
 
             // 当たり判定（ヒット対象のリストに含まれるか）
@@ -47,6 +62,7 @@ namespace TechC.VBattle.InGame.Systems
 
             if (!isHitRange)
             {
+                CustomLogger.Info("ヒット範囲外", LogTagUtil.TagAttack);
                 PublishAttackResult(attackEvent, target, false, false, false, 0);
                 return;
             }
@@ -54,7 +70,7 @@ namespace TechC.VBattle.InGame.Systems
             // 攻撃命中時のダメージ/属性判定
             bool isHit = true;
             bool isGuard = target.IsGuarding;
-            bool isCounter = false; // 追加入力予定があれば後で判定可能
+            bool isCounter = false;
             int damage = attackEvent.attackData.damage;
 
             if (target.IsInvincible || target.IsGuarding)

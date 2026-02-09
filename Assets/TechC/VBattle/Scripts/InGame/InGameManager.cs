@@ -31,6 +31,12 @@ namespace TechC.VBattle.InGame
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
         [SerializeField] private Camera.CameraController cameraController;
+        
+        [Header("カウンターテスト設定")]
+        [Tooltip("有効にすると2Pが常にカウンター状態になります")]
+        [SerializeField] private bool enableCounterTest = true;
+        [Tooltip("カウンター発動時に実行する攻撃データ（isCounter=trueでnextChainが設定されている必要があります）")]
+        [SerializeField] private AttackData counterAttackData;
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
@@ -46,6 +52,10 @@ namespace TechC.VBattle.InGame
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
         protected override bool UseDontDestroyOnLoad => false;
+        
+        // プレイヤー参照（カウンターテスト用）
+        private Character.CharacterController p1Character;
+        private Character.CharacterController p2Character;
  
         public override void Init()
         {
@@ -54,14 +64,14 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                var p1 = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
-                var p2 = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                p1Character = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p2Character = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
 
-                p1.Init(1, Keyboard.current, false);
-                p2.Init(2, Keyboard.current, false);
-                p2.GetComponent<PlayerInput>().enabled = false;
+                p1Character.Init(1, Keyboard.current, false);
+                p2Character.Init(2, Keyboard.current, false);
+                p2Character.GetComponent<PlayerInput>().enabled = false;
 
-                battleJudge = new BattleJudge(p1, p2, BattleBus);
+                battleJudge = new BattleJudge(p1Character, p2Character, BattleBus);
 
                 if (GameDataBridge.I != null)
                     GameDataBridge.I.SetupPlayer(1, new GameDataBridge.PlayerSetupData
@@ -81,13 +91,13 @@ namespace TechC.VBattle.InGame
                         SelectedCharacter = teramiData
                     });
 
-                cameraController.SetupPlayers(p1, p2);
+                cameraController.SetupPlayers(p1Character, p2Character);
                 ChangeState(InGameState.Battle);
             }
             else
             {
                 var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
-                var p1 = p1Obj.GetComponent<Character.CharacterController>();
+                p1Character = p1Obj.GetComponent<Character.CharacterController>();
                 
                 // Player1のコントロールスキーム設定
                 if (GameDataBridge.I.Player_1Setup.DeviceName != null)
@@ -101,7 +111,7 @@ namespace TechC.VBattle.InGame
                 }
                 
                 var p2Obj = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot));
-                var p2 = p2Obj.GetComponent<Character.CharacterController>();
+                p2Character = p2Obj.GetComponent<Character.CharacterController>();
                 
                 // Player2のコントロールスキーム設定
                 if (GameDataBridge.I.Player_2Setup.DeviceName != null)
@@ -114,11 +124,11 @@ namespace TechC.VBattle.InGame
                     }
                 }
 
-                p1.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
-                p2.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                p1Character.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2Character.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
                 
-                battleJudge = new BattleJudge(p1, p2, BattleBus);
-                cameraController.SetupPlayers(p1, p2);
+                battleJudge = new BattleJudge(p1Character, p2Character, BattleBus);
+                cameraController.SetupPlayers(p1Character, p2Character);
                 
                 ChangeState(InGameState.Start);
             }
@@ -140,6 +150,12 @@ namespace TechC.VBattle.InGame
  
         private void UpdateState()
         {
+            // カウンターテストモード
+            if (enableCounterTest && p2Character != null && counterAttackData != null)
+            {
+                UpdateCounterTest();
+            }
+            
             switch (inGameState)
             {
                 case InGameState.Start:
@@ -415,7 +431,62 @@ namespace TechC.VBattle.InGame
         }
 
         public void SetPauseState(bool pause) => isPaused = pause;
+        
+        /// <summary>
+        /// カウンターテストモードの更新処理
+        /// 2Pを常にカウンター状態に保つ
+        /// </summary>
+        private void UpdateCounterTest()
+        {
+            // 2Pがカウンター状態でない場合、カウンター攻撃を設定
+            if (!p2Character.CanCounter)
+            {
+                p2Character.SetCanCounter(true);
+                p2Character.SetCounterAction(() =>
+                {
+                    Debug.Log("P2 カウンター発動！");
+                    
+                    // counterAttackDataが設定されている場合、それを使って攻撃
+                    if (counterAttackData != null)
+                    {
+                        var attackData = counterAttackData.nextChain != null ? counterAttackData.nextChain : counterAttackData;
+                        ExecuteCounterAttackAsync(attackData).Forget();
+                    }
+                    else
+                    {
+                        // counterAttackDataが未設定の場合、デフォルトの攻撃
+                        ExecuteCounterAttackAsync(null).Forget();
+                    }
+                });
+            }
+        }
+        
+        /// <summary>
+        /// カウンター攻撃を非同期で実行
+        /// </summary>
+        private async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
+        {
+            // 数フレーム待機して、現在の処理が完全に終了するのを待つ
+            await UniTask.DelayFrame(3, PlayerLoopTiming.Update);
+            
+            // 2Pが攻撃可能な状態か確認
+            if (p2Character != null && p2Character.StateMachine != null)
+            {
+                // 攻撃を実行
+                p2Character.Attack(AttackType.Weak, AttackDirection.Neutral);
+                
+                if (attackData != null)
+                {
+                    Debug.Log($"P2 カウンター攻撃実行: {attackData.attackName}");
+                }
+                else
+                {
+                    Debug.Log("P2 カウンター攻撃実行: デフォルト攻撃");
+                }
+            }
+        }
     }
+    
     /// <summary>
     /// インゲームのState
     /// </summary>

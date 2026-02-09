@@ -36,7 +36,7 @@ MonoBehaviour:
   cancelStartTime: 0.5
   cancelEndTime: 0.5
   hitStunDuration: 0.25
-  nextChain: {fileID: 0}
+  nextChain: {fileID: 11400000, guid: 976cf2fc90886ac4f88004e4cf3d841d, type: 2}
   canChain: 0
   isChainPos: 0
   hitStopDuration: 0.9

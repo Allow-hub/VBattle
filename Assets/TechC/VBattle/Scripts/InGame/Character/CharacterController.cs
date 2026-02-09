@@ -66,6 +66,11 @@ namespace TechC.VBattle.InGame.Character
         private int currentJumpCount = 0;
         private int maxJumpCount = 2;
 
+        // ===== カウンター関連 =====
+        private bool canCounter = false;
+        private System.Action onCounter = null;
+        public bool CanCounter => canCounter;
+
         // ===== IAttacker実装 =====
         GameObject IAttacker.AttackerObj => gameObject;
         Transform IAttacker.Transform => transform;
@@ -290,6 +295,51 @@ namespace TechC.VBattle.InGame.Character
             velocity.z *= 0.8f;
             rb.velocity = velocity;
             currentJumpCount = 0;
+        }
+
+        // ===== カウンター関連メソッド =====
+        public void SetCanCounter(bool val) => canCounter = val;
+        public void SetCounterAction(System.Action action) => onCounter = action;
+        public void ResetCounterAction() => onCounter = null;
+        public void UseCounter()
+        {
+            if (onCounter == null) return;
+            CustomLogger.Info($"Player {PlayerIndex}: カウンター発動！", LogTagUtil.TagAttack);
+            SetCanCounter(false);
+            var action = onCounter;
+            onCounter = null;
+            action.Invoke();
+        }
+
+        // ===== テスト用メソッド =====
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        public void TestEnableCounter()
+        {
+            CustomLogger.Info($"Player {PlayerIndex}: テスト用カウンター有効化", LogTagUtil.TagAttack);
+            SetCanCounter(true);
+            SetCounterAction(() => {
+                CustomLogger.Info($"Player {PlayerIndex}: テスト用カウンター実行", LogTagUtil.TagAttack);
+            });
+        }
+
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        public void TestForceCounter()
+        {
+            CustomLogger.Info($"Player {PlayerIndex}: 強制カウンター実行テスト", LogTagUtil.TagAttack);
+            if (CanCounter)
+            {
+                UseCounter();
+            }
+            else
+            {
+                CustomLogger.Warning($"Player {PlayerIndex}: カウンター状態ではありません", LogTagUtil.TagAttack);
+            }
+        }
+
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        public void DebugCounterStatus()
+        {
+            CustomLogger.Info($"Player {PlayerIndex}: CanCounter={CanCounter}, onCounter={onCounter != null}", LogTagUtil.TagAttack);
         }
 
         private void OnDestroy()

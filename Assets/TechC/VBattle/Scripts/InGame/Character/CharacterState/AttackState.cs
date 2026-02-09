@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 using TechC.VBattle.Systems;
@@ -13,6 +14,10 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class AttackState : CharacterState
     {
+        // カウンター受付時間（すべてのカウンター攻撃で共通）
+        private const float COUNTER_START_TIME = 0.0f;  // 攻撃開始からカウンター受付開始までの時間
+        private const float COUNTER_END_TIME = 0.4f;    // 攻撃開始からカウンター受付終了までの時間
+        
         private AttackData currentAttackData;
         private bool canCancel = false;
         private bool isAirAttack = false;
@@ -70,16 +75,43 @@ namespace TechC.VBattle.InGame.Character
 
                     // 攻撃開始（キャンセル不可）
                     canCancel = false;
+                    
+                    // カウンター受付開始タイミングまで待機
+                    if (currentAttackData.isCounter && COUNTER_START_TIME > 0)
+                    {
+                        await UniTask.Delay(TimeSpan.FromSeconds(COUNTER_START_TIME), cancellationToken: ct);
+                        
+                        // カウンター受付開始
+                        controller.SetCanCounter(true);
+                        SetupCounterAction();
+                        CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター受付開始 - {currentAttackData.attackName}", LogTagUtil.TagAttack);
+                    }
 
-                    // hitTimingまで待機
-                    await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
+                    // hitTimingまでの残り時間を待機
+                    float remainingToHitTiming = currentAttackData.hitTiming - (currentAttackData.isCounter ? COUNTER_START_TIME : 0);
+                    if (remainingToHitTiming > 0)
+                        await UniTask.Delay(TimeSpan.FromSeconds(remainingToHitTiming), cancellationToken: ct);
 
                     // 攻撃Prefab生成と判定を実行
                     CreateAttackObject();
                     PerformHitDetection();
+                    
+                    // カウンター受付終了タイミングまでの待機
+                    if (currentAttackData.isCounter && COUNTER_END_TIME > currentAttackData.hitTiming)
+                    {
+                        float remainingToCounterEnd = COUNTER_END_TIME - currentAttackData.hitTiming;
+                        if (remainingToCounterEnd > 0)
+                            await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
+                        
+                        // カウンター受付終了
+                        controller.SetCanCounter(false);
+                        controller.ResetCounterAction();
+                        CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター受付終了 - {currentAttackData.attackName}", LogTagUtil.TagAttack);
+                    }
 
                     // cancelStartTimeまでの残り時間を待機
-                    float remainingToCancelStart = currentAttackData.cancelStartTime - currentAttackData.hitTiming;
+                    float counterEndOrHitTiming = currentAttackData.isCounter ? Mathf.Max(COUNTER_END_TIME, currentAttackData.hitTiming) : currentAttackData.hitTiming;
+                    float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrHitTiming;
                     if (remainingToCancelStart > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
 
@@ -117,6 +149,12 @@ namespace TechC.VBattle.InGame.Character
                     break;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // カウンター発動などによる正常なキャンセル処理
+                CustomLogger.Info($"Player {controller.PlayerIndex}: AttackState正常キャンセル", LogTagUtil.TagAttack);
+                return isAirAttack ? controller.GetState<AirState>() : controller.GetState<NeutralState>();
+            }
             catch (Exception ex)
             {
                 Debug.LogError($"AttackState error: {ex.Message}\n{ex.StackTrace}");
@@ -134,6 +172,32 @@ namespace TechC.VBattle.InGame.Character
             canCancel = false;
             isChainRequested = false;
             chain = 0;
+            
+            // カウンター状態をリセット（念のため）
+            controller.SetCanCounter(false);
+            controller.ResetCounterAction();
+        }
+
+        /// <summary>
+        /// カウンター発動時のアクションを設定
+        /// </summary>
+        private void SetupCounterAction()
+        {
+            if (currentAttackData == null || !currentAttackData.isCounter) return;
+
+            controller.SetCounterAction(() =>
+            {
+                CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター発動！", LogTagUtil.TagAttack);
+                
+                // カウンター受付終了
+                controller.SetCanCounter(false);
+                controller.ResetCounterAction();
+                
+                // 現在の攻撃をキャンセル（InGameManagerが新しい攻撃を実行する）
+                controller.Anim.SetBool(AnimatorParam.IsAttacking, false);
+                
+                // 注意: StateMachineの変更はInGameManagerのExecuteCounterAttackAsyncで行われる
+            });
         }
 
         /// <summary>
