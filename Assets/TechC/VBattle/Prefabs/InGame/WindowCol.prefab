@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 759121799074839892}
   - component: {fileID: 8627692133440023927}
   - component: {fileID: 3938947408911915455}
-  m_Layer: 15
+  m_Layer: 8
   m_Name: WindowCol
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,13 +42,13 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391721127375270565}
-  m_Material: {fileID: 13400000, guid: 48b06d21610036e4b8f9fa4b535a73a8, type: 2}
+  m_Material: {fileID: 13400000, guid: c52b1b1ccbdcc934eb752634efad3af3, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1335
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -72,10 +72,10 @@ Rigidbody:
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1335
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0

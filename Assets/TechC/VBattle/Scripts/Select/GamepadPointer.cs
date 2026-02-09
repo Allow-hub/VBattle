@@ -173,7 +173,7 @@ namespace TechC.VBattle.Select
                 }
 
                 // カーソルウィンドウ生成
-                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
+                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.ImageLayered);
                 int style = PInvoke.GetWindowLong((HWND)w.Hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
                 style &= ~(int)WINDOW_STYLE.WS_CAPTION;
                 style &= ~(int)WINDOW_STYLE.WS_THICKFRAME;

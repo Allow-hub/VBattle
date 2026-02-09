@@ -1,4 +1,6 @@
+using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Character;
+using TechC.VBattle.InGame.Gimmick;
 using TechC.VBattle.InGame.UI;
 using TechC.VBattle.Systems;
 using UnityEngine;
@@ -15,6 +17,8 @@ namespace TechC.VBattle.InGame
         [SerializeField] private CharaAttackFactory charaAttackFactory;
         [SerializeField] private EffectFactory effectFactory;
         [SerializeField] private AttackVisualizer attackVisualizer;
+        [SerializeField] private BattleGimmickManager battleGimmickManager;
+        [SerializeField] private WindowColliderFactory windowColliderFactory;
         [SerializeField] private InGameUIController inGameUIController;
 
         private void Awake()
@@ -23,6 +27,8 @@ namespace TechC.VBattle.InGame
             charaAttackFactory.Init();
             effectFactory.Init();
             attackVisualizer.Init();
+            windowColliderFactory.Init();
+            battleGimmickManager.Init();
             inGameUIController.Init();
         }
     }
