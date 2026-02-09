@@ -13,5 +13,6 @@ namespace TechC.VBattle.Core.Util
         public static readonly string TagEvent = "event";
         public static readonly string TagWidnow = "window";
         public static readonly string TagScene = "scene";
+        public static readonly string TagNpc = "npc";
     }
 }

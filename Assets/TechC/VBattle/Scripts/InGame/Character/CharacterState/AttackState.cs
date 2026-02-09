@@ -149,11 +149,10 @@ namespace TechC.VBattle.InGame.Character
                     break;
                 }
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException) // 攻撃が何かしらの要因によって中断されたとき
             {
-                // カウンター発動などによる正常なキャンセル処理
-                CustomLogger.Info($"Player {controller.PlayerIndex}: AttackState正常キャンセル", LogTagUtil.TagAttack);
-                return isAirAttack ? controller.GetState<AirState>() : controller.GetState<NeutralState>();
+                CustomLogger.Error($"[AttackState] キャンセルされました (プレイヤー{controller.PlayerIndex})", LogTagUtil.TagState);
+                return null;
             }
             catch (Exception ex)
             {
@@ -217,7 +216,7 @@ namespace TechC.VBattle.InGame.Character
                     currentAttackData.targetLayers
                 );
                 AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
-                
+
                 // BattleJudgeに判定を依頼
                 InGameManager.I.BattleBus.Publish(new AttackRequestEvent
                 {

@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 886937bb062f76641a10a0a02d70e18d, type: 3}
+  m_Name: Terami_NpcData_Normal
+  m_EditorClassIdentifier: 
+  actionTimings:
+    actionInterval: 0.5
+    reactionTime: 0.1
+    approachTime: 0.3
+    retreatTime: 0.3
+    weakAttackTime: 0.15
+    strongAttackTime: 0.3
+    guardTime: 0.3
+    jumpTime: 0.16
+    crouchTime: 0.28
+    waitTime: 0.25    attackDelayRate: 0.5  attackSettings:
+    weakAttackChance: 0.7
+    jumpAttackChance: 0.8
+    jumpWeakAttackChance: 0.7
+    crouchAttackChance: 0.6
+    crouchWeakAttackChance: 0.7
+  directionProbability:
+    baseLeftPercent: 25
+    baseRightPercent: 25
+    baseUpPercent: 25
+    baseDownPercent: 25
+    preferLeftPercent: 40
+    preferRightPercent: 40
+    lessRightPercent: 10
+    lessLeftPercent: 10
+  personality:
+    aggression: 1
+    defensiveness: 1
+    mobility: 1
+  distanceSettings:
+    closeRange: 2
+    mediumRange: 5
+  strategies:
+  - range: 0
+    actionWeights:
+    - actionType: 2
+      weight: 0.4
+    - actionType: 3
+      weight: 0.3
+    - actionType: 1
+      weight: 0.2
+    - actionType: 4
+      weight: 0.1
+  - range: 1
+    actionWeights:
+    - actionType: 0
+      weight: 0.4
+    - actionType: 2
+      weight: 0.3
+    - actionType: 6
+      weight: 0.2
+    - actionType: 4
+      weight: 0.1
+  - range: 2
+    actionWeights:
+    - actionType: 0
+      weight: 0.6
+    - actionType: 6
+      weight: 0.2
+    - actionType: 4
+      weight: 0.2
