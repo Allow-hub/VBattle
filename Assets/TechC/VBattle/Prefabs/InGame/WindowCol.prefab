@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 759121799074839892}
   - component: {fileID: 8627692133440023927}
   - component: {fileID: 3938947408911915455}
-  - component: {fileID: 1151556102665493089}
   m_Layer: 8
   m_Name: WindowCol
   m_TagString: Wall
@@ -91,7 +90,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391721127375270565}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -134,15 +133,3 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391721127375270565}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1151556102665493089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7391721127375270565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe25e5c82c5428b4e93e672e8e7ff1b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
