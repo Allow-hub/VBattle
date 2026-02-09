@@ -16,6 +16,7 @@ namespace TechC.VBattle.InGame.Npc
         private Transform opponent;
         private AIInputManager inputManager;
         private BattleAIStrategy strategy;
+        private Character.CharacterController characterController;
 
         [Header("行動設定")]
         [SerializeField] private float actionInterval = 0.5f;
@@ -94,6 +95,9 @@ namespace TechC.VBattle.InGame.Npc
             if (strategy == null)
                 strategy = GetComponent<BattleAIStrategy>();
 
+            if (characterController == null)
+                characterController = GetComponent<Character.CharacterController>();
+
             ApplyDifficultySettings();
 
             aiCts?.Cancel();
@@ -116,6 +120,13 @@ namespace TechC.VBattle.InGame.Npc
         {
             while (!token.IsCancellationRequested)
             {
+                // コンポーネントが無効の場合は処理をスキップ
+                if (!enabled)
+                {
+                    await UniTask.Yield(token);
+                    continue;
+                }
+
                 if (opponent == null || inputManager == null || strategy == null)
                 {
                     await UniTask.Yield(token);
@@ -124,7 +135,8 @@ namespace TechC.VBattle.InGame.Npc
 
                 UpdateBattleRange();
 
-                if (Time.time - lastActionTime >= actionInterval && !isExecutingAction)
+                // アクション中（攻撃、ガード、ダメージ、空中）は次のアクションを開始しない
+                if (!IsExecutingAction())
                 {
                     await ExecuteAIActionAsync(token);
                     lastActionTime = Time.time;
@@ -144,12 +156,28 @@ namespace TechC.VBattle.InGame.Npc
         }
 
         /// <summary>
+        /// キャラクターがアクション中かどうかを判定
+        /// </summary>
+        private bool IsExecutingAction()
+        {
+            if (characterController == null || characterController.StateMachine == null || characterController.StateMachine.CurrentState == null)
+                return false;
+
+            var currentState = characterController.StateMachine.CurrentState;
+            
+            // 攻撃中、ガード中、ダメージ中、空中は新しいアクションを開始しない
+            return currentState is Character.AttackState or
+                   Character.GuardState or
+                   Character.DamageState or
+                   Character.AirState;
+        }
+
+        /// <summary>
         /// AIの行動を実行
         /// </summary>
         private async UniTask ExecuteAIActionAsync(CancellationToken token)
         {
             currentAction = strategy.SelectAction(currentRange);
-            CustomLogger.Info($"AI Action: {currentAction}", LogTagUtil.TagNpc);
             await PerformActionAsync(currentAction, token);
         }
 

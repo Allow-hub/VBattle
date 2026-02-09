@@ -54,6 +54,10 @@ MonoBehaviour:
     displayName: Scene
     color: {r: 1, g: 0.7164262, b: 0.5707547, a: 1}
     enabledByDefault: 1
+  - categoryId: npc
+    displayName: Npc
+    color: {r: 0.9117594, g: 0.29025427, b: 0.6335699, a: 1}
+    enabledByDefault: 0
   defaultCategory:
     categoryId: default
     displayName: Default
@@ -68,3 +72,4 @@ MonoBehaviour:
   - scene
   - window
   - command
+  - npc
