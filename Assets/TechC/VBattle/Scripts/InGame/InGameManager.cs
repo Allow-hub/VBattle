@@ -2,14 +2,13 @@ using System;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
 using TechC.VBattle.InGame.Character;
 using TechC.VBattle.InGame.Events;
 using TechC.VBattle.InGame.Systems;
 using TechC.VBattle.InGame.UI;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Windows.Win32.Foundation;
@@ -28,17 +27,20 @@ namespace TechC.VBattle.InGame
         private float remainingBattleTime;
         public float RemainingBattleTime => remainingBattleTime;
         private bool isTimeUpTriggered = false;
+        [Header("デバック関連")]
         [SerializeField] private bool isDebug = true;
+        [SerializeField] private bool useNpc = false;
+
         [SerializeField] private Vector3 p1Rot;
         [SerializeField] private Vector3 p2Rot;
         [SerializeField] private Vector3 p1Pos;
         [SerializeField] private Vector3 p2Pos;
-
+        [Header("IsDebugが有効の時に1Pから生成されるObj")]
         [SerializeField] private GameObject ameObj;
-        
+
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
-        
+
         [SerializeField] private Camera.CameraController cameraController;
         [SerializeField] private PlayerUIController player1UIController;
         [SerializeField] private PlayerUIController player2UIController;
@@ -68,30 +70,32 @@ namespace TechC.VBattle.InGame
             if (isDebug)
             {
                 p1Controller = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
-                
-                // NPC用のプレハブを使用（AmeのNpcPrefab）
-                p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
 
-                p1Controller.Init(1, Keyboard.current, false);
-                p2Controller.Init(2, Keyboard.current, true); // NPCとして初期化
+                if (useNpc)
+                    p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                else
+                    p2Controller = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+
+                p1Controller.Init(PlayerConstants.PLAYER_1_ID, Keyboard.current, false);
+                p2Controller.Init(PlayerConstants.PLAYER_2_ID, Keyboard.current, useNpc); // useNpcフラグを使用
 
                 battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
 
                 if (GameDataBridge.I != null)
-                    GameDataBridge.I.SetupPlayer(1, new GameDataBridge.PlayerSetupData
+                    GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_1_ID, new GameDataBridge.PlayerSetupData
                     {
-                        PlayerIndex = 1,
+                        PlayerIndex = PlayerConstants.PLAYER_1_ID,
                         DeviceName = Keyboard.current,
                         IsNPC = false,
                         SelectedCharacter = ameData
                     });
 
                 if (GameDataBridge.I != null)
-                    GameDataBridge.I.SetupPlayer(2, new GameDataBridge.PlayerSetupData
+                    GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_2_ID, new GameDataBridge.PlayerSetupData
                     {
-                        PlayerIndex = 2,
+                        PlayerIndex = PlayerConstants.PLAYER_2_ID,
                         DeviceName = Keyboard.current,
-                        IsNPC = true,
+                        IsNPC = useNpc,
                         SelectedCharacter = ameData
                     });
 
@@ -101,8 +105,8 @@ namespace TechC.VBattle.InGame
                     player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
                 }
                 cameraController.SetupPlayers(p1Controller, p2Controller);
-                
-                ChangeState(InGameState.Start); // カウントダウンから開始
+
+                ChangeState(InGameState.Battle); 
             }
             else
             {
@@ -508,11 +512,11 @@ namespace TechC.VBattle.InGame
         {
             if (p1Controller.CurrentHP > p2Controller.CurrentHP)
             {
-                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 2 });
+                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = PlayerConstants.PLAYER_2_ID });
             }
             else if (p2Controller.CurrentHP > p1Controller.CurrentHP)
             {
-                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 1 });
+                I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = PlayerConstants.PLAYER_1_ID });
             }
             BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = 0 }); // 全員停止
             SceneLoader.I.SetCursorMode(true, CursorLockMode.None);
