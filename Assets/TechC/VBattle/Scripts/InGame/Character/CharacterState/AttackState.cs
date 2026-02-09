@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 using TechC.VBattle.Systems;
@@ -117,6 +118,11 @@ namespace TechC.VBattle.InGame.Character
                     break;
                 }
             }
+            catch (OperationCanceledException) // 攻撃が何かしらの要因によって中断されたとき
+            {
+                CustomLogger.Error($"[AttackState] キャンセルされました (プレイヤー{controller.PlayerIndex})", LogTagUtil.TagState);
+                return null;
+            }
             catch (Exception ex)
             {
                 Debug.LogError($"AttackState error: {ex.Message}\n{ex.StackTrace}");
@@ -153,7 +159,7 @@ namespace TechC.VBattle.InGame.Character
                     currentAttackData.targetLayers
                 );
                 AttackVisualizer.I.DrawHitbox(hitPosition, currentAttackData.radius);
-                
+
                 // BattleJudgeに判定を依頼
                 InGameManager.I.BattleBus.Publish(new AttackRequestEvent
                 {

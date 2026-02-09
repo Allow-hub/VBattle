@@ -28,6 +28,7 @@ namespace TechC.VBattle.Select.Core
             public int playerId;
             public CharacterData characterData;
             public InputDevice inputDevice;
+            public bool isNpc;  // NPC判定を明示的に保存
         }
 
         [SerializeField] private float startDelay = 6f;
@@ -136,7 +137,8 @@ namespace TechC.VBattle.Select.Core
             {
                 playerId = e.PlayerId,
                 characterData = finalCharacter,
-                inputDevice = e.Device
+                inputDevice = e.Device,
+                isNpc = e.IsNpc
             };
             
             hasPicked[index] = true;
