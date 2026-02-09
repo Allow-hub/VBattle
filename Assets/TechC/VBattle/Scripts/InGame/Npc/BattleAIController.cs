@@ -1,9 +1,8 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
-using TechC.VBattle.Core;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Npc
 {
@@ -12,74 +11,41 @@ namespace TechC.VBattle.InGame.Npc
     /// </summary>
     public class BattleAIController : MonoBehaviour
     {
+        #region フィールド
+
         [Header("AI設定")]
+        [Tooltip("難易度設定")]
+        [SerializeField] private EnemyDifficulty difficulty = EnemyDifficulty.Normal;
+
+        [Header("AI行動データ（難易度別）")]
+        [Tooltip("Debug難易度用のデータ")]
+        [SerializeField] private NpcDataSO debugData;
+        
+        [Tooltip("Easy難易度用のデータ")]
+        [SerializeField] private NpcDataSO easyData;
+        
+        [Tooltip("Normal難易度用のデータ")]
+        [SerializeField] private NpcDataSO normalData;
+
+        private NpcDataSO npcData;
         private Transform opponent;
         private AIInputManager inputManager;
         private BattleAIStrategy strategy;
         private Character.CharacterController characterController;
 
-        [Header("行動設定")]
-        [SerializeField] private float actionInterval = 0.5f;
-        [SerializeField] private float reactionTime = 0.1f;
+        #endregion
 
-        [Header("難易度")]
-        [SerializeField] private EnemyDifficulty difficulty = EnemyDifficulty.Normal;
-
-        [Header("【重要】各行動の時間（※難易度をDEBUGにすることで反映）")]
-        [Tooltip("接近行動の継続時間（秒）")]
-        [SerializeField] private float approachTime = 0.3f;
-        [Tooltip("後退行動の継続時間（秒）")]
-        [SerializeField] private float retreatTime = 0.3f;
-        [Tooltip("弱攻撃の入力継続時間（秒）")]
-        [SerializeField] private float weakAttackTime = 0.15f;
-        [Tooltip("強攻撃の入力継続時間（秒）")]
-        [SerializeField] private float strongAttackTime = 0.3f;
-        [Tooltip("ガードの継続時間（秒）")]
-        [SerializeField] private float guardTime = 0.3f;
-        [Tooltip("ジャンプの入力継続時間（秒）")]
-        [SerializeField] private float jumpTime = 0.12f;
-        [Tooltip("しゃがみの継続時間（秒）")]
-        [SerializeField] private float crouchTime = 0.25f;
-        [Tooltip("待機行動の継続時間（秒）")]
-        [SerializeField] private float waitTime = 0.25f;
-
-        [Header("通常攻撃設定")]
-        [SerializeField, Range(0, 1)] private float weakAttackChance = 0.7f;
-
-        [Header("攻撃方向の確率（通常時）")]
-        [Tooltip("左方向への攻撃確率（通常時）")]
-        [SerializeField, ReadOnly] private float baseLeftPercent = 25f;
-
-        [Tooltip("右方向への攻撃確率（通常時）")]
-        [SerializeField, ReadOnly] private float baseRightPercent = 25f;
-
-        [Tooltip("上方向への攻撃確率（通常時）")]
-        [SerializeField, ReadOnly] private float baseUpPercent = 25f;
-
-        [Tooltip("下方向への攻撃確率（通常時）")]
-        [SerializeField, ReadOnly] private float baseDownPercent = 25f;
-
-        [Header("攻撃方向の確率（優遇時）")]
-        [SerializeField] private float preferLeftPercent = 40f;
-        [SerializeField] private float preferRightPercent = 40f;
-        [SerializeField] private float lessLeftPercent = 10f;
-        [SerializeField] private float lessRightPercent = 10f;
-
-        [Header("ジャンプ攻撃設定")]
-        [SerializeField, Range(0, 1)] private float jumpAttackChance = 0.8f;
-        [SerializeField, Range(0, 1)] private float jumpWeakAttackChance = 0.7f;
-
-        [Header("しゃがみの攻撃設定")]
-        [SerializeField, Range(0, 1)] private float crouchAttackChance = 0.6f;
-        [SerializeField, Range(0, 1)] private float crouchWeakAttackChance = 0.7f;
-
-        private const float ATTACK_DELAY_RATE = 0.5f;
+        #region 内部状態
 
         private float lastActionTime;
         private BattleRange currentRange;
         private AIActionType currentAction;
         private bool isExecutingAction;
         private CancellationTokenSource aiCts;
+
+        #endregion
+
+        #region 初期化・破棄
 
         /// <summary>
         /// 外部から初期化
@@ -92,13 +58,28 @@ namespace TechC.VBattle.InGame.Npc
             if (inputManager == null)
                 inputManager = GetComponent<AIInputManager>();
 
-            if (strategy == null)
-                strategy = GetComponent<BattleAIStrategy>();
-
             if (characterController == null)
                 characterController = GetComponent<Character.CharacterController>();
 
-            ApplyDifficultySettings();
+            // 難易度に応じてNpcDataSOを切り替え
+            npcData = difficulty switch
+            {
+                EnemyDifficulty.Debug => debugData,
+                EnemyDifficulty.Easy => easyData,
+                EnemyDifficulty.Normal => normalData,
+                _ => normalData
+            };
+
+            // NpcDataSOのチェック
+            if (npcData == null)
+            {
+                CustomLogger.Error($"[{name}] 難易度 {difficulty} にNpcDataSOが設定されていません");
+                return;
+            }
+
+            // 戦略を初期化（ScriptableObjectから）
+            strategy = new BattleAIStrategy();
+            strategy.Initialize(npcData);
 
             aiCts?.Cancel();
             aiCts?.Dispose();
@@ -112,6 +93,10 @@ namespace TechC.VBattle.InGame.Npc
             aiCts?.Cancel();
             aiCts?.Dispose();
         }
+
+        #endregion
+
+        #region AIメインループ
 
         /// <summary>
         /// AI行動のメインループ
@@ -181,6 +166,10 @@ namespace TechC.VBattle.InGame.Npc
             await PerformActionAsync(currentAction, token);
         }
 
+        #endregion
+
+        #region 行動実行
+
         /// <summary>
         /// 選択された行動を実行
         /// </summary>
@@ -189,7 +178,7 @@ namespace TechC.VBattle.InGame.Npc
             isExecutingAction = true;
 
             await DelayUtility.RunAfterDelayWithPause(
-                reactionTime,
+                npcData.ActionTimings.ReactionTime,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -238,7 +227,7 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetMoveInput(direction);
 
             await DelayUtility.RunAfterDelayWithPause(
-                approachTime,
+                npcData.ActionTimings.ApproachTime,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -256,7 +245,7 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetMoveInput(direction);
 
             await DelayUtility.RunAfterDelayWithPause(
-                retreatTime,
+                npcData.ActionTimings.RetreatTime,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -271,13 +260,13 @@ namespace TechC.VBattle.InGame.Npc
         private async UniTask PerformAttackAsync(CancellationToken token)
         {
             Vector2 direction = GetAttackDirection();
-            bool isWeak = Random.value < weakAttackChance;
+            bool isWeak = Random.value < npcData.AttackSettings.WeakAttackChance;
 
             if (isWeak)
             {
                 inputManager.SetWeakAttackInput(direction);
                 await DelayUtility.RunAfterDelayWithPause(
-                    weakAttackTime,
+                    npcData.ActionTimings.WeakAttackTime,
                     () => { },
                     InGameManager.I?.GetPauseStateFunc,
                     token
@@ -288,7 +277,7 @@ namespace TechC.VBattle.InGame.Npc
             {
                 inputManager.SetStrongAttackInput(direction);
                 await DelayUtility.RunAfterDelayWithPause(
-                    strongAttackTime,
+                    npcData.ActionTimings.StrongAttackTime,
                     () => { },
                     InGameManager.I?.GetPauseStateFunc,
                     token
@@ -305,7 +294,7 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetGuardInput(true);
 
             await DelayUtility.RunAfterDelayWithPause(
-                guardTime,
+                npcData.ActionTimings.GuardTime,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -321,7 +310,7 @@ namespace TechC.VBattle.InGame.Npc
         {
             inputManager.SetJumpInput(true);
 
-            float attackDelay = jumpTime * ATTACK_DELAY_RATE;
+            float attackDelay = npcData.ActionTimings.JumpTime * npcData.ActionTimings.AttackDelayRate;
             await DelayUtility.RunAfterDelayWithPause(
                 attackDelay,
                 () => { },
@@ -329,14 +318,14 @@ namespace TechC.VBattle.InGame.Npc
                 token
             );
 
-            if (Random.value < jumpAttackChance)
+            if (Random.value < npcData.AttackSettings.JumpAttackChance)
             {
-                bool isWeak = Random.value < jumpWeakAttackChance;
+                bool isWeak = Random.value < npcData.AttackSettings.JumpWeakAttackChance;
                 if (isWeak)
                 {
                     inputManager.SetWeakAttackInput(Vector2.up);
                     await DelayUtility.RunAfterDelayWithPause(
-                        weakAttackTime,
+                        npcData.ActionTimings.WeakAttackTime,
                         () => { },
                         InGameManager.I?.GetPauseStateFunc,
                         token
@@ -347,7 +336,7 @@ namespace TechC.VBattle.InGame.Npc
                 {
                     inputManager.SetStrongAttackInput(Vector2.up);
                     await DelayUtility.RunAfterDelayWithPause(
-                        strongAttackTime,
+                        npcData.ActionTimings.StrongAttackTime,
                         () => { },
                         InGameManager.I?.GetPauseStateFunc,
                         token
@@ -357,7 +346,7 @@ namespace TechC.VBattle.InGame.Npc
             }
 
             await DelayUtility.RunAfterDelayWithPause(
-                jumpTime - attackDelay,
+                npcData.ActionTimings.JumpTime - attackDelay,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -373,7 +362,7 @@ namespace TechC.VBattle.InGame.Npc
         {
             inputManager.SetCrouchInput(true);
 
-            float attackDelay = crouchTime * ATTACK_DELAY_RATE;
+            float attackDelay = npcData.ActionTimings.CrouchTime * npcData.ActionTimings.AttackDelayRate;
             await DelayUtility.RunAfterDelayWithPause(
                 attackDelay,
                 () => { },
@@ -381,14 +370,14 @@ namespace TechC.VBattle.InGame.Npc
                 token
             );
 
-            if (Random.value < crouchAttackChance)
+            if (Random.value < npcData.AttackSettings.CrouchAttackChance)
             {
-                bool isWeak = Random.value < crouchWeakAttackChance;
+                bool isWeak = Random.value < npcData.AttackSettings.CrouchWeakAttackChance;
                 if (isWeak)
                 {
                     inputManager.SetWeakAttackInput(Vector2.down);
                     await DelayUtility.RunAfterDelayWithPause(
-                        weakAttackTime,
+                        npcData.ActionTimings.WeakAttackTime,
                         () => { },
                         InGameManager.I?.GetPauseStateFunc,
                         token
@@ -399,7 +388,7 @@ namespace TechC.VBattle.InGame.Npc
                 {
                     inputManager.SetStrongAttackInput(Vector2.down);
                     await DelayUtility.RunAfterDelayWithPause(
-                        strongAttackTime,
+                        npcData.ActionTimings.StrongAttackTime,
                         () => { },
                         InGameManager.I?.GetPauseStateFunc,
                         token
@@ -409,7 +398,7 @@ namespace TechC.VBattle.InGame.Npc
             }
 
             await DelayUtility.RunAfterDelayWithPause(
-                crouchTime - attackDelay,
+                npcData.ActionTimings.CrouchTime - attackDelay,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
@@ -424,12 +413,16 @@ namespace TechC.VBattle.InGame.Npc
         private async UniTask PerformWaitAsync(CancellationToken token)
         {
             await DelayUtility.RunAfterDelayWithPause(
-                waitTime,
+                npcData.ActionTimings.WaitTime,
                 () => { },
                 InGameManager.I?.GetPauseStateFunc,
                 token
             );
         }
+
+        #endregion
+
+        #region ユーティリティ
 
         /// <summary>
         /// 相手への方向ベクトルを取得
@@ -447,20 +440,21 @@ namespace TechC.VBattle.InGame.Npc
         {
             float dx = opponent.position.x - transform.position.x;
 
-            float leftPercent = baseLeftPercent;
-            float rightPercent = baseRightPercent;
-            float upPercent = baseUpPercent;
-            float downPercent = baseDownPercent;
+            var directionProbability = npcData.DirectionProbability;
+            float leftPercent = directionProbability.BaseLeftPercent;
+            float rightPercent = directionProbability.BaseRightPercent;
+            float upPercent = directionProbability.BaseUpPercent;
+            float downPercent = directionProbability.BaseDownPercent;
 
             if (dx < 0)
             {
-                leftPercent = preferLeftPercent;
-                rightPercent = lessRightPercent;
+                leftPercent = directionProbability.PreferLeftPercent;
+                rightPercent = directionProbability.LessRightPercent;
             }
             else if (dx > 0)
             {
-                rightPercent = preferRightPercent;
-                leftPercent = lessLeftPercent;
+                rightPercent = directionProbability.PreferRightPercent;
+                leftPercent = directionProbability.LessLeftPercent;
             }
 
             float total = leftPercent + rightPercent + upPercent + downPercent;
@@ -474,42 +468,6 @@ namespace TechC.VBattle.InGame.Npc
             return Vector2.down;
         }
 
-        /// <summary>
-        /// 難易度に応じて、CPUのパラメータを変更する
-        /// </summary>
-        private void ApplyDifficultySettings()
-        {
-            switch (difficulty)
-            {
-                case EnemyDifficulty.Debug:
-                    break;
-                case EnemyDifficulty.Easy:
-                    actionInterval = 0.8f;
-                    reactionTime = 0.3f;
-                    approachTime = 0.4f;
-                    retreatTime = 0.4f;
-                    weakAttackTime = 0.18f;
-                    strongAttackTime = 0.35f;
-                    guardTime = 0.35f;
-                    jumpTime = 0.22f;
-                    crouchTime = 0.36f;
-                    waitTime = 0.35f;
-                    strategy.SetPersonality(0.7f, 1.2f, 0.8f);
-                    break;
-                case EnemyDifficulty.Normal:
-                    actionInterval = 0.5f;
-                    reactionTime = 0.1f;
-                    approachTime = 0.3f;
-                    retreatTime = 0.3f;
-                    weakAttackTime = 0.15f;
-                    strongAttackTime = 0.3f;
-                    guardTime = 0.3f;
-                    jumpTime = 0.16f;
-                    crouchTime = 0.28f;
-                    waitTime = 0.25f;
-                    strategy.SetPersonality(1.0f, 1.0f, 1.0f);
-                    break;
-            }
-        }
+        #endregion
     }
 }

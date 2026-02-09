@@ -76,7 +76,6 @@ GameObject:
   - component: {fileID: 16701765163562529}
   - component: {fileID: 1262581174402241415}
   - component: {fileID: -2800001782768856970}
-  - component: {fileID: -523548637896245194}
   m_Layer: 7
   m_Name: Npc_Ame
   m_TagString: Player
@@ -345,45 +344,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf5eda289e7f444382fabd71db8bab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionInterval: 0.5
-  reactionTime: 0.1
   difficulty: 0
-  approachTime: 0.3
-  retreatTime: 0.3
-  weakAttackTime: 0.15
-  strongAttackTime: 0.3
-  guardTime: 0.3
-  jumpTime: 0.12
-  crouchTime: 0.25
-  waitTime: 0.25
-  weakAttackChance: 0.7
-  baseLeftPercent: 25
-  baseRightPercent: 25
-  baseUpPercent: 25
-  baseDownPercent: 25
-  preferLeftPercent: 40
-  preferRightPercent: 40
-  lessLeftPercent: 10
-  lessRightPercent: 10
-  jumpAttackChance: 0.8
-  jumpWeakAttackChance: 0.7
-  crouchAttackChance: 0.6
-  crouchWeakAttackChance: 0.7
---- !u!114 &-523548637896245194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2916867313761328699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82ad332653429944a9b86d8f1575bc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  strategies: []
-  closeRange: 2
-  mediumRange: 5
+  debugData: {fileID: 11400000, guid: 3276bf3705cb37e488dc0a3afaa6585b, type: 2}
+  easyData: {fileID: 11400000, guid: a3b5d44dd02b32940bcfbca7ad27a2bf, type: 2}
+  normalData: {fileID: 11400000, guid: 0e1bc75f4e1ecfa428de4e644de72534, type: 2}
 --- !u!1001 &217520268115137976
 PrefabInstance:
   m_ObjectHideFlags: 0

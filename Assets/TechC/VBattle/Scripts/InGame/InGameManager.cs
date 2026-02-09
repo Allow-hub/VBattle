@@ -102,9 +102,6 @@ namespace TechC.VBattle.InGame
                 }
                 cameraController.SetupPlayers(p1Controller, p2Controller);
                 
-                // NPC初期化
-                SetupNpc(p2Controller, p1Controller.transform);
-                
                 ChangeState(InGameState.Start); // カウントダウンから開始
             }
             else
@@ -147,9 +144,6 @@ namespace TechC.VBattle.InGame
                 player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
                 battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
                 cameraController.SetupPlayers(p1Controller, p2Controller);
-
-                // NPC初期化
-                SetupNpc(p2Controller, p1Controller.transform);
 
                 ChangeState(InGameState.Start);
             }
@@ -456,6 +450,10 @@ namespace TechC.VBattle.InGame
         {
             remainingBattleTime = battleTimeLimit;
             isTimeUpTriggered = false;
+
+            // NPC初期化
+            if (p2Controller != null && p2Controller.IsNPC)
+                SetupNpc(p2Controller, p1Controller.transform);
 
             // バトル開始時に入力を有効化
             if (p1Controller != null)

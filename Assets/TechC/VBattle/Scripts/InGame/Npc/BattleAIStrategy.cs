@@ -1,45 +1,35 @@
 using System.Collections.Generic;
-using UnityEngine;
+using TechC.VBattle.Core.Extensions;
 
 namespace TechC.VBattle.InGame.Npc
 {
     /// <summary>
-    /// AI戦略管理クラス（個別性格パラメータ対応版）
+    /// AI戦略管理クラス（ロジックのみ）
     /// </summary>
-    public class BattleAIStrategy : MonoBehaviour
+    [System.Serializable]
+    public class BattleAIStrategy
     {
-        [Header("戦略設定")]
-        [SerializeField] private List<BattleRangeStrategy> strategies = new List<BattleRangeStrategy>();
+        private List<BattleRangeStrategy> strategies;
+        private float closeRange;
+        private float mediumRange;
+        private AIPersonality personality;
 
-        [Header("距離設定")]
-        [SerializeField] private float closeRange = 2.0f;
-        [SerializeField] private float mediumRange = 5.0f;
-
-        private float aggressiveness = 1.0f;
-        private float defensiveness = 1.0f;
-        private float mobility = 1.0f;
-
-        private void Awake()
+        /// <summary>
+        /// 初期化（NpcDataSOから設定を受け取る）
+        /// </summary>
+        public void Initialize(NpcDataSO npcData)
         {
-            InitializeStrategies();
-        }
-
-        private void InitializeStrategies()
-        {
-            if (strategies.Count == 0)
+            if (npcData == null)
             {
-                strategies.Add(new BattleRangeStrategy(BattleRange.Close));
-                strategies.Add(new BattleRangeStrategy(BattleRange.Medium));
-                strategies.Add(new BattleRangeStrategy(BattleRange.Far));
+                CustomLogger.Error("NpcDataSOがnullです");
+                return;
             }
 
-            foreach (var strategy in strategies)
-            {
-                if (strategy.actionWeights.Count == 0)
-                {
-                    strategy.InitializeDefaultWeights();
-                }
-            }
+            // SOからデータをコピー
+            closeRange = npcData.DistanceSettings.CloseRange;
+            mediumRange = npcData.DistanceSettings.MediumRange;
+            strategies = new List<BattleRangeStrategy>(npcData.Strategies);
+            personality = npcData.Personality;
         }
 
         /// <summary>
@@ -58,11 +48,10 @@ namespace TechC.VBattle.InGame.Npc
         /// <summary>
         /// 指定された範囲の戦略を取得
         /// </summary>
-        public BattleRangeStrategy GetStrategy(BattleRange range) => strategies.Find(s => s.range == range);
+        public BattleRangeStrategy GetStrategy(BattleRange range) => strategies?.Find(s => s.range == range);
 
         /// <summary>
         /// 重み付けに基づいてランダムに行動を選択
-        /// 各戦略の個別性格パラメータを使用
         /// </summary>
         public AIActionType SelectAction(BattleRange range)
         {
@@ -70,19 +59,9 @@ namespace TechC.VBattle.InGame.Npc
             if (strategy == null || strategy.actionWeights.Count == 0)
                 return AIActionType.Wait;
 
-            strategy.ApplyPersonalityAdjustments();
+            strategy.ApplyPersonalityAdjustments(personality);
 
             return strategy.SelectAction();
-        }
-
-        /// <summary>
-        /// 性格パラメータを設定するメソッド
-        /// </summary>
-        public void SetPersonality(float aggressiveness, float defensiveness, float mobility)
-        {
-            this.aggressiveness = aggressiveness;
-            this.defensiveness = defensiveness;
-            this.mobility = mobility;
         }
     }
 }

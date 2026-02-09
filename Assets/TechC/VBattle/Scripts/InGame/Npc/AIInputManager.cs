@@ -67,13 +67,9 @@ namespace TechC.VBattle.InGame.Npc
         public void SetGuardInput(bool press)
         {
             if (press)
-            {
                 OnButtonDown(InputButton.Guard);
-            }
             else
-            {
                 OnButtonUp(InputButton.Guard);
-            }
         }
 
         /// <summary>
@@ -83,9 +79,7 @@ namespace TechC.VBattle.InGame.Npc
         public void SetWeakAttackInput(Vector2 direction = default)
         {
             if (direction != default && direction.magnitude > INPUT_THRESHOLD)
-            {
                 SetMove(direction);
-            }
             OnButtonDown(InputButton.WeakAttack);
         }
 
@@ -105,9 +99,7 @@ namespace TechC.VBattle.InGame.Npc
         public void SetStrongAttackInput(Vector2 direction = default)
         {
             if (direction != default && direction.magnitude > INPUT_THRESHOLD)
-            {
                 SetMove(direction);
-            }
             OnButtonDown(InputButton.StrongAttack);
         }
 
