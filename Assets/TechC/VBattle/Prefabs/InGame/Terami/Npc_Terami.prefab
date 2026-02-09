@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 16701765163562529}
   - component: {fileID: -8378151722998138787}
   - component: {fileID: 1947395803959975149}
-  - component: {fileID: -6722333999164275771}
   m_Layer: 7
   m_Name: Npc_Terami
   m_TagString: Player
@@ -286,45 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf5eda289e7f444382fabd71db8bab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionInterval: 0.5
-  reactionTime: 0.1
   difficulty: 0
-  approachTime: 0.3
-  retreatTime: 0.3
-  weakAttackTime: 0.15
-  strongAttackTime: 0.3
-  guardTime: 0.3
-  jumpTime: 0.12
-  crouchTime: 0.25
-  waitTime: 0.25
-  weakAttackChance: 0.7
-  baseLeftPercent: 25
-  baseRightPercent: 25
-  baseUpPercent: 25
-  baseDownPercent: 25
-  preferLeftPercent: 40
-  preferRightPercent: 40
-  lessLeftPercent: 10
-  lessRightPercent: 10
-  jumpAttackChance: 0.8
-  jumpWeakAttackChance: 0.7
-  crouchAttackChance: 0.6
-  crouchWeakAttackChance: 0.7
---- !u!114 &-6722333999164275771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2916867313761328699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82ad332653429944a9b86d8f1575bc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  strategies: []
-  closeRange: 2
-  mediumRange: 5
+  debugData: {fileID: 0}
+  easyData: {fileID: 0}
+  normalData: {fileID: 0}
 --- !u!1 &8374959724036113229
 GameObject:
   m_ObjectHideFlags: 0

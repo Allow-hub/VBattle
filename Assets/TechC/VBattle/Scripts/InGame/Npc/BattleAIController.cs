@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -32,6 +33,12 @@ namespace TechC.VBattle.InGame.Npc
         private AIInputManager inputManager;
         private BattleAIStrategy strategy;
         private Character.CharacterController characterController;
+
+        // キャッシュされたデータ
+        private AIActionTimings actionTimings;
+        private AIAttackSettings attackSettings;
+        private AIAttackDirectionProbability directionProbability;
+        private Func<bool> pauseStateFunc;
 
         #endregion
 
@@ -76,6 +83,12 @@ namespace TechC.VBattle.InGame.Npc
                 CustomLogger.Error($"[{name}] 難易度 {difficulty} にNpcDataSOが設定されていません");
                 return;
             }
+
+            // 頻繁にアクセスされるデータをキャッシュ
+            actionTimings = npcData.ActionTimings;
+            attackSettings = npcData.AttackSettings;
+            directionProbability = npcData.DirectionProbability;
+            pauseStateFunc = InGameManager.I?.GetPauseStateFunc;
 
             // 戦略を初期化（ScriptableObjectから）
             strategy = new BattleAIStrategy();
@@ -178,9 +191,9 @@ namespace TechC.VBattle.InGame.Npc
             isExecutingAction = true;
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.ReactionTime,
+                actionTimings.ReactionTime,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -227,9 +240,9 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetMoveInput(direction);
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.ApproachTime,
+                actionTimings.ApproachTime,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -245,9 +258,9 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetMoveInput(direction);
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.RetreatTime,
+                actionTimings.RetreatTime,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -260,15 +273,15 @@ namespace TechC.VBattle.InGame.Npc
         private async UniTask PerformAttackAsync(CancellationToken token)
         {
             Vector2 direction = GetAttackDirection();
-            bool isWeak = Random.value < npcData.AttackSettings.WeakAttackChance;
+            bool isWeak = UnityEngine.Random.value < attackSettings.WeakAttackChance;
 
             if (isWeak)
             {
                 inputManager.SetWeakAttackInput(direction);
                 await DelayUtility.RunAfterDelayWithPause(
-                    npcData.ActionTimings.WeakAttackTime,
+                    actionTimings.WeakAttackTime,
                     () => { },
-                    InGameManager.I?.GetPauseStateFunc,
+                    pauseStateFunc,
                     token
                 );
                 inputManager.ReleaseWeakAttack();
@@ -277,9 +290,9 @@ namespace TechC.VBattle.InGame.Npc
             {
                 inputManager.SetStrongAttackInput(direction);
                 await DelayUtility.RunAfterDelayWithPause(
-                    npcData.ActionTimings.StrongAttackTime,
+                    actionTimings.StrongAttackTime,
                     () => { },
-                    InGameManager.I?.GetPauseStateFunc,
+                    pauseStateFunc,
                     token
                 );
                 inputManager.ReleaseStrongAttack();
@@ -294,9 +307,9 @@ namespace TechC.VBattle.InGame.Npc
             inputManager.SetGuardInput(true);
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.GuardTime,
+                actionTimings.GuardTime,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -310,24 +323,24 @@ namespace TechC.VBattle.InGame.Npc
         {
             inputManager.SetJumpInput(true);
 
-            float attackDelay = npcData.ActionTimings.JumpTime * npcData.ActionTimings.AttackDelayRate;
+            float attackDelay = actionTimings.JumpTime * actionTimings.AttackDelayRate;
             await DelayUtility.RunAfterDelayWithPause(
                 attackDelay,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
-            if (Random.value < npcData.AttackSettings.JumpAttackChance)
+            if (UnityEngine.Random.value < attackSettings.JumpAttackChance)
             {
-                bool isWeak = Random.value < npcData.AttackSettings.JumpWeakAttackChance;
+                bool isWeak = UnityEngine.Random.value < attackSettings.JumpWeakAttackChance;
                 if (isWeak)
                 {
                     inputManager.SetWeakAttackInput(Vector2.up);
                     await DelayUtility.RunAfterDelayWithPause(
-                        npcData.ActionTimings.WeakAttackTime,
+                        actionTimings.WeakAttackTime,
                         () => { },
-                        InGameManager.I?.GetPauseStateFunc,
+                        pauseStateFunc,
                         token
                     );
                     inputManager.ReleaseWeakAttack();
@@ -336,9 +349,9 @@ namespace TechC.VBattle.InGame.Npc
                 {
                     inputManager.SetStrongAttackInput(Vector2.up);
                     await DelayUtility.RunAfterDelayWithPause(
-                        npcData.ActionTimings.StrongAttackTime,
+                        actionTimings.StrongAttackTime,
                         () => { },
-                        InGameManager.I?.GetPauseStateFunc,
+                        pauseStateFunc,
                         token
                     );
                     inputManager.ReleaseStrongAttack();
@@ -346,9 +359,9 @@ namespace TechC.VBattle.InGame.Npc
             }
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.JumpTime - attackDelay,
+                actionTimings.JumpTime - attackDelay,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -362,24 +375,24 @@ namespace TechC.VBattle.InGame.Npc
         {
             inputManager.SetCrouchInput(true);
 
-            float attackDelay = npcData.ActionTimings.CrouchTime * npcData.ActionTimings.AttackDelayRate;
+            float attackDelay = actionTimings.CrouchTime * actionTimings.AttackDelayRate;
             await DelayUtility.RunAfterDelayWithPause(
                 attackDelay,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
-            if (Random.value < npcData.AttackSettings.CrouchAttackChance)
+            if (UnityEngine.Random.value < attackSettings.CrouchAttackChance)
             {
-                bool isWeak = Random.value < npcData.AttackSettings.CrouchWeakAttackChance;
+                bool isWeak = UnityEngine.Random.value < attackSettings.CrouchWeakAttackChance;
                 if (isWeak)
                 {
                     inputManager.SetWeakAttackInput(Vector2.down);
                     await DelayUtility.RunAfterDelayWithPause(
-                        npcData.ActionTimings.WeakAttackTime,
+                        actionTimings.WeakAttackTime,
                         () => { },
-                        InGameManager.I?.GetPauseStateFunc,
+                        pauseStateFunc,
                         token
                     );
                     inputManager.ReleaseWeakAttack();
@@ -388,9 +401,9 @@ namespace TechC.VBattle.InGame.Npc
                 {
                     inputManager.SetStrongAttackInput(Vector2.down);
                     await DelayUtility.RunAfterDelayWithPause(
-                        npcData.ActionTimings.StrongAttackTime,
+                        actionTimings.StrongAttackTime,
                         () => { },
-                        InGameManager.I?.GetPauseStateFunc,
+                        pauseStateFunc,
                         token
                     );
                     inputManager.ReleaseStrongAttack();
@@ -398,9 +411,9 @@ namespace TechC.VBattle.InGame.Npc
             }
 
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.CrouchTime - attackDelay,
+                actionTimings.CrouchTime - attackDelay,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
 
@@ -413,9 +426,9 @@ namespace TechC.VBattle.InGame.Npc
         private async UniTask PerformWaitAsync(CancellationToken token)
         {
             await DelayUtility.RunAfterDelayWithPause(
-                npcData.ActionTimings.WaitTime,
+                actionTimings.WaitTime,
                 () => { },
-                InGameManager.I?.GetPauseStateFunc,
+                pauseStateFunc,
                 token
             );
         }
@@ -440,7 +453,6 @@ namespace TechC.VBattle.InGame.Npc
         {
             float dx = opponent.position.x - transform.position.x;
 
-            var directionProbability = npcData.DirectionProbability;
             float leftPercent = directionProbability.BaseLeftPercent;
             float rightPercent = directionProbability.BaseRightPercent;
             float upPercent = directionProbability.BaseUpPercent;
@@ -458,7 +470,7 @@ namespace TechC.VBattle.InGame.Npc
             }
 
             float total = leftPercent + rightPercent + upPercent + downPercent;
-            float rand = Random.Range(0f, total);
+            float rand = UnityEngine.Random.Range(0f, total);
 
             if (rand < leftPercent) return Vector2.left;
             rand -= leftPercent;

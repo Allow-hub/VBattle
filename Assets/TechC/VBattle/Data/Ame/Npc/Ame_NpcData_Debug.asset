@@ -40,7 +40,7 @@ MonoBehaviour:
     lessRightPercent: 10
     lessLeftPercent: 10
   personality:
-    aggression: 1
+    aggression: 2
     defensiveness: 1
     mobility: 1
   distanceSettings:
