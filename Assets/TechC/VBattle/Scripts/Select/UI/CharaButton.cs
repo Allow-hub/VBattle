@@ -160,10 +160,15 @@ namespace TechC.VBattle.Select.UI
             InputDevice targetDevice = device;
             int targetId = playerId;
 
-            if (SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID) && isNpc && playerId == PlayerConstants.PLAYER_1_ID)
+            // NPCが設定されている場合の処理
+            if (isNpc)
             {
-                targetId = PlayerConstants.PLAYER_2_ID;
-                targetDevice = null;
+                // 1Pが既に選択済みの場合、2PをNPCとして設定
+                if (SelectUIManager.I.CheckPicked(PlayerConstants.PLAYER_1_ID))
+                {
+                    targetId = PlayerConstants.PLAYER_2_ID;
+                    targetDevice = null;  // NPCなのでデバイスはnull
+                }
             }
 
             if (SelectUIManager.I.CheckPicked(targetId)) return;
