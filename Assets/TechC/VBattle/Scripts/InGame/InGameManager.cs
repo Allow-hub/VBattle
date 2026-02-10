@@ -20,13 +20,20 @@ namespace TechC.VBattle.InGame
     /// </summary>
     public class InGameManager : Singleton<InGameManager>
     {
+        #region 定数
         private const string KEYBOARD_CONTROL_SCHEME = "KeyboardScheme";
         private const string GAMEPAD_CONTROL_SCHEME = "PadScheme";
+        #endregion
+
+        #region バトル設定
         [SerializeField] private float battleTimeLimit = 60f; // 制限時間（秒）
         public float BattleTimeLimit => battleTimeLimit;
         private float remainingBattleTime;
         public float RemainingBattleTime => remainingBattleTime;
         private bool isTimeUpTriggered = false;
+        #endregion
+
+        #region デバッグ設定
         [Header("デバック関連")]
         [SerializeField] private bool isDebug = true;
         [SerializeField] private bool useNpc = false;
@@ -40,31 +47,52 @@ namespace TechC.VBattle.InGame
 
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
+        #endregion
 
+        #region UI・カメラ
         [SerializeField] private Camera.CameraController cameraController;
         [SerializeField] private PlayerUIController player1UIController;
         [SerializeField] private PlayerUIController player2UIController;
+        #endregion
 
+        #region カウントダウン設定
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
         [SerializeField] private int[] countdownFontSize; // フォントサイズ配列を追加
         private int countdownTimer = 3;
         private CancellationTokenSource countdownCts;
+        #endregion
+
+        #region ステート管理
         public InGameState InGameState => inGameState;
         private InGameState inGameState = InGameState.None;
+        #endregion
+
+        #region キャラクター・バトル管理
         private Character.CharacterController p1Controller;
         private Character.CharacterController p2Controller;
         public BattleEventBus BattleBus { get; private set; }
         private BattleJudge battleJudge;
         private HitStopController hitStopController;//イベントを使用しているので保持しておく必要がある
+        #endregion
+
+        #region ポーズ機能
         private bool isPaused = false;          // ポーズ状態フラグ
         public bool IsPaused => isPaused;       // 読み取り専用プロパティ
         public Func<bool> GetPauseStateFunc => () => isPaused;  // Funcデリゲート
+        #endregion
+
+        #region シングルトン設定
         protected override bool UseDontDestroyOnLoad => false;
+        #endregion
         
+        #region プレイヤー参照（カウンターテスト用）
         // プレイヤー参照（カウンターテスト用）
         private Character.CharacterController p1Character;
         private Character.CharacterController p2Character;
+        #endregion
+
+        #region 初期化
         public override void Init()
         {
             base.Init();
@@ -154,7 +182,9 @@ namespace TechC.VBattle.InGame
                 ChangeState(InGameState.Start);
             }
         }
+        #endregion
 
+        #region Unityライフサイクル
         private void Start()
         {
             BattleBus.Subscribe<PlayerOnDeathEvent>(e =>
@@ -180,7 +210,9 @@ namespace TechC.VBattle.InGame
             battleJudge?.Dispose();
             BattleBus?.Clear();
         }
+        #endregion
 
+        #region ステート更新
         private void UpdateState()
         {
             switch (inGameState)
@@ -217,7 +249,9 @@ namespace TechC.VBattle.InGame
                     break;
             }
         }
+        #endregion
 
+        #region Startステート
         private void InitStartState()
         {
             if (InGameUIController.I != null)
@@ -451,7 +485,9 @@ namespace TechC.VBattle.InGame
         }
 
         private void UpdateStartState() { }
+        #endregion
 
+        #region Battleステート
         private void InitBattleState()
         {
             remainingBattleTime = battleTimeLimit;
@@ -509,7 +545,9 @@ namespace TechC.VBattle.InGame
             if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
                 isPaused = !isPaused;
         }
+        #endregion
 
+        #region Resultステート
         private void InitResultState()
         {
             if (p1Controller.CurrentHP > p2Controller.CurrentHP)
@@ -530,10 +568,13 @@ namespace TechC.VBattle.InGame
         {
 
         }
+        #endregion
 
-
+        #region 公開メソッド
         public void SetPauseState(bool pause) => isPaused = pause;
+        #endregion
         
+        #region NPC設定
         private void SetupNpc(Character.CharacterController character, Transform opponent)
         {
             if (character == null || !character.IsNPC) return;
@@ -546,6 +587,7 @@ namespace TechC.VBattle.InGame
 
             aiController.Init(opponent);
         }
+        #endregion
     }
     
     /// <summary>
