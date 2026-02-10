@@ -25,6 +25,9 @@ namespace TechC.VBattle.InGame.Character
 
                 // 移動方向を計算
                 Vector3 moveDirection = new Vector3(direction.x, 0, 0).normalized;
+                // 壁があれば進行不可
+                if (IsWallAhead(moveDirection))
+                    return;
                 Vector3 targetVelocity = moveDirection * moveSpeed;
 
                 // 現在の速度を取得してY軸は保持
@@ -121,6 +124,16 @@ namespace TechC.VBattle.InGame.Character
         private void PerformSpecial()
         {
             UseSpecialGauge(characterData.maxSpecialGauge);
+        }
+        private bool IsWallAhead(Vector3 moveDirection)
+        {
+            Vector3 origin = transform.position + Vector3.up * 0.5f;
+            Debug.DrawRay(origin, moveDirection * wallCheckDistance, Color.red);
+
+            if (Physics.Raycast(origin, moveDirection, out RaycastHit hit, wallCheckDistance))
+                return hit.collider.CompareTag("Wall");
+
+            return false;
         }
 
         /// <summary>

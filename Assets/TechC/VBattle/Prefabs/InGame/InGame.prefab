@@ -2033,6 +2033,8 @@ MonoBehaviour:
   charaAttackFactory: {fileID: 8042099456699637893}
   effectFactory: {fileID: 9105864281085549204}
   attackVisualizer: {fileID: 2008342281509438462}
+  battleGimmickManager: {fileID: 7102736807134503929}
+  windowColliderFactory: {fileID: 3343973563185617946}
   inGameUIController: {fileID: 2627414135167660342}
 --- !u!114 &6733301921680445614
 MonoBehaviour:
@@ -2048,6 +2050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleTimeLimit: 120
   isDebug: 1
+  useNpc: 0
   p1Rot: {x: 0, y: 90, z: 0}
   p2Rot: {x: 0, y: -90, z: 0}
   p1Pos: {x: -1, y: 0, z: -6}
@@ -2086,21 +2089,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256032833623941496}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 451888f0c16d58a43a6f0b103ba90179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tabGimickController:
     normalTabObj: {fileID: 8881539637466067497}
-    intervalRange: {x: 1, y: 3}
+    intervalRange: {x: 7, y: 12}
   windowGimmickController:
     groundLayer:
       serializedVersion: 2
       m_Bits: 256
-    intervalRange: {x: 10, y: 20}
+    intervalRange: {x: 1, y: 2}
     appearTime: 8
-    wallSprite: {fileID: 0}
+    wallSprite: {fileID: 21300000, guid: c2b628579db2bc44d8c99292cf2442ee, type: 3}
 --- !u!114 &1445153867511104967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30197,6 +30200,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 4566718942260591305, guid: bc402f3abf445764889da0768e74c83a,
         type: 3}
+      propertyPath: visiblePos.x
+      value: 1320
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566718942260591305, guid: bc402f3abf445764889da0768e74c83a,
+        type: 3}
       propertyPath: visiblePos.y
       value: 800
       objectReference: {fileID: 0}
@@ -30208,12 +30216,12 @@ PrefabInstance:
     - target: {fileID: 4566718942260591305, guid: bc402f3abf445764889da0768e74c83a,
         type: 3}
       propertyPath: windowSize.y
-      value: 120
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4566718942260591305, guid: bc402f3abf445764889da0768e74c83a,
         type: 3}
       propertyPath: slideDuration
-      value: 3
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 9065600717667164329, guid: bc402f3abf445764889da0768e74c83a,
         type: 3}
@@ -30223,12 +30231,16 @@ PrefabInstance:
     - target: {fileID: 9065600717667164329, guid: bc402f3abf445764889da0768e74c83a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9072057291467852282, guid: bc402f3abf445764889da0768e74c83a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5102621848347244123}
   m_SourcePrefab: {fileID: 100100000, guid: bc402f3abf445764889da0768e74c83a, type: 3}
 --- !u!224 &2584473446379794523 stripped
 RectTransform:
@@ -30242,6 +30254,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 479630285157727187}
   m_PrefabAsset: {fileID: 0}
+--- !u!225 &5102621848347244123
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8881539637466067497}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1001 &629287399802202089
 PrefabInstance:
   m_ObjectHideFlags: 0

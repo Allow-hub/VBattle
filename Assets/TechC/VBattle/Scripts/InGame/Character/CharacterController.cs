@@ -23,6 +23,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private LayerMask groundMask;
         [SerializeField, ReadOnly] private int playerIndex;
         [SerializeField, ReadOnly] private string playerTag = "Player";
+        [SerializeField] private float wallCheckDistance = 0.6f;
 
         // ===== 公開プロパティ =====
         public int PlayerIndex => playerIndex;
