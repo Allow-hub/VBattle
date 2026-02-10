@@ -44,12 +44,6 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Camera.CameraController cameraController;
         [SerializeField] private PlayerUIController player1UIController;
         [SerializeField] private PlayerUIController player2UIController;
-        
-        [Header("カウンターテスト設定")]
-        [Tooltip("有効にすると2Pが常にカウンター状態になります")]
-        [SerializeField] private bool enableCounterTest = true;
-        [Tooltip("カウンター発動時に実行する攻撃データ（isCounter=trueでnextChainが設定されている必要があります）")]
-        [SerializeField] private AttackData counterAttackData;
 
         [SerializeField] private Vector2[] countdownPosition;
         [SerializeField] private Vector2[] countdownSize;
@@ -189,12 +183,6 @@ namespace TechC.VBattle.InGame
 
         private void UpdateState()
         {
-            // カウンターテストモード
-            if (enableCounterTest && p2Character != null && counterAttackData != null)
-            {
-                UpdateCounterTest();
-            }
-            
             switch (inGameState)
             {
                 case InGameState.Start:
@@ -546,60 +534,6 @@ namespace TechC.VBattle.InGame
 
         public void SetPauseState(bool pause) => isPaused = pause;
         
-        /// <summary>
-        /// カウンターテストモードの更新処理
-        /// 2Pを常にカウンター状態に保つ
-        /// </summary>
-        private void UpdateCounterTest()
-        {
-            // 2Pがカウンター状態でない場合、カウンター攻撃を設定
-            if (!p2Character.CanCounter)
-            {
-                p2Character.SetCanCounter(true);
-                p2Character.SetCounterAction(() =>
-                {
-                    Debug.Log("P2 カウンター発動！");
-                    
-                    // counterAttackDataが設定されている場合、それを使って攻撃
-                    if (counterAttackData != null)
-                    {
-                        var attackData = counterAttackData.nextChain != null ? counterAttackData.nextChain : counterAttackData;
-                        ExecuteCounterAttackAsync(attackData).Forget();
-                    }
-                    else
-                    {
-                        // counterAttackDataが未設定の場合、デフォルトの攻撃
-                        ExecuteCounterAttackAsync(null).Forget();
-                    }
-                });
-            }
-        }
-        
-        /// <summary>
-        /// カウンター攻撃を非同期で実行
-        /// </summary>
-        private async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
-        {
-            // 数フレーム待機して、現在の処理が完全に終了するのを待つ
-            await UniTask.DelayFrame(3, PlayerLoopTiming.Update);
-            
-            // 2Pが攻撃可能な状態か確認
-            if (p2Character != null && p2Character.StateMachine != null)
-            {
-                // 攻撃を実行
-                p2Character.Attack(AttackType.Weak, AttackDirection.Neutral);
-                
-                if (attackData != null)
-                {
-                    Debug.Log($"P2 カウンター攻撃実行: {attackData.attackName}");
-                }
-                else
-                {
-                    Debug.Log("P2 カウンター攻撃実行: デフォルト攻撃");
-                }
-            }
-        }
-
         private void SetupNpc(Character.CharacterController character, Transform opponent)
         {
             if (character == null || !character.IsNPC) return;

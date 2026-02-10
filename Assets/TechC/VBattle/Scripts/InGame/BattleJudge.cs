@@ -35,7 +35,6 @@ namespace TechC.VBattle.InGame.Systems
         {
             // 対戦相手の特定
             var target = GetOpponent(attackEvent.attacker);
-            CustomLogger.Info($"攻撃リクエスト: 攻撃者={attackEvent.attacker?.Owner?.PlayerIndex}, ターゲット={target}", LogTagUtil.TagAttack);
 
             if (target == null)
             {
@@ -47,14 +46,10 @@ namespace TechC.VBattle.InGame.Systems
             // カウンター判定を最優先で実行（カウンター攻撃実行中は除く）
             if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
             {
-                CustomLogger.Info($"カウンター判定成功: Player {character.PlayerIndex}, 攻撃データ: {attackEvent.attackData.attackName}, CanCounter={character.CanCounter}, IsExecutingCounterAttack={character.IsExecutingCounterAttack}", LogTagUtil.TagAttack);
+                CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター発動！ Player {attackEvent.attacker.Owner.PlayerIndex}の[{attackEvent.attackData.attackName}] → カウンター攻撃[弱攻撃ニュートラル]", LogTagUtil.TagAttack);
                 character.UseCounter();
                 PublishAttackResult(attackEvent, target, false, true, false, 0); // isCounter=true
                 return;
-            }
-            else if (target is CharacterController character2)
-            {
-                CustomLogger.Info($"Player {character2.PlayerIndex}: CanCounter={character2.CanCounter}, IsExecutingCounterAttack={character2.IsExecutingCounterAttack} (カウンター判定: false)", LogTagUtil.TagAttack);
             }
 
             // 当たり判定（ヒット対象のリストに含まれるか）
@@ -62,7 +57,6 @@ namespace TechC.VBattle.InGame.Systems
 
             if (!isHitRange)
             {
-                CustomLogger.Info("ヒット範囲外", LogTagUtil.TagAttack);
                 PublishAttackResult(attackEvent, target, false, false, false, 0);
                 return;
             }

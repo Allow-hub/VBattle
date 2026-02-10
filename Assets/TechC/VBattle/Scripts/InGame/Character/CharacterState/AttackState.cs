@@ -89,11 +89,10 @@ namespace TechC.VBattle.InGame.Character
                         // カウンター受付開始（COUNTER_START_TIME = 0なので即座に開始）
                         controller.SetCanCounter(true);
                         SetupCounterAction();
-                        CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター受付開始 - {currentAttackData.attackName}", LogTagUtil.TagAttack);
                     }
                     else if (isCounterAttack)
                     {
-                        CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター攻撃なのでカウンター機能無効 - {currentAttackData.attackName}", LogTagUtil.TagAttack);
+                        // カウンター攻撃なのでカウンター機能無効
                     }
 
                     // hitTimingまでの残り時間を待機
@@ -115,7 +114,6 @@ namespace TechC.VBattle.InGame.Character
                         // カウンター受付終了
                         controller.SetCanCounter(false);
                         controller.ResetCounterAction();
-                        CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター受付終了 - {currentAttackData.attackName}", LogTagUtil.TagAttack);
                     }
 
                     // cancelStartTimeまでの残り時間を待機
@@ -196,19 +194,14 @@ namespace TechC.VBattle.InGame.Character
             // カウンター攻撃実行中はカウンターアクションを設定しない（無限ループ防止）
             if (controller.IsExecutingCounterAttack)
             {
-                CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター攻撃実行中のためカウンター待機をスキップ", LogTagUtil.TagAttack);
                 return;
             }
             
             // isCounterフラグに基づいてカウンターアクションを設定
             if (!currentAttackData.isCounter) return;
-            
-            CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター待機設定 - {currentAttackData.attackName} (AttackType:{controller.CurrentAttackType}, Direction:{controller.CurrentAttackDirection})", LogTagUtil.TagAttack);
 
             controller.SetCounterAction(() =>
             {
-                CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター発動！", LogTagUtil.TagAttack);
-                
                 // カウンター受付終了
                 controller.SetCanCounter(false);
                 controller.ResetCounterAction();
@@ -267,11 +260,11 @@ namespace TechC.VBattle.InGame.Character
                 
                 if (attackData != null)
                 {
-                    Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: {attackData.attackName}");
+                    // Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: {attackData.attackName}");
                 }
                 else
                 {
-                    Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: デフォルト攻撃");
+                    // Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: デフォルト攻撃");
                 }
                 
                 // カウンター攻撃終了後にフラグをクリア
@@ -279,7 +272,6 @@ namespace TechC.VBattle.InGame.Character
                 if (controller != null)
                 {
                     controller.SetExecutingCounterAttack(false);
-                    CustomLogger.Info($"Player {controller.PlayerIndex}: カウンター攻撃完了、フラグをリセット", LogTagUtil.TagAttack);
                 }
             }
         }

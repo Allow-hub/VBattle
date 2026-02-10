@@ -309,7 +309,6 @@ namespace TechC.VBattle.InGame.Character
         public void UseCounter()
         {
             if (onCounter == null) return;
-            CustomLogger.Info($"Player {PlayerIndex}: カウンター発動！", LogTagUtil.TagAttack);
             SetCanCounter(false);
             var action = onCounter;
             onCounter = null;
@@ -319,7 +318,6 @@ namespace TechC.VBattle.InGame.Character
         public void SetExecutingCounterAttack(bool val)
         {
             isExecutingCounterAttack = val;
-            CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行フラグを{(val ? "有効化" : "無効化")}しました", LogTagUtil.TagAttack);
         }
 
         // ===== テスト用メソッド =====
