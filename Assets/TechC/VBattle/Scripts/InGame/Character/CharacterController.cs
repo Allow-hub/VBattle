@@ -37,6 +37,10 @@ namespace TechC.VBattle.InGame.Character
         // 攻撃情報
         public AttackType CurrentAttackType { get; private set; }
         public AttackDirection CurrentAttackDirection { get; private set; }
+        
+        // カウンター攻撃関連
+        private bool isExecutingCounterAttack = false;
+        public bool IsExecutingCounterAttack => isExecutingCounterAttack;
 
         // ===== コンポーネント =====
         public Animator Anim => anim;
@@ -310,6 +314,12 @@ namespace TechC.VBattle.InGame.Character
             var action = onCounter;
             onCounter = null;
             action.Invoke();
+        }
+
+        public void SetExecutingCounterAttack(bool val)
+        {
+            isExecutingCounterAttack = val;
+            CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行フラグを{(val ? "有効化" : "無効化")}しました", LogTagUtil.TagAttack);
         }
 
         // ===== テスト用メソッド =====

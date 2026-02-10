@@ -31,7 +31,7 @@ MonoBehaviour:
     type: 3}
   damage: 3
   knockbackForce: 1
-  isCounter: 1
+  isCounter: 0
   recoveryDuration: 0.05
   cancelStartTime: 0.2
   cancelEndTime: 0.3

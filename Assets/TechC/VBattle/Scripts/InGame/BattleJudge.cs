@@ -44,17 +44,17 @@ namespace TechC.VBattle.InGame.Systems
                 return;
             }
 
-            // カウンター判定を最優先で実行
-            if (target is CharacterController character && character.CanCounter)
+            // カウンター判定を最優先で実行（カウンター攻撃実行中は除く）
+            if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
             {
-                CustomLogger.Info($"カウンター判定成功: {character.PlayerIndex}, 攻撃データ: {attackEvent.attackData.attackName}", LogTagUtil.TagAttack);
+                CustomLogger.Info($"カウンター判定成功: Player {character.PlayerIndex}, 攻撃データ: {attackEvent.attackData.attackName}, CanCounter={character.CanCounter}, IsExecutingCounterAttack={character.IsExecutingCounterAttack}", LogTagUtil.TagAttack);
                 character.UseCounter();
                 PublishAttackResult(attackEvent, target, false, true, false, 0); // isCounter=true
                 return;
             }
             else if (target is CharacterController character2)
             {
-                CustomLogger.Info($"Player {character2.PlayerIndex}: CanCounter={character2.CanCounter}", LogTagUtil.TagAttack);
+                CustomLogger.Info($"Player {character2.PlayerIndex}: CanCounter={character2.CanCounter}, IsExecutingCounterAttack={character2.IsExecutingCounterAttack} (カウンター判定: false)", LogTagUtil.TagAttack);
             }
 
             // 当たり判定（ヒット対象のリストに含まれるか）

@@ -257,6 +257,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
+      propertyPath: useNpc
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
       propertyPath: counterAttackData
       value: 
       objectReference: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d,
@@ -264,12 +269,7 @@ PrefabInstance:
     - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: enableCounterTest
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: useNpc
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -284,6 +284,11 @@ PrefabInstance:
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102736807134503929, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
