@@ -38,7 +38,6 @@ namespace TechC.VBattle.InGame.Systems
 
             if (target == null)
             {
-                CustomLogger.Warning("ターゲットが見つかりません", LogTagUtil.TagAttack);
                 PublishAttackResult(attackEvent, null, false, false, false, 0);
                 return;
             }
@@ -46,9 +45,19 @@ namespace TechC.VBattle.InGame.Systems
             // カウンター判定を最優先で実行（カウンター攻撃実行中は除く）
             if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
             {
-                CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター発動！ Player {attackEvent.attacker.Owner.PlayerIndex}の[{attackEvent.attackData.attackName}] → カウンター攻撃[弱攻撃ニュートラル]", LogTagUtil.TagAttack);
-                character.UseCounter();
-                PublishAttackResult(attackEvent, target, false, true, false, 0); // isCounter=true
+                CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
+                
+                // カウンターイベントを発行
+                eventBus.Publish(new CounterTriggeredEvent
+                {
+                    defender = character,
+                    originalAttacker = attackEvent.attacker,
+                    counterAttackData = character.GetCounterAttackData(),
+                    originalAttackPosition = attackEvent.hitPosition
+                });
+                
+                // 元の攻撃結果（カウンター成功として無効化）
+                PublishAttackResult(attackEvent, target, false, true, false, 0);
                 return;
             }
 

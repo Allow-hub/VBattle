@@ -19,6 +19,7 @@ namespace TechC.VBattle.InGame.Character
         private const float COUNTER_END_TIME = 1.0f;    // 攻撃開始からカウンター受付終了までの時間（テスト用に5秒に延長）
         
         private AttackData currentAttackData;
+        private AttackData pendingAttackData;
         private bool canCancel = false;
         private bool isAirAttack = false;
         private bool isChainRequested = false;
@@ -45,6 +46,9 @@ namespace TechC.VBattle.InGame.Character
             
             // カウンター攻撃かどうかをチェック
             isCounterAttack = controller.IsExecutingCounterAttack;
+
+            var forcedAttackData = pendingAttackData;
+            pendingAttackData = null;
             
             //空中攻撃は派生させない予定なので無理やり矯正する形で
             if (!controller.IsGrounded())
@@ -62,6 +66,9 @@ namespace TechC.VBattle.InGame.Character
                 isAirAttack = false;
                 currentAttackData = controller.AttackSet.GetAttackData(controller.CurrentAttackType, controller.CurrentAttackDirection);
             }
+
+            if (forcedAttackData != null)
+                currentAttackData = forcedAttackData;
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }
@@ -86,17 +93,13 @@ namespace TechC.VBattle.InGame.Character
                     
                     if (shouldEnableCounter)
                     {
-                        // カウンター受付開始（COUNTER_START_TIME = 0なので即座に開始）
+                        // カウンター受付開始
                         controller.SetCanCounter(true);
-                        SetupCounterAction();
-                    }
-                    else if (isCounterAttack)
-                    {
-                        // カウンター攻撃なのでカウンター機能無効
+                        controller.SetCounterAttackData(currentAttackData.nextChain);
                     }
 
                     // hitTimingまでの残り時間を待機
-                    float remainingToHitTiming = currentAttackData.hitTiming - (currentAttackData.isCounter ? COUNTER_START_TIME : 0);
+                    float remainingToHitTiming = currentAttackData.hitTiming;
                     if (remainingToHitTiming > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToHitTiming), cancellationToken: ct);
 
@@ -105,7 +108,7 @@ namespace TechC.VBattle.InGame.Character
                     PerformHitDetection();
                     
                     // カウンター受付終了タイミングまでの待機
-                    if (currentAttackData.isCounter && COUNTER_END_TIME > currentAttackData.hitTiming)
+                    if (shouldEnableCounter && COUNTER_END_TIME > currentAttackData.hitTiming)
                     {
                         float remainingToCounterEnd = COUNTER_END_TIME - currentAttackData.hitTiming;
                         if (remainingToCounterEnd > 0)
@@ -113,11 +116,10 @@ namespace TechC.VBattle.InGame.Character
                         
                         // カウンター受付終了
                         controller.SetCanCounter(false);
-                        controller.ResetCounterAction();
                     }
 
                     // cancelStartTimeまでの残り時間を待機
-                    float counterEndOrHitTiming = currentAttackData.isCounter ? Mathf.Max(COUNTER_END_TIME, currentAttackData.hitTiming) : currentAttackData.hitTiming;
+                    float counterEndOrHitTiming = shouldEnableCounter ? Mathf.Max(COUNTER_END_TIME, currentAttackData.hitTiming) : currentAttackData.hitTiming;
                     float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrHitTiming;
                     if (remainingToCancelStart > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
@@ -181,99 +183,15 @@ namespace TechC.VBattle.InGame.Character
             
             // カウンター状態をリセット（念のため）
             controller.SetCanCounter(false);
-            controller.ResetCounterAction();
+            controller.ClearCounterAttackData();
         }
 
         /// <summary>
-        /// カウンター発動時のアクションを設定
+        /// カウンター攻撃用のAttackDataを設定（CharacterControllerから呼ばれる）
         /// </summary>
-        private void SetupCounterAction()
+        public void SetPendingAttack(AttackData attackData)
         {
-            if (currentAttackData == null) return;
-            
-            // カウンター攻撃実行中はカウンターアクションを設定しない（無限ループ防止）
-            if (controller.IsExecutingCounterAttack)
-            {
-                return;
-            }
-            
-            // isCounterフラグに基づいてカウンターアクションを設定
-            if (!currentAttackData.isCounter) return;
-
-            controller.SetCounterAction(() =>
-            {
-                // カウンター受付終了
-                controller.SetCanCounter(false);
-                controller.ResetCounterAction();
-                
-                // InGameManagerのテスト機能と同じように、カウンター攻撃を実行
-                var counterAttackData = GetCounterAttackData();
-                if (counterAttackData != null)
-                {
-                    ExecuteCounterAttackAsync(counterAttackData).Forget();
-                }
-                else
-                {
-                    // デフォルトの攻撃を実行
-                    ExecuteCounterAttackAsync(null).Forget();
-                }
-            });
-        }
-        
-        /// <summary>
-        /// カウンター攻撃データを取得（デフォルトのカウンター攻撃を返す）
-        /// </summary>
-        private AttackData GetCounterAttackData()
-        {
-            // InGameManagerのテスト機能ではnextChainを使用するが、
-            // 現在は直接アクセスできないので、nullを返す
-            // 後でInGameManagerにパブリックメソッドを追加するか、
-            // またはキャラクターのデフォルトカウンター攻撃を使用する
-            return null;
-        }
-        
-        /// <summary>
-        /// カウンター攻撃を非同期で実行（InGameManagerのロジックと同様）
-        /// </summary>
-        private async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
-        {
-            // 数フレーム待機して、現在の処理が完全に終了するのを待つ
-            await UniTask.DelayFrame(3, PlayerLoopTiming.Update);
-            
-            // 攻撃可能な状態か確認
-            if (controller != null && controller.StateMachine != null)
-            {
-                // 現在の攻撃をキャンセル
-                controller.Anim.SetBool(AnimatorParam.IsAttacking, false);
-                
-                // カウンター攻撃フラグを立てる
-                controller.SetExecutingCounterAttack(true);
-                
-                // 一旦ニュートラル状態に戻してから攻撃を実行（InGameManagerと同じ方式）
-                controller.StateMachine.ChangeState(controller.GetState<NeutralState>());
-                
-                // さらに数フレーム待機してステート切り替えを確実にする
-                await UniTask.DelayFrame(2, PlayerLoopTiming.Update);
-                
-                // 攻撃を実行
-                controller.Attack(AttackType.Weak, AttackDirection.Neutral);
-                
-                if (attackData != null)
-                {
-                    // Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: {attackData.attackName}");
-                }
-                else
-                {
-                    // Debug.Log($"Player {controller.PlayerIndex} カウンター攻撃実行: デフォルト攻撃");
-                }
-                
-                // カウンター攻撃終了後にフラグをクリア
-                await UniTask.DelayFrame(30, PlayerLoopTiming.Update); // 攻撃アニメーション完了を待つ
-                if (controller != null)
-                {
-                    controller.SetExecutingCounterAttack(false);
-                }
-            }
+            pendingAttackData = attackData;
         }
 
         /// <summary>

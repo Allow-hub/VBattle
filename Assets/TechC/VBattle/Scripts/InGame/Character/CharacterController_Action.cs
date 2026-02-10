@@ -1,3 +1,6 @@
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 using UnityEngine;
@@ -179,6 +182,83 @@ namespace TechC.VBattle.InGame.Character
             damageState.SetStunDuration(stunDuration);
             damageState.SetKnockback(attackerPosition, knockbackForce, knockbackDirection);
             stateMachine.ChangeState(damageState);
+        }
+
+        /// <summary>
+        /// カウンター攻撃を非同期で実行（イベント経由で呼ばれる）
+        /// </summary>
+        public async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
+        {
+            // 数フレーム待機して、現在の処理が完全に終了するのを待つ
+            await UniTask.DelayFrame(3, PlayerLoopTiming.Update);
+            
+            // 攻撃可能な状態か確認
+            if (StateMachine != null)
+            {
+                // 現在の攻撃をキャンセル
+                Anim.SetBool(AnimatorParam.IsAttacking, false);
+                
+                // カウンター攻撃フラグを立てる
+                SetExecutingCounterAttack(true);
+                
+                // 一旦ニュートラル状態に戻してから攻撃を実行
+                StateMachine.ChangeState(GetState<NeutralState>());
+                
+                // さらに数フレーム待機してステート切り替えを確実にする
+                await UniTask.DelayFrame(2, PlayerLoopTiming.Update);
+                
+                // AttackStateに攻撃データを渡す
+                GetState<AttackState>().SetPendingAttack(attackData);
+                
+                // AttackDataから対応するAttackType/Directionを取得してセット
+                var (attackType, attackDirection) = GetAttackTypeDirection(attackData);
+                CurrentAttackType = attackType;
+                CurrentAttackDirection = attackDirection;
+                
+                // 直接AttackStateに遷移（Attack()メソッドを経由しない）
+                StateMachine.ChangeState(GetState<AttackState>());
+                
+                if (attackData != null)
+                    CustomLogger.Info($"Player {PlayerIndex} カウンター攻撃: {attackData.attackName}", LogTagUtil.TagAttack);
+                else
+                    CustomLogger.Warning("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
+                
+                // カウンター攻撃終了後にフラグをクリア
+                await UniTask.DelayFrame(30, PlayerLoopTiming.Update);
+                if (this != null)
+                    SetExecutingCounterAttack(false);
+            }
+        }
+        
+        /// <summary>
+        /// AttackDataから対応するAttackType/AttackDirectionを取得
+        /// </summary>
+        private (AttackType attackType, AttackDirection attackDirection) GetAttackTypeDirection(AttackData attackData)
+        {
+            var attackType = AttackType.Weak;
+            var attackDirection = AttackDirection.Neutral;
+
+            if (attackData == null)
+                return (attackType, attackDirection);
+
+            if (AttackSet?.attacks == null)
+            {
+                CustomLogger.Warning("AttackSetまたはattacksがnullです", LogTagUtil.TagAttack);
+                return (attackType, attackDirection);
+            }
+
+            var entry = AttackSet.attacks.FirstOrDefault(e => e.attackData == attackData);
+            if (entry.attackData != null)
+            {
+                attackType = entry.type;
+                attackDirection = entry.direction;
+            }
+            else
+            {
+                CustomLogger.Warning($"カウンター用AttackData [{attackData.attackName}] がAttackSetに見つかりません", LogTagUtil.TagAttack);
+            }
+
+            return (attackType, attackDirection);
         }
     }
 }

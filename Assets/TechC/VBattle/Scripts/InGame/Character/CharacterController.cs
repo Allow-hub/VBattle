@@ -37,7 +37,7 @@ namespace TechC.VBattle.InGame.Character
         // 攻撃情報
         public AttackType CurrentAttackType { get; private set; }
         public AttackDirection CurrentAttackDirection { get; private set; }
-        
+
         // カウンター攻撃関連
         private bool isExecutingCounterAttack = false;
         public bool IsExecutingCounterAttack => isExecutingCounterAttack;
@@ -73,7 +73,7 @@ namespace TechC.VBattle.InGame.Character
 
         // ===== カウンター関連 =====
         private bool canCounter = false;
-        private System.Action onCounter = null;
+        private AttackData counterAttackData = null;
         public bool CanCounter => canCounter;
 
         // ===== IAttacker実装 =====
@@ -119,11 +119,12 @@ namespace TechC.VBattle.InGame.Character
             IsNPC = isNPC;
             CurrentHP = characterData.MaxHP;
             currentGuardPower = characterData.GuardPower;
-            
+
             outlineController?.ApplyOutline(playerIndex);
-            
+
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
+            InGameManager.I.BattleBus.Subscribe<CounterTriggeredEvent>(OnCounterTriggered);
         }
 
         private void Start()
@@ -304,55 +305,37 @@ namespace TechC.VBattle.InGame.Character
 
         // ===== カウンター関連メソッド =====
         public void SetCanCounter(bool val) => canCounter = val;
-        public void SetCounterAction(System.Action action) => onCounter = action;
-        public void ResetCounterAction() => onCounter = null;
-        public void UseCounter()
+        public void SetCounterAttackData(AttackData data) => counterAttackData = data;
+        public AttackData GetCounterAttackData() => counterAttackData;
+        public void ClearCounterAttackData() => counterAttackData = null;
+
+        public void SetExecutingCounterAttack(bool val) => isExecutingCounterAttack = val;
+
+        /// <summary>
+        /// カウンター発動イベントを受け取る
+        /// </summary>
+        private void OnCounterTriggered(CounterTriggeredEvent e)
         {
-            if (onCounter == null) return;
+            // 自分がdefenderでない場合は無視
+            if (e.defender != this) return;
+
+            CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行開始", LogTagUtil.TagAttack);
+
+            // カウンター状態をクリア
             SetCanCounter(false);
-            var action = onCounter;
-            onCounter = null;
-            action.Invoke();
+            ClearCounterAttackData();
+
+            // カウンター攻撃を実行
+            ExecuteCounterAttackAsync(e.counterAttackData).Forget();
         }
 
-        public void SetExecutingCounterAttack(bool val)
-        {
-            isExecutingCounterAttack = val;
-        }
-
-        // ===== テスト用メソッド =====
-        [System.Diagnostics.Conditional("UNITY_EDITOR")]
-        public void TestEnableCounter()
-        {
-            CustomLogger.Info($"Player {PlayerIndex}: テスト用カウンター有効化", LogTagUtil.TagAttack);
-            SetCanCounter(true);
-            SetCounterAction(() => {
-                CustomLogger.Info($"Player {PlayerIndex}: テスト用カウンター実行", LogTagUtil.TagAttack);
-            });
-        }
-
-        [System.Diagnostics.Conditional("UNITY_EDITOR")]
-        public void TestForceCounter()
-        {
-            CustomLogger.Info($"Player {PlayerIndex}: 強制カウンター実行テスト", LogTagUtil.TagAttack);
-            if (CanCounter)
-            {
-                UseCounter();
-            }
-            else
-            {
-                CustomLogger.Warning($"Player {PlayerIndex}: カウンター状態ではありません", LogTagUtil.TagAttack);
-            }
-        }
-
-        [System.Diagnostics.Conditional("UNITY_EDITOR")]
-        public void DebugCounterStatus()
-        {
-            CustomLogger.Info($"Player {PlayerIndex}: CanCounter={CanCounter}, onCounter={onCounter != null}", LogTagUtil.TagAttack);
-        }
 
         private void OnDestroy()
         {
+            InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(HandleAttackResult);
+            InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
+            InGameManager.I.BattleBus.Unsubscribe<CounterTriggeredEvent>(OnCounterTriggered);
+
             stateMachine?.Cancel();
             outlineController?.Cleanup();
         }
