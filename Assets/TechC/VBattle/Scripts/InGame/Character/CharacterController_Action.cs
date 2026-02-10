@@ -201,9 +201,6 @@ namespace TechC.VBattle.InGame.Character
                 // カウンター攻撃フラグを立てる
                 SetExecutingCounterAttack(true);
                 
-                // 一旦ニュートラル状態に戻してから攻撃を実行
-                StateMachine.ChangeState(GetState<NeutralState>());
-                
                 // さらに数フレーム待機してステート切り替えを確実にする
                 await UniTask.DelayFrame(2, PlayerLoopTiming.Update);
                 
@@ -215,7 +212,7 @@ namespace TechC.VBattle.InGame.Character
                 CurrentAttackType = attackType;
                 CurrentAttackDirection = attackDirection;
                 
-                // 直接AttackStateに遷移（Attack()メソッドを経由しない）
+                // 直接AttackStateに遷移
                 StateMachine.ChangeState(GetState<AttackState>());
                 
                 if (attackData != null)

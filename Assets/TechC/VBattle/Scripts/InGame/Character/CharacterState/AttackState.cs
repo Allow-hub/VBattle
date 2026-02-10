@@ -186,13 +186,8 @@ namespace TechC.VBattle.InGame.Character
             controller.ClearCounterAttackData();
         }
 
-        /// <summary>
-        /// カウンター攻撃用のAttackDataを設定（CharacterControllerから呼ばれる）
-        /// </summary>
-        public void SetPendingAttack(AttackData attackData)
-        {
-            pendingAttackData = attackData;
-        }
+        /// <summary>カウンター攻撃用のAttackDataを設定</summary>
+        public void SetPendingAttack(AttackData attackData) => pendingAttackData = attackData;
 
         /// <summary>
         /// 攻撃判定の実行,判定は調停者に任せる
