@@ -67,6 +67,14 @@ namespace TechC.VBattle.InGame.Character
         private int currentJumpCount = 0;
         private int maxJumpCount = 2;
 
+        // ===== カウンター関連 =====
+        private bool canCounter = false;
+        private AttackData counterAttackData = null;
+        private bool isExecutingCounterAttack = false;
+        
+        public bool CanCounter => canCounter;
+        public bool IsExecutingCounterAttack => isExecutingCounterAttack;
+
         // ===== IAttacker実装 =====
         GameObject IAttacker.AttackerObj => gameObject;
         Transform IAttacker.Transform => transform;
@@ -110,9 +118,9 @@ namespace TechC.VBattle.InGame.Character
             IsNPC = isNPC;
             CurrentHP = characterData.MaxHP;
             currentGuardPower = characterData.GuardPower;
-            
+
             outlineController?.ApplyOutline(playerIndex);
-            
+
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
         }
@@ -293,8 +301,23 @@ namespace TechC.VBattle.InGame.Character
             currentJumpCount = 0;
         }
 
+        // ===== カウンター関連メソッド =====
+        public void SetCanCounter(bool val) => canCounter = val;
+        public void SetCounterAttackData(AttackData data) => counterAttackData = data;
+        public AttackData GetCounterAttackData() => counterAttackData;
+        public void ClearCounterAttackData() => counterAttackData = null;
+
+        public void SetExecutingCounterAttack(bool val) => isExecutingCounterAttack = val;
+
+
         private void OnDestroy()
         {
+            if (InGameManager.I != null && InGameManager.I.BattleBus != null)
+            {
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(HandleAttackResult);
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
+            }
+
             stateMachine?.Cancel();
             outlineController?.Cleanup();
         }

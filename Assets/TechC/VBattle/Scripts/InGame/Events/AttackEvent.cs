@@ -39,7 +39,7 @@ namespace TechC.VBattle.InGame.Events
     }
 
     /// <summary>
-    /// 必殺技ゲージ変化イベント
+  　/// 必殺技ゲージ変化イベント
     /// </summary>
     public class SpecialGaugeChangedEvent : IBattleEvent
     {
