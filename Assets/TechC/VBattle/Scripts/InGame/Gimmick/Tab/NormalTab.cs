@@ -1,3 +1,5 @@
+using TechC.VBattle.Core.Util;
+using TechC.VBattle.InGame.Comment;
 using TMPro;
 using UnityEngine;
 // using TechC.CommentSystem;
@@ -6,7 +8,7 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
 {
     public class NormalTab : BaseTab
     {
-        // [SerializeField] private CommentDisplay commentDisplay;
+        [SerializeField] private CommentDisplay commentDisplay;
         [SerializeField] private TextMeshProUGUI durationText;
         [SerializeField] private float addSpeed = 1.5f;
         [SerializeField] private float delayDuration = 3f;
@@ -36,14 +38,15 @@ namespace TechC.VBattle.InGame.Gimmick.Tab
             base.Excute();
             durationText.text = delayDuration + "秒間";
 
-            // originalSpeed = commentDisplay.GetCurrentSpeed();
-            // // スピードを一時的に上げる
-            // commentDisplay.AddSpeed(addSpeed);
-            // // 速度をもとに戻す
-            // DelayUtility.StartDelayedAction(this, delayDuration, () =>
-            // {
-            //     commentDisplay.SetSpeed(originalSpeed);
-            // });
+            originalSpeed = commentDisplay.GetCurrentSpeed();
+            // スピードを一時的に上げる
+            commentDisplay.AddSpeed(addSpeed);
+            // 速度をもとに戻す
+            _ = DelayUtility.StartDelayedActionWithPauseAsync(
+                delayDuration,
+                () => commentDisplay.SetSpeed(originalSpeed),
+                () => InGameManager.I.IsPaused
+            );
         }
     }
 }

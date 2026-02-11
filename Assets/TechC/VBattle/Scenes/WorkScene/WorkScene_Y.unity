@@ -29408,7 +29408,7 @@ PrefabInstance:
     - target: {fileID: 8160060843155146080, guid: d43ee5b8a82782549a110282ca425b38,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -29538,6 +29538,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4163511449742016794, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: addSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4163511449742016794, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: commentDisplay
+      value: 
+      objectReference: {fileID: 1401811217}
     - target: {fileID: 4880679695495569093, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -29715,7 +29725,7 @@ PrefabInstance:
     - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: useNpc
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -29746,7 +29756,7 @@ PrefabInstance:
     - target: {fileID: 7102736807134503929, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7767785695839799985, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
