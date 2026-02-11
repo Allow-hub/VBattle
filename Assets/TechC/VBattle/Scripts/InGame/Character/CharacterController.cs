@@ -332,9 +332,12 @@ namespace TechC.VBattle.InGame.Character
 
         private void OnDestroy()
         {
-            InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(HandleAttackResult);
-            InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
-            InGameManager.I.BattleBus.Unsubscribe<CounterTriggeredEvent>(OnCounterTriggered);
+            if (InGameManager.I != null && InGameManager.I.BattleBus != null)
+            {
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(HandleAttackResult);
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
+                InGameManager.I.BattleBus.Unsubscribe<CounterTriggeredEvent>(OnCounterTriggered);
+            }
 
             stateMachine?.Cancel();
             outlineController?.Cleanup();
