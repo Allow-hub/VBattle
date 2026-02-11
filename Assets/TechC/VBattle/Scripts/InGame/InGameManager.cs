@@ -85,12 +85,6 @@ namespace TechC.VBattle.InGame
         #region シングルトン設定
         protected override bool UseDontDestroyOnLoad => false;
         #endregion
-        
-        #region プレイヤー参照（カウンターテスト用）
-        // プレイヤー参照（カウンターテスト用）
-        private Character.CharacterController p1Character;
-        private Character.CharacterController p2Character;
-        #endregion
 
         #region 初期化
         public override void Init()
@@ -100,17 +94,17 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                p1Character = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p1Controller = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
 
                 if (useNpc)
-                    p2Character = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                    p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
                 else
-                    p2Character = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                    p2Controller = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
 
-                p1Character.Init(PlayerConstants.PLAYER_1_ID, Keyboard.current, false);
-                p2Character.Init(PlayerConstants.PLAYER_2_ID, Keyboard.current, useNpc); // useNpcフラグを使用
+                p1Controller.Init(PlayerConstants.PLAYER_1_ID, Keyboard.current, false);
+                p2Controller.Init(PlayerConstants.PLAYER_2_ID, Keyboard.current, useNpc); // useNpcフラグを使用
 
-                battleJudge = new BattleJudge(p1Character, p2Character, BattleBus);
+                battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
 
                 if (GameDataBridge.I != null)
                     GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_1_ID, new GameDataBridge.PlayerSetupData
@@ -135,7 +129,7 @@ namespace TechC.VBattle.InGame
                     player1UIController.SetCharacterIcon(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharacterName);
                     player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
                 }
-                cameraController.SetupPlayers(p1Character, p2Character);
+                cameraController.SetupPlayers(p1Controller, p2Controller);
 
                 ChangeState(InGameState.Battle);
             }
@@ -143,7 +137,7 @@ namespace TechC.VBattle.InGame
             {
                 // Player1は常にプレイヤー用プレハブ
                 var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
-                p1Character = p1Obj.GetComponent<Character.CharacterController>();
+                p1Controller = p1Obj.GetComponent<Character.CharacterController>();
                 // Player1のコントロールスキーム設定
                 if (GameDataBridge.I.Player_1Setup.DeviceName != null)
                 {
@@ -159,7 +153,7 @@ namespace TechC.VBattle.InGame
                 var p2Setup = GameDataBridge.I.Player_2Setup;
                 GameObject p2Prefab = p2Setup.IsNPC ? p2Setup.SelectedCharacter.NpcPrefab : p2Setup.SelectedCharacter.CharaPrefab;
                 var p2Obj = Instantiate(p2Prefab, p2Pos, Quaternion.Euler(p2Rot));
-                p2Character = p2Obj.GetComponent<Character.CharacterController>();
+                p2Controller = p2Obj.GetComponent<Character.CharacterController>();
 
                 // Player2のコントロールスキーム設定（プレイヤーの場合のみ）
                 if (!GameDataBridge.I.Player_2Setup.IsNPC && GameDataBridge.I.Player_2Setup.DeviceName != null)
@@ -172,12 +166,12 @@ namespace TechC.VBattle.InGame
                     }
                 }
 
-                p1Character.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
-                p2Character.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
+                p1Controller.Init(GameDataBridge.I.Player_1Setup.PlayerIndex, GameDataBridge.I.Player_1Setup.DeviceName, GameDataBridge.I.Player_1Setup.IsNPC);
+                p2Controller.Init(GameDataBridge.I.Player_2Setup.PlayerIndex, GameDataBridge.I.Player_2Setup.DeviceName, GameDataBridge.I.Player_2Setup.IsNPC);
                 player1UIController.SetCharacterIcon(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharacterName);
                 player2UIController.SetCharacterIcon(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharacterName);
-                battleJudge = new BattleJudge(p1Character, p2Character, BattleBus);
-                cameraController.SetupPlayers(p1Character, p2Character);
+                battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
+                cameraController.SetupPlayers(p1Controller, p2Controller);
 
                 ChangeState(InGameState.Start);
             }

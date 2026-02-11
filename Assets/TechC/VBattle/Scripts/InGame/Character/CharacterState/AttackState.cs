@@ -15,7 +15,7 @@ namespace TechC.VBattle.InGame.Character
     public class AttackState : CharacterState
     {
         private AttackData currentAttackData;
-        private AttackData pendingAttackData;
+        private AttackData pendingAttackData;  // カウンター攻撃などで外部から強制的に設定される攻撃データ
         private bool canCancel = false;
         private bool isAirAttack = false;
         private bool isChainRequested = false;
@@ -65,6 +65,7 @@ namespace TechC.VBattle.InGame.Character
 
             if (forcedAttackData != null)
                 currentAttackData = forcedAttackData;
+                
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }
