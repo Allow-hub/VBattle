@@ -99,6 +99,7 @@ namespace TechC.VBattle.Core.Window
         /// </summary>
         public void SetTextureToBitmap(Texture2D texture)
         {
+            //レイヤードが選択されてない可能性があるので修正の余地あり
             // if (!IsLayered)
             // {
             //     Debug.LogWarning("SetTextureToBitmap is only available for ImageLayered windows. Use SetImage instead.");
