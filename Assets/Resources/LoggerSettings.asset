@@ -33,7 +33,7 @@ MonoBehaviour:
   - categoryId: attack
     displayName: Attack
     color: {r: 0.9528302, g: 0.20225172, b: 0.7289607, a: 1}
-    enabledByDefault: 1
+    enabledByDefault: 0
   - categoryId: command
     displayName: Command
     color: {r: 0.4335546, g: 0.74509805, b: 0.08627451, a: 1}
@@ -66,10 +66,10 @@ MonoBehaviour:
   _enabledCategoryIds: []
   _disabledCategoryIds:
   - icon
-  - attack
   - state
   - event
   - scene
   - window
   - command
   - npc
+  - attack

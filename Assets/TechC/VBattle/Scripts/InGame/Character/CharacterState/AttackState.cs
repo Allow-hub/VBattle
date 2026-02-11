@@ -15,10 +15,12 @@ namespace TechC.VBattle.InGame.Character
     public class AttackState : CharacterState
     {
         private AttackData currentAttackData;
+        private AttackData pendingAttackData;  // カウンター攻撃などで外部から強制的に設定される攻撃データ
         private bool canCancel = false;
         private bool isAirAttack = false;
         private bool isChainRequested = false;
         private int chain = 0;
+        private bool isCounterAttack = false; // カウンター攻撃として実行された攻撃かどうか
         public AttackState(CharacterController controller) : base(controller) { }
 
         public override bool CanExecuteCommand<T>(T command)
@@ -37,6 +39,13 @@ namespace TechC.VBattle.InGame.Character
         public override void OnEnter(CharacterState prevState)
         {
             isChainRequested = false;
+            
+            // カウンター攻撃かどうかをチェック
+            isCounterAttack = controller.IsExecutingCounterAttack;
+
+            var forcedAttackData = pendingAttackData;
+            pendingAttackData = null;
+            
             //空中攻撃は派生させない予定なので無理やり矯正する形で
             if (!controller.IsGrounded())
             {
@@ -53,6 +62,10 @@ namespace TechC.VBattle.InGame.Character
                 isAirAttack = false;
                 currentAttackData = controller.AttackSet.GetAttackData(controller.CurrentAttackType, controller.CurrentAttackDirection);
             }
+
+            if (forcedAttackData != null)
+                currentAttackData = forcedAttackData;
+
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }
@@ -71,6 +84,16 @@ namespace TechC.VBattle.InGame.Character
 
                     // 攻撃開始（キャンセル不可）
                     canCancel = false;
+                    
+                    // isCounterフラグに基づいてカウンター機能を有効にする（カウンター攻撃ではない場合のみ）
+                    bool shouldEnableCounter = currentAttackData.isCounter && !isCounterAttack;
+                    
+                    if (shouldEnableCounter)
+                    {
+                        // カウンター受付開始
+                        controller.SetCanCounter(true);
+                        controller.SetCounterAttackData(currentAttackData.nextChain);
+                    }
 
                     // hitTimingまで待機
                     await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
@@ -78,9 +101,20 @@ namespace TechC.VBattle.InGame.Character
                     // 攻撃Prefab生成と判定を実行
                     CreateAttackObject();
                     PerformHitDetection();
+                    
+                    // カウンター受付終了タイミングまでの待機
+                    if (shouldEnableCounter && currentAttackData.counterEnableDuration > currentAttackData.hitTiming)
+                    {
+                        float remainingToCounterEnd = currentAttackData.counterEnableDuration - currentAttackData.hitTiming;
+                        await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
+                        
+                        // カウンター受付終了
+                        controller.SetCanCounter(false);
+                    }
 
                     // cancelStartTimeまでの残り時間を待機
-                    float remainingToCancelStart = currentAttackData.cancelStartTime - currentAttackData.hitTiming;
+                    float counterEndOrHitTiming = shouldEnableCounter ? Mathf.Max(currentAttackData.counterEnableDuration, currentAttackData.hitTiming) : currentAttackData.hitTiming;
+                    float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrHitTiming;
                     if (remainingToCancelStart > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
 
@@ -140,7 +174,18 @@ namespace TechC.VBattle.InGame.Character
             canCancel = false;
             isChainRequested = false;
             chain = 0;
+            
+            // 他のステートへの遷移時にカウンター状態が残らないようクリーンアップ
+            controller.SetCanCounter(false);
+            controller.ClearCounterAttackData();
+            
+            // カウンター攻撃として実行された場合、フラグをクリア
+            if (isCounterAttack)
+                controller.SetExecutingCounterAttack(false);
         }
+
+        /// <summary>カウンター攻撃用のAttackDataを設定</summary>
+        public void SetPendingAttack(AttackData attackData) => pendingAttackData = attackData;
 
         /// <summary>
         /// 攻撃判定の実行,判定は調停者に任せる
