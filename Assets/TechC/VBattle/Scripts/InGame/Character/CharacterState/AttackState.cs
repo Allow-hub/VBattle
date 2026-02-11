@@ -175,7 +175,7 @@ namespace TechC.VBattle.InGame.Character
             isChainRequested = false;
             chain = 0;
             
-            // 他のステートへの遷移時にカウンター状態が残らないようクリーンアップ            controller.SetCanCounter(false);
+            // 他のステートへの遷移時にカウンター状態が残らないようクリーンアップ
             controller.SetCanCounter(false);
             controller.ClearCounterAttackData();
             
