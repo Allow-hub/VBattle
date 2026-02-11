@@ -52,7 +52,7 @@ namespace TechC.VBattle.InGame.Character
                     if (nextState != _currentState)
                     {
                         // OnUpdateが正常に完了してから遷移
-                        ChangeState(nextState);
+                        ChangeState(nextState, true);
                     }
                 }
                 catch (System.OperationCanceledException)
@@ -73,13 +73,22 @@ namespace TechC.VBattle.InGame.Character
         /// <summary>
         /// 外部から状態を変更
         /// </summary>
-        public void ChangeState(CharacterState nextState)
+        public void ChangeState(CharacterState nextState, bool force = false)
         {
             if (nextState == null)
                 return;
-            CustomLogger.Info($"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}", LogTagUtil.TagState);
 
-            // 現在の状態をキャンセル
+            if (!force &&
+                _currentState != null &&
+                nextState.Priority < _currentState.Priority)
+            {
+                return;
+            }
+
+            CustomLogger.Info(
+                $"ChangeState: {_currentState?.GetType().Name} -> {nextState.GetType().Name}",
+                LogTagUtil.TagState);
+
             _ctsForState?.Cancel();
             _ctsForState?.Dispose();
 
@@ -88,7 +97,6 @@ namespace TechC.VBattle.InGame.Character
             _currentState = nextState;
             _currentState?.OnEnter(prev);
 
-            // 新しい状態用のCancellationTokenを作成
             _ctsForState = new CancellationTokenSource();
         }
 

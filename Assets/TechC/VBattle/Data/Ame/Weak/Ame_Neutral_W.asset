@@ -30,10 +30,11 @@ MonoBehaviour:
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 3
-  knockbackForce: 1
+  knockbackForce: 2
   isCounter: 0
+  counterEnableDuration: 1
   recoveryDuration: 0.05
-  cancelStartTime: 0.2
+  cancelStartTime: 0.1
   cancelEndTime: 0.3
   hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
@@ -41,7 +42,7 @@ MonoBehaviour:
   isChainPos: 0
   hitStopDuration: 0.01
   hitStopTimeScale: 0.1
-  knockbackDirection: {x: -1, y: 0.5, z: -1}
+  knockbackDirection: {x: 1, y: 0.5, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}

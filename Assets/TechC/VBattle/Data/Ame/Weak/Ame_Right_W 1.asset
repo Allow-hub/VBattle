@@ -32,6 +32,7 @@ MonoBehaviour:
   damage: 5
   knockbackForce: 4
   isCounter: 0
+  counterEnableDuration: 1
   recoveryDuration: 0.25
   cancelStartTime: 0.3
   cancelEndTime: 0.5
@@ -41,13 +42,15 @@ MonoBehaviour:
   isChainPos: 0
   hitStopDuration: 0.9
   hitStopTimeScale: 0.8
-  knockbackDirection: {x: 1, y: 1, z: 0}
+  knockbackDirection: {x: -1, y: 1, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
   canRepeat: 0
   repeatInterval: 0
   repeatDuration: 0
+  specialGaugeGain: 5
+  specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8
   wallBounceVerticalBoost: 2
