@@ -47,15 +47,6 @@ namespace TechC.VBattle.InGame.Systems
             {
                 CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
                 
-                // カウンターイベントを発行
-                eventBus.Publish(new CounterTriggeredEvent
-                {
-                    defender = character,
-                    originalAttacker = attackEvent.attacker,
-                    counterAttackData = character.GetCounterAttackData(),
-                    originalAttackPosition = attackEvent.hitPosition
-                });
-                
                 // 元の攻撃結果（カウンター成功として無効化）
                 PublishAttackResult(attackEvent, target, false, true, false, 0);
                 return;

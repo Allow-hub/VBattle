@@ -49,18 +49,6 @@ namespace TechC.VBattle.InGame.Events
         public float Percentage; // 0-1
     }
 
-    /// <summary>
-    /// カウンター発動イベント
-    /// BattleJudgeがカウンター判定を行った際に発行される
-    /// </summary>
-    public class CounterTriggeredEvent : IBattleEvent
-    {
-        public Character.CharacterController defender;         // カウンターを発動したキャラ
-        public IAttacker originalAttacker;           // 元の攻撃者
-        public AttackData counterAttackData;         // カウンター攻撃データ
-        public Vector3 originalAttackPosition;       // 元の攻撃位置（演出用）
-    }
-
     public class PlayerOnDeathEvent : IBattleEvent
     {
         public int PlayerIndex;

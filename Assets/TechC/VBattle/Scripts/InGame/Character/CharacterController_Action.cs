@@ -12,6 +12,11 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public partial class CharacterController
     {
+        // カウンター攻撃の待機フレーム数
+        private const int COUNTER_INITIAL_DELAY_FRAMES = 3;  // 現在の処理完了待ち
+        private const int COUNTER_STATE_SWITCH_DELAY_FRAMES = 2;  // ステート切り替え待ち
+        private const int COUNTER_ATTACK_DURATION_FRAMES = 30;  // 攻撃完了待ち
+
         /// <summary>
         /// 左右の移動
         /// </summary>
@@ -185,12 +190,12 @@ namespace TechC.VBattle.InGame.Character
         }
 
         /// <summary>
-        /// カウンター攻撃を非同期で実行（イベント経由で呼ばれる）
+        /// カウンター攻撃を非同期で実行
         /// </summary>
         public async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
         {
             // 数フレーム待機して、現在の処理が完全に終了するのを待つ
-            await UniTask.DelayFrame(3, PlayerLoopTiming.Update);
+            await UniTask.DelayFrame(COUNTER_INITIAL_DELAY_FRAMES, PlayerLoopTiming.Update);
             
             // 攻撃可能な状態か確認
             if (StateMachine != null)
@@ -202,7 +207,7 @@ namespace TechC.VBattle.InGame.Character
                 SetExecutingCounterAttack(true);
                 
                 // さらに数フレーム待機してステート切り替えを確実にする
-                await UniTask.DelayFrame(2, PlayerLoopTiming.Update);
+                await UniTask.DelayFrame(COUNTER_STATE_SWITCH_DELAY_FRAMES, PlayerLoopTiming.Update);
                 
                 // AttackStateに攻撃データを渡す
                 GetState<AttackState>().SetPendingAttack(attackData);
@@ -221,7 +226,7 @@ namespace TechC.VBattle.InGame.Character
                     CustomLogger.Warning("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
                 
                 // カウンター攻撃終了後にフラグをクリア
-                await UniTask.DelayFrame(30, PlayerLoopTiming.Update);
+                await UniTask.DelayFrame(COUNTER_ATTACK_DURATION_FRAMES, PlayerLoopTiming.Update);
                 if (this != null)
                     SetExecutingCounterAttack(false);
             }
