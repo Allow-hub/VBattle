@@ -149,8 +149,10 @@ namespace TechC.VBattle.InGame.Character
             if (e.attacker?.Owner == this) return;
             // ターゲットが自分でない場合
             if (e.target != this) return;
+            // 攻撃がヒットしていない場合
+            if (!e.isHit) return;
 
-            // カウンター判定成功時の処理（isHitチェックより前に実行）
+            // カウンター判定成功時の処理
             if (e.isCounter)
             {
                 CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行開始", LogTagUtil.TagAttack);
@@ -165,8 +167,6 @@ namespace TechC.VBattle.InGame.Character
                 return; // カウンター成功時はダメージ処理をスキップ
             }
 
-            // 攻撃がヒットしていない場合
-            if (!e.isHit) return;
 
             // 通常のダメージ処理
             TakeDamage(e.attackData, e.attacker.Transform.position, e.damage);

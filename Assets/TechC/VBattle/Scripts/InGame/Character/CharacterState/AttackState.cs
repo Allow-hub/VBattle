@@ -14,8 +14,6 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class AttackState : CharacterState
     {
-        private const float COUNTER_END_TIME = 1.0f;    // 攻撃開始からカウンター受付終了までの時間
-        
         private AttackData currentAttackData;
         private AttackData pendingAttackData;
         private bool canCancel = false;
@@ -106,9 +104,9 @@ namespace TechC.VBattle.InGame.Character
                     PerformHitDetection();
                     
                     // カウンター受付終了タイミングまでの待機
-                    if (shouldEnableCounter && COUNTER_END_TIME > currentAttackData.hitTiming)
+                    if (shouldEnableCounter && currentAttackData.counterEnableDuration > currentAttackData.hitTiming)
                     {
-                        float remainingToCounterEnd = COUNTER_END_TIME - currentAttackData.hitTiming;
+                        float remainingToCounterEnd = currentAttackData.counterEnableDuration - currentAttackData.hitTiming;
                         if (remainingToCounterEnd > 0)
                             await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
                         
@@ -117,7 +115,7 @@ namespace TechC.VBattle.InGame.Character
                     }
 
                     // cancelStartTimeまでの残り時間を待機
-                    float counterEndOrHitTiming = shouldEnableCounter ? Mathf.Max(COUNTER_END_TIME, currentAttackData.hitTiming) : currentAttackData.hitTiming;
+                    float counterEndOrHitTiming = shouldEnableCounter ? Mathf.Max(currentAttackData.counterEnableDuration, currentAttackData.hitTiming) : currentAttackData.hitTiming;
                     float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrHitTiming;
                     if (remainingToCancelStart > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);

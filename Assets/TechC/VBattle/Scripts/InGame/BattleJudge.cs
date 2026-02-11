@@ -45,16 +45,15 @@ namespace TechC.VBattle.InGame.Systems
             // カウンター判定を最優先で実行
             if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
             {
-                bool isCounterableAttack = attackEvent.attackData.isCounter;
-                
-                var attackerOwner = attackEvent.attacker.Owner;
+                // 攻撃者がカウンター攻撃実行中かチェック（無限ループ防止）
+                var attackerOwner = attackEvent.attacker.Owner as CharacterController;
                 bool isAttackerCountering = attackerOwner != null && attackerOwner.IsExecutingCounterAttack;
                 
-                // カウンター可能な攻撃 かつ 攻撃者がカウンター実行中でない場合のみカウンター成功
-                if (isCounterableAttack && !isAttackerCountering)
+                if (!isAttackerCountering)
                 {
                     CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
-                    PublishAttackResult(attackEvent, target, false, true, false, 0);
+                    // isHit=true: カメラシェイク・ヒットストップなどの演出を発生させる（ダメージは0）
+                    PublishAttackResult(attackEvent, target, true, true, false, 0);
                     return;
                 }
             }
