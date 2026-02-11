@@ -24,14 +24,15 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
-  radius: 1
-  hitboxOffset: {x: 0, y: 1, z: 4}
+  radius: 1.5
+  hitboxOffset: {x: 0, y: 1, z: 5}
   hitTiming: 0.3
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 10
-  knockbackForce: 35
+  knockbackForce: 20
   isCounter: 0
+  counterEnableDuration: 1
   recoveryDuration: 0.3
   cancelStartTime: 0.3
   cancelEndTime: 0.4
@@ -41,7 +42,7 @@ MonoBehaviour:
   isChainPos: 0
   hitStopDuration: 0.01
   hitStopTimeScale: 0.2
-  knockbackDirection: {x: 1, y: 0.5, z: 0}
+  knockbackDirection: {x: 1, y: 0.4, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
@@ -51,8 +52,8 @@ MonoBehaviour:
   specialGaugeGain: 0
   specialGaugeGainOnHit: 0
   causesWallBounce: 1
-  wallBounceForce: 15
-  wallBounceVerticalBoost: 5
+  wallBounceForce: 4
+  wallBounceVerticalBoost: 6
   wallBounceTime: 0.7
   characterSEType: 0
   characterVoiceType: 0

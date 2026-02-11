@@ -2,7 +2,9 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.Systems;
 using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
@@ -221,6 +223,8 @@ namespace TechC.VBattle.InGame.Character
             var rb = controller.Rb;
             if (rb != null)
             {
+                AudioManager.I?.PlaySE(Audio.SEID.WallHit);
+                EffectFactory.I?.GetEffectObj(EffectFactory.I?.DebrisEffectPrefab, controller.transform.position, Quaternion.identity);
                 // 壁に当たった方向の反対方向に跳ね返す
                 // wallHitDirection: 1=前方の壁に当たった→後方(-forward)に跳ね返す
                 //                  -1=後方の壁に当たった→前方(+forward)に跳ね返す
@@ -235,7 +239,6 @@ namespace TechC.VBattle.InGame.Character
                 rb.velocity = bounceVelocity;
 
                 CustomLogger.Info($"Wall Bounce START: hitDir={wallHitDirection}, bounceDir={bounceDirection}, velocity={bounceVelocity}, force={attackData.wallBounceForce}, boost={attackData.wallBounceVerticalBoost}", LogTagUtil.TagState);
-                Debug.Log($"Wall Bounce: hitDir={wallHitDirection}, bounceDir={bounceDirection}, force={attackData.wallBounceForce}");
             }
             hasWallBounced = true;
         }
