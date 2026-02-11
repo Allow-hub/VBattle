@@ -30,18 +30,19 @@ MonoBehaviour:
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 15
-  knockbackForce: 20
+  knockbackForce: 12
   isCounter: 0
+  counterEnableDuration: 1
   recoveryDuration: 0.1
   cancelStartTime: 0.5
   cancelEndTime: 0.7
-  hitStunDuration: 0.25
+  hitStunDuration: 0.4
   nextChain: {fileID: 0}
   canChain: 0
   isChainPos: 0
   hitStopDuration: 0.3
   hitStopTimeScale: 0.8
-  knockbackDirection: {x: 2, y: -1, z: 0}
+  knockbackDirection: {x: -2, y: 1, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
@@ -53,6 +54,6 @@ MonoBehaviour:
   causesWallBounce: 1
   wallBounceForce: 8
   wallBounceVerticalBoost: 2
-  wallBounceTime: 0.5
+  wallBounceTime: 0.7
   characterSEType: 12
   characterVoiceType: 0

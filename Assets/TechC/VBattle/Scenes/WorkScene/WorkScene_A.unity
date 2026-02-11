@@ -469,6 +469,12 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9105864281085549204, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: debrisEffectPrefab
+      value: 
+      objectReference: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
+        type: 3}
     - target: {fileID: 9181323615756779624, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_Layer

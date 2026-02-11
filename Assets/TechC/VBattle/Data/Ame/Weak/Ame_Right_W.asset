@@ -32,6 +32,7 @@ MonoBehaviour:
   damage: 0
   knockbackForce: 0
   isCounter: 1
+  counterEnableDuration: 0.75
   recoveryDuration: 0.25
   cancelStartTime: 0.5
   cancelEndTime: 0.5
@@ -41,7 +42,7 @@ MonoBehaviour:
   isChainPos: 0
   hitStopDuration: 0.9
   hitStopTimeScale: 0.8
-  knockbackDirection: {x: 0, y: 1, z: 1}
+  knockbackDirection: {x: 0, y: 1, z: -1}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}

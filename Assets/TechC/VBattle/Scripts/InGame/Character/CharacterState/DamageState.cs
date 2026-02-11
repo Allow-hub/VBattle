@@ -9,39 +9,40 @@ using UnityEngine;
 
 namespace TechC.VBattle.InGame.Character
 {
-    /// <summary>
-    /// ダメージ状態
-    /// </summary>
     public class DamageState : CharacterState
     {
         private float damageStunDuration = 0.3f;
         private AttackData attackData;
-        private Vector3 attackerPosition; // 変更: 攻撃者位置を保持
+        private Vector3 attackerPosition;
+        private Vector3 attackerForward; // ★ 攻撃者の向きを保存
+
         private float knockbackForce;
         private Vector3 knockbackDirection;
         private bool hasKnockback = false;
-        private bool isWallBouncing = false; // 壁バウンス中かどうか
-        private float wallBounceElapsedTime = 0f; // 壁バウンス経過時間
-        private int wallHitDirection = 0; // 壁に当たった方向（1=前方, -1=後方）
-        public override int Priority => 10;
+
+        private bool isWallBouncing = false;
+        private float wallBounceElapsedTime = 0f;
+        private int wallHitDirection = 0;
         private bool hasWallBounced = false;
+
+        public override int Priority => 10;
+
         public DamageState(CharacterController controller) : base(controller) { }
 
-        public override bool CanExecuteCommand<T>(T command)
-        {
-            return false;
-        }
+        public override bool CanExecuteCommand<T>(T command) => false;
 
         public override void OnEnter(CharacterState prevState)
         {
+            // ★ OnEnterで初期化
             controller.Anim.SetBool(AnimatorParam.IsHitting, false);
             controller.Anim.SetBool(AnimatorParam.IsWallHitting, false);
+            
             isWallBouncing = false;
             wallBounceElapsedTime = 0f;
             hasWallBounced = false;
 
-            // 通常のダメージアニメーション
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsHitting);
+
             ApplyKnockback();
         }
 
@@ -51,25 +52,20 @@ namespace TechC.VBattle.InGame.Character
 
             while (elapsedTime < damageStunDuration)
             {
-                // 壁バウンド判定（まだ壁バウンスしていない場合のみ）
-                if (!hasWallBounced && attackData != null && attackData.causesWallBounce)
+                if (!hasWallBounced && attackData?.causesWallBounce == true)
                 {
-
                     if (CheckWallBehind(out int hitDir))
                     {
-                        // 壁バウンド開始
                         wallHitDirection = hitDir;
                         StartWallBounce();
-                        elapsedTime = 0f; // 時間をリセット
+                        elapsedTime = 0f;
                         continue;
                     }
                 }
 
-                // 壁バウンス中の時間カウント
                 if (isWallBouncing)
-                {
                     wallBounceElapsedTime += Time.deltaTime;
-                }
+
                 await UniTask.Yield(ct);
                 elapsedTime += Time.deltaTime;
             }
@@ -82,25 +78,19 @@ namespace TechC.VBattle.InGame.Character
 
         public override void OnExit()
         {
+            // ★ OnExitでは最低限のクリーンアップのみ
             controller.Anim.SetBool(AnimatorParam.IsHitting, false);
             controller.Anim.SetBool(AnimatorParam.IsWallHitting, false);
-            hasKnockback = false;
-            knockbackForce = 0f;
-            attackerPosition = Vector3.zero;
-            isWallBouncing = false;
-            wallBounceElapsedTime = 0f;
-            wallHitDirection = 0;
         }
 
-        /// <summary>
-        /// AttackDataと攻撃者位置から情報を設定
-        /// </summary>
-        public void SetDamageInfo(AttackData data, Vector3 attackerPos)
+        public void SetDamageInfo(AttackData data, Vector3 attackerPos, Vector3 attackerFwd)
         {
             attackData = data;
             attackerPosition = attackerPos;
+            attackerForward = attackerFwd;
 
             if (data == null) return;
+
             damageStunDuration = data.hitStunDuration;
 
             if (data.knockbackForce > 0f)
@@ -111,135 +101,169 @@ namespace TechC.VBattle.InGame.Character
             }
         }
 
-        /// <summary>
-        /// スタン時間のみ設定
-        /// </summary>
         public void SetStunDuration(float duration)
         {
             damageStunDuration = duration;
         }
 
-        /// <summary>
-        /// ノックバック情報を設定（攻撃者位置ベース）
-        /// </summary>
-        public void SetKnockback(Vector3 attackerPos, float force, Vector3 dir)
+        public void SetKnockback(Vector3 attackerPos, Vector3 attackerFwd, float force, Vector3 dir)
         {
             attackerPosition = attackerPos;
+            attackerForward = attackerFwd;
             knockbackForce = force;
             knockbackDirection = dir;
             hasKnockback = knockbackForce > 0.01f;
         }
 
         /// <summary>
-        /// 攻撃者位置とknockbackDirectionからノックバック適用
+        /// ノックバック処理
+        /// 被弾者の向きと攻撃者の位置を考慮した2D格闘ゲーム用
         /// </summary>
         private void ApplyKnockback()
         {
-            if (!hasKnockback || knockbackForce <= 0f) return;
+            if (!hasKnockback || knockbackForce <= 0f)
+                return;
 
             var rb = controller.Rb;
-            if (rb == null) return;
+            if (rb == null)
+                return;
 
-            // 攻撃者から被ダメージ者への方向ベクトル
-            Vector3 fromAttacker = (controller.transform.position - attackerPosition).normalized;
+            // ★ 被弾者の向きを取得
+            Vector3 victimForward = controller.transform.forward;
+            victimForward.y = 0f;
+            victimForward.Normalize();
 
-            // knockbackDirectionを攻撃者基準の方向に変換
-            Vector3 finalDirection = fromAttacker.x * knockbackDirection.x * Vector3.right +
-                                    knockbackDirection.y * Vector3.up +
-                                    fromAttacker.z * knockbackDirection.z * Vector3.forward;
+            // ★ 攻撃者→被弾者の方向を計算
+            Vector3 attackToVictim = controller.transform.position - attackerPosition;
+            attackToVictim.y = 0f;
 
-            finalDirection = finalDirection.normalized;
+            Vector3 knockbackDir;
 
-            // ノックバック適用
-            rb.velocity = finalDirection * knockbackForce;
+            // ★ 距離が極端に近い場合
+            if (attackToVictim.sqrMagnitude < 0.01f)
+            {
+                // 被弾者の後方に飛ばす
+                knockbackDir = -victimForward;
+                CustomLogger.Warning("Knockback: Very close range, using victim backward", LogTagUtil.TagState);
+            }
+            else
+            {
+                attackToVictim.Normalize();
 
-            // CustomLogger.Info($"Knockback: attackerPos={attackerPosition}, dir={finalDirection}, force={knockbackForce}", LogTagUtil.TagState);
+                // ★ 攻撃者が被弾者のどちら側にいるかを判定
+                // 内積 > 0 なら前方、< 0 なら後方
+                float dotProduct = Vector3.Dot(victimForward, attackToVictim);
+
+                if (dotProduct > 0.1f)
+                {
+                    // 攻撃者は前方 → 被弾者の後方に飛ばす
+                    knockbackDir = -victimForward;
+                }
+                else if (dotProduct < -0.1f)
+                {
+                    // 攻撃者は後方 → 被弾者の前方に飛ばす
+                    knockbackDir = victimForward;
+                }
+                else
+                {
+                    // 真横から攻撃 → 攻撃方向の逆に飛ばす
+                    knockbackDir = attackToVictim;
+                }
+
+                CustomLogger.Info(
+                    $"Knockback: dotProduct={dotProduct}, victimForward={victimForward}, attackToVictim={attackToVictim}",
+                    LogTagUtil.TagState);
+            }
+
+            // ★ knockbackDirection.x が負なら方向を反転（引き寄せ技用）
+            if (knockbackDirection.x < 0)
+            {
+                knockbackDir = -knockbackDir;
+            }
+
+            // ★ 水平方向と垂直方向を合成
+            float horizontalForce = Mathf.Abs(knockbackDirection.x) * knockbackForce;
+            float verticalForce = knockbackDirection.y * knockbackForce;
+
+            Vector3 finalVelocity = knockbackDir * horizontalForce + Vector3.up * verticalForce;
+
+            // ★ VelocityChangeで適用
+            rb.velocity = Vector3.zero;
+            rb.AddForce(finalVelocity, ForceMode.VelocityChange);
+
+            CustomLogger.Info(
+                $"Knockback Applied: dir={knockbackDir}, finalVel={finalVelocity}, victimForward={victimForward}",
+                LogTagUtil.TagState);
         }
 
-        /// <summary>
-        /// 前方または後方に壁があるかチェック
-        /// </summary>
-        /// <param name="hitDirection">壁に当たった方向（out: 1=前方, -1=後方, 0=壁なし）</param>
-        /// <returns>壁に当たったかどうか</returns>
         private bool CheckWallBehind(out int hitDirection)
         {
             hitDirection = 0;
+
             var wallCheckDistance = 0.6f;
-            Vector3 origin = controller.transform.position + Vector3.up * 0.5f; // 腰あたりの高さ
+            Vector3 origin = controller.transform.position + Vector3.up * 0.5f;
 
-            // 後方にレイキャスト
             Vector3 backward = -controller.transform.forward;
-            bool hitWallBack = Physics.Raycast(origin, backward, out RaycastHit hitBack, wallCheckDistance, LayerMask.GetMask("Wall"));
+            bool hitBack = Physics.Raycast(origin, backward, wallCheckDistance, LayerMask.GetMask("Wall"));
 
-            // 前方にレイキャスト
             Vector3 forward = controller.transform.forward;
-            bool hitWallForward = Physics.Raycast(origin, forward, out RaycastHit hitForward, wallCheckDistance, LayerMask.GetMask("Wall"));
+            bool hitForward = Physics.Raycast(origin, forward, wallCheckDistance, LayerMask.GetMask("Wall"));
 
-            // デバッグ描画（常に表示、色を分ける）
-            Debug.DrawRay(origin, backward * wallCheckDistance, hitWallBack ? Color.red : Color.yellow, 2.0f);
-            Debug.DrawRay(origin, forward * wallCheckDistance, hitWallForward ? Color.green : Color.cyan, 2.0f);
+            Debug.DrawRay(origin, backward * wallCheckDistance, hitBack ? Color.red : Color.yellow, 2f);
+            Debug.DrawRay(origin, forward * wallCheckDistance, hitForward ? Color.green : Color.cyan, 2f);
 
-            // ログ出力
-            if (hitWallBack || hitWallForward)
+            if (hitForward)
             {
-                CustomLogger.Info($"Wall Check: Forward={hitWallForward}, Back={hitWallBack}", LogTagUtil.TagState);
-            }
-
-            // 壁に当たった方向を設定
-            if (hitWallForward)
-            {
-                hitDirection = 1; // 前方の壁に当たった
-                CustomLogger.Info($"Hit FORWARD wall, will bounce BACKWARD", LogTagUtil.TagState);
+                hitDirection = 1;
                 return true;
             }
-            else if (hitWallBack)
+
+            if (hitBack)
             {
-                hitDirection = -1; // 後方の壁に当たった
-                CustomLogger.Info($"Hit BACKWARD wall, will bounce FORWARD", LogTagUtil.TagState);
+                hitDirection = -1;
                 return true;
             }
 
             return false;
         }
 
-        /// <summary>
-        /// 壁バウンド開始
-        /// </summary>
         private void StartWallBounce()
         {
-            if (attackData == null || !attackData.causesWallBounce) return;
+            if (attackData == null || !attackData.causesWallBounce)
+                return;
 
             isWallBouncing = true;
             wallBounceElapsedTime = 0f;
 
-            // 壁バウンド専用アニメーションに切り替え
             controller.Anim.SetBool(AnimatorParam.IsHitting, false);
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsWallHitting);
 
-            // 壁バウンド時間を適用
             damageStunDuration = attackData.wallBounceTime;
 
-            // 壁から跳ね返る速度を適用
             var rb = controller.Rb;
-            if (rb != null)
-            {
-                AudioManager.I?.PlaySE(Audio.SEID.WallHit);
-                EffectFactory.I?.GetEffectObj(EffectFactory.I?.DebrisEffectPrefab, controller.transform.position, Quaternion.identity);
-                // 壁に当たった方向の反対方向に跳ね返す
-                // wallHitDirection: 1=前方の壁に当たった→後方(-forward)に跳ね返す
-                //                  -1=後方の壁に当たった→前方(+forward)に跳ね返す
-                Vector3 bounceDirection = -wallHitDirection * controller.transform.forward;
-                bounceDirection.y = 0; // 水平方向のみ
-                bounceDirection = bounceDirection.normalized;
+            if (rb == null)
+                return;
 
-                // 上方向のブーストを追加
-                Vector3 bounceVelocity = bounceDirection * attackData.wallBounceForce +
-                                        Vector3.up * attackData.wallBounceVerticalBoost;
+            AudioManager.I?.PlaySE(Audio.SEID.WallHit);
+            EffectFactory.I?.GetEffectObj(
+                EffectFactory.I?.DebrisEffectPrefab,
+                controller.transform.position,
+                Quaternion.identity);
 
-                rb.velocity = bounceVelocity;
+            Vector3 bounceDirection = -wallHitDirection * controller.transform.forward;
+            bounceDirection.y = 0;
+            bounceDirection.Normalize();
 
-                CustomLogger.Info($"Wall Bounce START: hitDir={wallHitDirection}, bounceDir={bounceDirection}, velocity={bounceVelocity}, force={attackData.wallBounceForce}, boost={attackData.wallBounceVerticalBoost}", LogTagUtil.TagState);
-            }
+            Vector3 bounceVelocity =
+                bounceDirection * attackData.wallBounceForce +
+                Vector3.up * attackData.wallBounceVerticalBoost;
+
+            rb.velocity = bounceVelocity;
+
+            CustomLogger.Info(
+                $"WallBounce: dir={bounceDirection}, vel={bounceVelocity}",
+                LogTagUtil.TagState);
+
             hasWallBounced = true;
         }
     }
