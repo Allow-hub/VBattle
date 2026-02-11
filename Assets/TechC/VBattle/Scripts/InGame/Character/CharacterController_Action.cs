@@ -244,8 +244,8 @@ namespace TechC.VBattle.InGame.Character
             var attackDirection = AttackDirection.Neutral;
 
             if (attackData == null)
-                return (attackType, attackDirection);
-
+                CustomLogger.Error("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
+             
             if (AttackSet?.attacks == null)
             {
                 CustomLogger.Warning("AttackSetまたはattacksがnullです", LogTagUtil.TagAttack);
@@ -259,9 +259,7 @@ namespace TechC.VBattle.InGame.Character
                 attackDirection = entry.direction;
             }
             else
-            {
                 CustomLogger.Warning($"カウンター用AttackData [{attackData.attackName}] がAttackSetに見つかりません", LogTagUtil.TagAttack);
-            }
 
             return (attackType, attackDirection);
         }

@@ -65,7 +65,7 @@ namespace TechC.VBattle.InGame.Character
 
             if (forcedAttackData != null)
                 currentAttackData = forcedAttackData;
-                
+
             controller.Anim.speed = currentAttackData.animationSpeed;
             AnimatorUtil.SetAnimatorBoolExclusive(controller.Anim, AnimatorParam.IsAttacking);
         }
@@ -95,10 +95,8 @@ namespace TechC.VBattle.InGame.Character
                         controller.SetCounterAttackData(currentAttackData.nextChain);
                     }
 
-                    // hitTimingまでの残り時間を待機
-                    float remainingToHitTiming = currentAttackData.hitTiming;
-                    if (remainingToHitTiming > 0)
-                        await UniTask.Delay(TimeSpan.FromSeconds(remainingToHitTiming), cancellationToken: ct);
+                    // hitTimingまで待機
+                    await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.hitTiming), cancellationToken: ct);
 
                     // 攻撃Prefab生成と判定を実行
                     CreateAttackObject();
@@ -108,8 +106,7 @@ namespace TechC.VBattle.InGame.Character
                     if (shouldEnableCounter && currentAttackData.counterEnableDuration > currentAttackData.hitTiming)
                     {
                         float remainingToCounterEnd = currentAttackData.counterEnableDuration - currentAttackData.hitTiming;
-                        if (remainingToCounterEnd > 0)
-                            await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
+                        await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
                         
                         // カウンター受付終了
                         controller.SetCanCounter(false);
@@ -178,7 +175,7 @@ namespace TechC.VBattle.InGame.Character
             isChainRequested = false;
             chain = 0;
             
-            // カウンター状態をリセット（念のため）
+            // 他のステートへの遷移時にカウンター状態が残らないようクリーンアップ            controller.SetCanCounter(false);
             controller.SetCanCounter(false);
             controller.ClearCounterAttackData();
             

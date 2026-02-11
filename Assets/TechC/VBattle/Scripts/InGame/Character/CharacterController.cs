@@ -38,10 +38,6 @@ namespace TechC.VBattle.InGame.Character
         public AttackType CurrentAttackType { get; private set; }
         public AttackDirection CurrentAttackDirection { get; private set; }
 
-        // カウンター攻撃関連
-        private bool isExecutingCounterAttack = false;
-        public bool IsExecutingCounterAttack => isExecutingCounterAttack;
-
         // ===== コンポーネント =====
         public Animator Anim => anim;
         public Rigidbody Rb => rb;
@@ -74,7 +70,10 @@ namespace TechC.VBattle.InGame.Character
         // ===== カウンター関連 =====
         private bool canCounter = false;
         private AttackData counterAttackData = null;
+        private bool isExecutingCounterAttack = false;
+        
         public bool CanCounter => canCounter;
+        public bool IsExecutingCounterAttack => isExecutingCounterAttack;
 
         // ===== IAttacker実装 =====
         GameObject IAttacker.AttackerObj => gameObject;

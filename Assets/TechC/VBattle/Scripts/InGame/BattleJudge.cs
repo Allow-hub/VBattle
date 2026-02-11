@@ -52,7 +52,6 @@ namespace TechC.VBattle.InGame.Systems
                 if (!isAttackerCountering)
                 {
                     CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
-                    // isHit=true: カメラシェイク・ヒットストップなどの演出を発生させる（ダメージは0）
                     PublishAttackResult(attackEvent, target, true, true, false, 0);
                     return;
                 }
