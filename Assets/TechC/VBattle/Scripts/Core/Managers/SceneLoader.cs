@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using TechC.VBattle.Audio;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
 using UnityEngine;
@@ -277,7 +278,7 @@ namespace TechC.VBattle.Core.Managers
             switch (toScene)
             {
                 case "TitleScene":
-                    // AudioManager.I?.PlayBGM(BGMID.Title);
+                    AudioManager.I?.PlayBGM(BGMID.Title);
                     SetCursorMode(true, CursorLockMode.None);
                     break;
 
@@ -286,7 +287,7 @@ namespace TechC.VBattle.Core.Managers
                     break;
 
                 case "BattleScene":
-                    // AudioManager.I?.PlayBGM(BGMID.Battle);
+                    AudioManager.I?.PlayBGM(BGMID.Battle);
                     SetCursorMode(false, CursorLockMode.Locked);
                     break;
 
