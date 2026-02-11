@@ -349,6 +349,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6538790824624640070}
+  - {fileID: 725848427459320659}
   m_Father: {fileID: 49732675773145881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6434067615194947122
@@ -369,6 +370,11 @@ MonoBehaviour:
       type: 3}
     parent: {fileID: 7812680236923317830}
     initialSize: 5
+  - name: Debris
+    prefab: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
+      type: 3}
+    parent: {fileID: 3133755519994864788}
+    initialSize: 5
   autoExpand: 1
   expandSize: 5
 --- !u!114 &9105864281085549204
@@ -384,6 +390,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPool: {fileID: 6434067615194947122}
+  debrisEffectPrefab: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
+    type: 3}
 --- !u!1 &1718379667028756389
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1265,37 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &3133755519994864788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 725848427459320659}
+  m_Layer: 0
+  m_Name: Debris
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &725848427459320659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3133755519994864788}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3745792992158121836}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3198519692414142371
 GameObject:
   m_ObjectHideFlags: 0
@@ -2089,7 +2128,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256032833623941496}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 451888f0c16d58a43a6f0b103ba90179, type: 3}
   m_Name: 
@@ -33095,6 +33134,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Walls
       objectReference: {fileID: 0}
+    - target: {fileID: 3247906996488951634, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 3386985695740358908, guid: d943afa8794265a438235fde12226e5c,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -33110,10 +33154,25 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6009846843642265680, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 6893764648075410516, guid: d943afa8794265a438235fde12226e5c,
         type: 3}
       propertyPath: m_Materials.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606836713085864350, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 8058736816895589846, guid: d943afa8794265a438235fde12226e5c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 8090464603563839967, guid: d943afa8794265a438235fde12226e5c,
         type: 3}

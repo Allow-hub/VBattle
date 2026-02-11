@@ -125,12 +125,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &343047141 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3745792992158121836, guid: de551b8e8565c92489c9ebc3cb126d65,
-    type: 3}
-  m_PrefabInstance: {fileID: 1756444364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1435828337
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -224,37 +218,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a52086bb800b7ff43bbb98b165c88e3c, type: 3}
---- !u!1 &1470195983
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1470195984}
-  m_Layer: 0
-  m_Name: Debris
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &1470195984
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1470195983}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 343047141}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1756444364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -263,16 +226,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 80850145152898922, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 80850145152898922, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     - target: {fileID: 1434924754111263982, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -363,26 +316,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4889709094718815726, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4889709094718815726, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
-    - target: {fileID: 5016226324138183078, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5016226324138183078, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     - target: {fileID: 5231933124452983106, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -413,40 +346,9 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: poolItems.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: poolItems.Array.data[1].name
-      value: Debris
-      objectReference: {fileID: 0}
-    - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: poolItems.Array.data[1].parent
-      value: 
-      objectReference: {fileID: 1470195983}
-    - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: poolItems.Array.data[1].prefab
-      value: 
-      objectReference: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
-        type: 3}
-    - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: poolItems.Array.data[1].initialSize
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 6682273496921815123, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: useNpc
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
@@ -464,34 +366,9 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7102736807134503929, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9105864281085549204, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: debrisEffectPrefab
-      value: 
-      objectReference: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
-        type: 3}
-    - target: {fileID: 9181323615756779624, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 9181323615756779624, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3745792992158121836, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1470195984}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de551b8e8565c92489c9ebc3cb126d65, type: 3}
 --- !u!1001 &7827945202877369542
