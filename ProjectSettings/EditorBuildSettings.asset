@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/TechC/VBattle/Scenes/WorkScene/WorkScene_A.unity
     guid: 2e320627d08e45e4f83d833902e01852
-  - enabled: 1
+  - enabled: 0
     path: Assets/TechC/VBattle/Scenes/WorkScene/WorkScene_Y.unity
     guid: 2fe7b01f1a0524148ba0cd43d82d0e46
-  - enabled: 0
+  - enabled: 1
     path: Assets/TechC/VBattle/Scenes/InGameScene.unity
     guid: 9ea62fb7ceff229408b82f7b9c75f910
   - enabled: 1
