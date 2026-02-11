@@ -12,11 +12,6 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public partial class CharacterController
     {
-        // カウンター攻撃の待機フレーム数
-        private const int COUNTER_INITIAL_DELAY_FRAMES = 3;  // 現在の処理完了待ち
-        private const int COUNTER_STATE_SWITCH_DELAY_FRAMES = 2;  // ステート切り替え待ち
-        private const int COUNTER_ATTACK_DURATION_FRAMES = 30;  // 攻撃完了待ち
-
         /// <summary>
         /// 左右の移動
         /// </summary>
@@ -152,11 +147,28 @@ namespace TechC.VBattle.InGame.Character
         {
             // 攻撃者の所有者が自分の場合は除外（自分の攻撃を受けない）
             if (e.attacker?.Owner == this) return;
-            // 攻撃がヒットしていない場合
-            if (!e.isHit) return;
             // ターゲットが自分でない場合
             if (e.target != this) return;
 
+            // カウンター判定成功時の処理（isHitチェックより前に実行）
+            if (e.isCounter)
+            {
+                CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行開始", LogTagUtil.TagAttack);
+
+                // カウンター状態をクリア
+                SetCanCounter(false);
+                var counterData = GetCounterAttackData();
+                ClearCounterAttackData();
+
+                // カウンター攻撃を実行（非同期）
+                ExecuteCounterAttack(counterData).Forget();
+                return; // カウンター成功時はダメージ処理をスキップ
+            }
+
+            // 攻撃がヒットしていない場合
+            if (!e.isHit) return;
+
+            // 通常のダメージ処理
             TakeDamage(e.attackData, e.attacker.Transform.position, e.damage);
         }
 
@@ -190,46 +202,37 @@ namespace TechC.VBattle.InGame.Character
         }
 
         /// <summary>
-        /// カウンター攻撃を非同期で実行
+        /// カウンター攻撃を実行（非同期でアニメーター更新を待つ）
+        /// Animatorが変化を検知するために、明示的にIsAttackingをfalse→trueに変更
         /// </summary>
-        public async UniTaskVoid ExecuteCounterAttackAsync(AttackData attackData)
+        public async UniTaskVoid ExecuteCounterAttack(AttackData attackData)
         {
-            // 数フレーム待機して、現在の処理が完全に終了するのを待つ
-            await UniTask.DelayFrame(COUNTER_INITIAL_DELAY_FRAMES, PlayerLoopTiming.Update);
+            if (StateMachine == null) return;
             
-            // 攻撃可能な状態か確認
-            if (StateMachine != null)
-            {
-                // 現在の攻撃をキャンセル
-                Anim.SetBool(AnimatorParam.IsAttacking, false);
-                
-                // カウンター攻撃フラグを立てる
-                SetExecutingCounterAttack(true);
-                
-                // さらに数フレーム待機してステート切り替えを確実にする
-                await UniTask.DelayFrame(COUNTER_STATE_SWITCH_DELAY_FRAMES, PlayerLoopTiming.Update);
-                
-                // AttackStateに攻撃データを渡す
-                GetState<AttackState>().SetPendingAttack(attackData);
-                
-                // AttackDataから対応するAttackType/Directionを取得してセット
-                var (attackType, attackDirection) = GetAttackTypeDirection(attackData);
-                CurrentAttackType = attackType;
-                CurrentAttackDirection = attackDirection;
-                
-                // 直接AttackStateに遷移
-                StateMachine.ChangeState(GetState<AttackState>());
-                
-                if (attackData != null)
-                    CustomLogger.Info($"Player {PlayerIndex} カウンター攻撃: {attackData.attackName}", LogTagUtil.TagAttack);
-                else
-                    CustomLogger.Warning("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
-                
-                // カウンター攻撃終了後にフラグをクリア
-                await UniTask.DelayFrame(COUNTER_ATTACK_DURATION_FRAMES, PlayerLoopTiming.Update);
-                if (this != null)
-                    SetExecutingCounterAttack(false);
-            }
+            // カウンター攻撃フラグを立てる
+            SetExecutingCounterAttack(true);
+            
+            // AttackStateに攻撃データを渡す
+            GetState<AttackState>().SetPendingAttack(attackData);
+            
+            // AttackDataから対応するAttackType/Directionを取得してセット
+            var (attackType, attackDirection) = GetAttackTypeDirection(attackData);
+            CurrentAttackType = attackType;
+            CurrentAttackDirection = attackDirection;
+            
+            // 現在の攻撃アニメーションを明示的に停止（Animatorに変化を認識させるため）
+            Anim.SetBool(AnimatorParam.IsAttacking, false);
+            
+            // アニメーターの更新を待つ（1フレーム）
+            await UniTask.Yield(PlayerLoopTiming.Update);
+            
+            // AttackStateに遷移（OnEnterでIsAttackingがtrueになる）
+            StateMachine.ChangeState(GetState<AttackState>());
+            
+            if (attackData != null)
+                CustomLogger.Info($"Player {PlayerIndex} カウンター攻撃: {attackData.attackName}", LogTagUtil.TagAttack);
+            else
+                CustomLogger.Warning("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
         }
         
         /// <summary>

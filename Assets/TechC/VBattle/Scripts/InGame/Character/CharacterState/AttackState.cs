@@ -14,7 +14,7 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class AttackState : CharacterState
     {
-        private const float COUNTER_END_TIME = 2.0f;    // 攻撃開始からカウンター受付終了までの時間（テスト用に5秒に延長）
+        private const float COUNTER_END_TIME = 2.0f;    // 攻撃開始からカウンター受付終了までの時間
         
         private AttackData currentAttackData;
         private AttackData pendingAttackData;
@@ -182,6 +182,10 @@ namespace TechC.VBattle.InGame.Character
             // カウンター状態をリセット（念のため）
             controller.SetCanCounter(false);
             controller.ClearCounterAttackData();
+            
+            // カウンター攻撃として実行された場合、フラグをクリア
+            if (isCounterAttack)
+                controller.SetExecutingCounterAttack(false);
         }
 
         /// <summary>カウンター攻撃用のAttackDataを設定</summary>

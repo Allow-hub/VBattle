@@ -233,20 +233,6 @@ namespace TechC.VBattle.InGame.Character
                 float gaugeGain = e.attackData.specialGaugeGainOnHit * characterData.specialGaugeChargeRate;
                 AddSpecialGauge(gaugeGain);
             }
-
-            // カウンター判定成功時の処理
-            if (e.target == this && e.isCounter)
-            {
-                CustomLogger.Info($"Player {PlayerIndex}: カウンター攻撃実行開始", LogTagUtil.TagAttack);
-
-                // カウンター状態をクリア
-                SetCanCounter(false);
-                var counterData = GetCounterAttackData();
-                ClearCounterAttackData();
-
-                // カウンター攻撃を実行
-                ExecuteCounterAttackAsync(counterData).Forget();
-            }
         }
 
         public bool IsGrounded()
