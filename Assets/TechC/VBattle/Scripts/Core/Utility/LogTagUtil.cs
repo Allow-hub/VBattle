@@ -15,5 +15,6 @@ namespace TechC.VBattle.Core.Util
         public static readonly string TagEditor = "editor";
         public static readonly string TagUnicode = "unicode";
         public static readonly string TagScene = "scene";
+        public static readonly string TagNpc = "npc";
     }
 }

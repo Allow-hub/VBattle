@@ -191,5 +191,7 @@ namespace TechC.VBattle.InGame.Comment
         }
 
         public float GetCurrentSpeed() => speed;
+        public void SetSpeed(float newSpeed) => speed = newSpeed;
+        public void AddSpeed(float addAmount) => speed += addAmount;
     }
 }

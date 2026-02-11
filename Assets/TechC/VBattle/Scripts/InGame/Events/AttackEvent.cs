@@ -39,7 +39,7 @@ namespace TechC.VBattle.InGame.Events
     }
 
     /// <summary>
-    /// 必殺技ゲージ変化イベント
+  　/// 必殺技ゲージ変化イベント
     /// </summary>
     public class SpecialGaugeChangedEvent : IBattleEvent
     {
@@ -47,5 +47,10 @@ namespace TechC.VBattle.InGame.Events
         public float CurrentGauge;
         public float MaxGauge;
         public float Percentage; // 0-1
+    }
+
+    public class PlayerOnDeathEvent : IBattleEvent
+    {
+        public int PlayerIndex;
     }
 }

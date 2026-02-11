@@ -10,7 +10,7 @@ namespace TechC.VBattle.Select.UI
     /// アイコン表示用のデータセット
     /// </summary>
     [System.Serializable]
-    public class IconData
+    public struct IconData
     {
         public GameObject iconObject;
         public Sprite iconSprite;
@@ -22,6 +22,13 @@ namespace TechC.VBattle.Select.UI
     /// </summary>
     public class IconController : MonoBehaviour
     {
+        private const float PLAYER_1_START_ANGLE = 45f;
+        private const float PLAYER_2_START_ANGLE = 135f;
+        private const float PLAYER_1_DIRECTION = -1f;
+        private const float PLAYER_2_DIRECTION = 1f;
+        private const float SMOOTHSTEP_FACTOR_1 = 3f;
+        private const float SMOOTHSTEP_FACTOR_2 = 2f;
+
         [SerializeField] private bool isP1;
         [SerializeField] private GameObject iconPrefab;
         [SerializeField] private Sprite keyboardSprite;
@@ -37,7 +44,6 @@ namespace TechC.VBattle.Select.UI
 
         private List<IconData> generatedIcons = new List<IconData>();
         private IconData currentIconData;
-
         private bool iconsActive = false;
         private bool isClearing = false;
         private float lastOpenedTime = -999f;
@@ -112,8 +118,8 @@ namespace TechC.VBattle.Select.UI
                 devices.Add(null);
             }
 
-            float startAngle = isP1 ? 45f : 135f;
-            float direction = isP1 ? -1f : 1f;
+            float startAngle = isP1 ? PLAYER_1_START_ANGLE : PLAYER_2_START_ANGLE;
+            float direction = isP1 ? PLAYER_1_DIRECTION : PLAYER_2_DIRECTION;
 
             for (int i = 0; i < sprites.Count; i++)
             {
@@ -155,8 +161,6 @@ namespace TechC.VBattle.Select.UI
 
             for (int i = 0; i < generatedIcons.Count; i++)
             {
-                if (generatedIcons[i] == null) continue;
-
                 var rect = generatedIcons[i].iconObject.GetComponent<RectTransform>();
                 StartCoroutine(MoveToPosition(rect, Vector2.zero, animDuration, i * animDelay, true));
             }
@@ -188,7 +192,7 @@ namespace TechC.VBattle.Select.UI
             {
                 elapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsed / duration);
-                t = t * t * (3f - 2f * t);
+                t = t * t * (SMOOTHSTEP_FACTOR_1 - SMOOTHSTEP_FACTOR_2 * t);
                 rect.anchoredPosition = Vector3.Lerp(start, target, t);
                 yield return null;
             }
@@ -200,11 +204,8 @@ namespace TechC.VBattle.Select.UI
 
         private void ChildClickEvent(IconData clickedIconData)
         {
-            if (clickedIconData != null)
-            {
-                iconImage.sprite = clickedIconData.iconSprite;
-                currentIconData = clickedIconData; // 選択情報を更新
-            }
+            iconImage.sprite = clickedIconData.iconSprite;
+            currentIconData = clickedIconData;
             StartCoroutine(ClearIcons());
         }
 

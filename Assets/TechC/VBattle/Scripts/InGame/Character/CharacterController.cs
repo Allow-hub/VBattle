@@ -25,6 +25,7 @@ namespace TechC.VBattle.InGame.Character
         [SerializeField] private Transform handPos;
         [SerializeField, ReadOnly] private int playerIndex;
         [SerializeField, ReadOnly] private string playerTag = "Player";
+        [SerializeField] private float wallCheckDistance = 0.6f;
 
         // ===== 公開プロパティ =====
         public int PlayerIndex => playerIndex;
@@ -74,6 +75,14 @@ namespace TechC.VBattle.InGame.Character
         private int currentJumpCount = 0;
         private int maxJumpCount = 2;
 
+        // ===== カウンター関連 =====
+        private bool canCounter = false;
+        private AttackData counterAttackData = null;
+        private bool isExecutingCounterAttack = false;
+        
+        public bool CanCounter => canCounter;
+        public bool IsExecutingCounterAttack => isExecutingCounterAttack;
+
         // ===== IAttacker実装 =====
         GameObject IAttacker.AttackerObj => gameObject;
         Transform IAttacker.Transform => transform;
@@ -83,6 +92,9 @@ namespace TechC.VBattle.InGame.Character
         GameObject IDamageable.GameObject => gameObject;
         bool IDamageable.IsInvincible => isInvincible;
         bool IDamageable.IsGuarding => isGuarding;
+
+        // ===== アウトライン管理 =====
+        [SerializeField] private CharacterOutlineController outlineController;
 
         private void Awake()
         {
@@ -116,6 +128,9 @@ namespace TechC.VBattle.InGame.Character
             IsNPC = isNPC;
             CurrentHP = characterData.MaxHP;
             currentGuardPower = characterData.GuardPower;
+
+            outlineController?.ApplyOutline(playerIndex);
+
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(HandleAttackResult);
             InGameManager.I.BattleBus.Subscribe<AttackResultEvent>(OnAttackResult);
         }
@@ -136,6 +151,7 @@ namespace TechC.VBattle.InGame.Character
         private void FixedUpdate()
         {
             commandInvoker.FixedUpdate();
+            if (stateMachine.CurrentState == GetState<AttackState>()) return;
             if (!IsGrounded() && stateMachine.CurrentState != GetState<AirState>())
                 stateMachine.ChangeState(GetState<AirState>());
         }
@@ -308,10 +324,25 @@ namespace TechC.VBattle.InGame.Character
         /// <param name="item">持つアイテム（nullで解除）</param>
         public void SetHoldItem(GameObject item) =>  HoldItem = item;
 
+        // ===== カウンター関連メソッド =====
+        public void SetCanCounter(bool val) => canCounter = val;
+        public void SetCounterAttackData(AttackData data) => counterAttackData = data;
+        public AttackData GetCounterAttackData() => counterAttackData;
+        public void ClearCounterAttackData() => counterAttackData = null;
+
+        public void SetExecutingCounterAttack(bool val) => isExecutingCounterAttack = val;
+
         private void OnDestroy()
         {
+            if (InGameManager.I != null && InGameManager.I.BattleBus != null)
+            {
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(HandleAttackResult);
+                InGameManager.I.BattleBus.Unsubscribe<AttackResultEvent>(OnAttackResult);
+            }
+
             stateMachine?.Cancel();
             CommentAbilityHandler?.Dispose(); // クリーンアップ
+            outlineController?.Cleanup();
         }
     }
 }

@@ -1,8 +1,9 @@
-using TechC.VBattle.Audio;
+using TechC.VBattle.Core;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Character;
+using TechC.VBattle.Select.Events;
 using TechC.VBattle.Select.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,16 +16,21 @@ namespace TechC.VBattle.Select.Core
     /// </summary>
     public class SelectUIManager : Singleton<SelectUIManager>
     {
+        private const int PLAYER_COUNT = 2;
+        private const int PLAYER_ID_UNKNOWN = 0;
+        private const int PLAYER_ID_TO_INDEX_OFFSET = 1;
+        private const string CHARACTER_NAME_AME = "Ame";
+        private const string CHARACTER_NAME_TERAMI = "Terami";
+
+
         public struct CharacterPick
         {
             public int playerId;
             public CharacterData characterData;
             public InputDevice inputDevice;
+            public bool isNpc;  // NPC判定を明示的に保存
         }
 
-        // ==============================
-        // Inspector設定用
-        // ==============================
         [SerializeField] private float startDelay = 6f;
         [SerializeField] private GameObject startObj;
         [SerializeField] private Button cancelButton;
@@ -38,18 +44,13 @@ namespace TechC.VBattle.Select.Core
         [SerializeField] private CharacterData npcAmeData;
         [SerializeField] private CharacterData npcTeramiData;
 
-        // ==============================
-        // 公開プロパティ / コールバック
-        // ==============================
-        public System.Action OnStartGamePicked;
         public bool[] HasPicked => hasPicked;
         public CharacterPick[] CurrentPicks => currentPicks;
+        public SelectEventBus EventBus => eventBus;
 
-        // ==============================
-        // 内部状態管理
-        // ==============================
-        private bool[] hasPicked = new bool[2];
-        private CharacterPick[] currentPicks = new CharacterPick[2];
+        private bool[] hasPicked = new bool[PLAYER_COUNT];
+        private CharacterPick[] currentPicks = new CharacterPick[PLAYER_COUNT];
+        private SelectEventBus eventBus = new();
         protected override bool UseDontDestroyOnLoad => false;
 
         public override void Init()
@@ -62,97 +63,129 @@ namespace TechC.VBattle.Select.Core
             startButton.onClick.AddListener(StartGame);
             cancelButton.onClick.AddListener(ResetSelect);
             startObj.SetActive(false);
-            currentPicks[0].playerId = 0;
-            currentPicks[1].playerId = 1;
+            currentPicks[PlayerConstants.PLAYER_1_INDEX].playerId = PlayerConstants.PLAYER_1_ID;
+            currentPicks[PlayerConstants.PLAYER_2_INDEX].playerId = PlayerConstants.PLAYER_2_ID;
+            
+            eventBus.Subscribe<DeviceAssignedEvent>(OnDeviceAssigned);
+            eventBus.Subscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
+            eventBus.Subscribe<SelectionResetEvent>(OnSelectionReset);
+            eventBus.Subscribe<CharacterHoveredEvent>(OnCharacterHovered);
+        }
+        
+        private void OnDestroy()
+        {
+            eventBus.Unsubscribe<DeviceAssignedEvent>(OnDeviceAssigned);
+            eventBus.Unsubscribe<SelectionConfirmedEvent>(OnSelectionConfirmed);
+            eventBus.Unsubscribe<SelectionResetEvent>(OnSelectionReset);
+            eventBus.Unsubscribe<CharacterHoveredEvent>(OnCharacterHovered);
+            eventBus.Clear();
         }
 
+        /// <summary>2PがNPCかどうかを判定</summary>
+        public bool GetIsNpc() => iconController_2p.GetCurrentDevice() == null;
+
+        /// <summary>指定プレイヤーが選択済みかを確認</summary>
+        public bool CheckPicked(int id) => hasPicked[id - PLAYER_ID_TO_INDEX_OFFSET];
+        
         /// <summary>
-        /// キャラ選択時そのデバイスが使用中であるかどうかで値を変える
+        /// デバイスからプレイヤーIDを判定
         /// </summary>
-        /// <param name="inputDevice">入力が加えられたデバイス</param>
-        /// <param name="pickChara">ピックされたキャラ</param>
-        /// <returns>1->1p,2->2p,0->無効なデバイス</returns>
-        public int SetCharacterPick(InputDevice inputDevice, CharacterData pickChara)
+        public int GetPlayerIdFromDevice(InputDevice device)
         {
-            // --- 1Pがこのデバイスを持っている場合
-            if (iconController_1p.GetCurrentDevice() == inputDevice)
-            {
-                currentPicks[0].characterData = pickChara;
-                currentPicks[0].inputDevice = inputDevice;
-                return 1;
-            }
-
-            // --- 2Pがこのデバイスを持っている場合
-            if (iconController_2p.GetCurrentDevice() == inputDevice)
-            {
-                currentPicks[1].characterData = pickChara;
-                currentPicks[1].inputDevice = inputDevice;
-                return 2;
-            }
-
-            // --- 特別処理: 2PがNPCなら1Pのデバイスで2Pのキャラを選べる
-            if (iconController_2p.GetCurrentDevice() == null)
-            {
-                    Debug.Log("AA");
-
-                // 1Pがもうキャラを決定済みか確認
-                if (CheckPicked(1))
-                {
-                    if (pickChara.name.Contains("Ame"))
-                        currentPicks[1].characterData = npcAmeData;
-                    else if (pickChara.name.Contains("Terami"))
-                        currentPicks[1].characterData = npcTeramiData;
-                    else
-                        currentPicks[1].characterData = pickChara;
-
-                    currentPicks[1].inputDevice = null;
-                    return 2;
-                }
-            }
-
-            // --- どこにも割り当てできない場合は無効
-            return 0;
+            if (iconController_1p.GetCurrentDevice() == device)
+                return PlayerConstants.PLAYER_1_ID;
+            
+            if (iconController_2p.GetCurrentDevice() == device)
+                return PlayerConstants.PLAYER_2_ID;
+            
+            if (iconController_2p.GetCurrentDevice() == null && iconController_1p.GetCurrentDevice() == device && CheckPicked(PlayerConstants.PLAYER_1_ID))
+                return PlayerConstants.PLAYER_2_ID;
+            
+            return PLAYER_ID_UNKNOWN;
         }
 
-        public void SetPicked(int id, bool b)
+        private void StartGame() => eventBus.Publish(new StartGameRequestedEvent());
+        private void ResetSelect() => eventBus.Publish(new SelectionResetEvent());
+        
+        private void OnDeviceAssigned(DeviceAssignedEvent e)
         {
-            id--;
-            hasPicked[id] = b;
-            if (hasPicked[0] && hasPicked[1])
+            int index = e.PlayerId - PLAYER_ID_TO_INDEX_OFFSET;
+            currentPicks[index].inputDevice = e.Device;
+        }
+        
+        
+        private void OnSelectionConfirmed(SelectionConfirmedEvent e)
+        {
+            int index = e.PlayerId - PLAYER_ID_TO_INDEX_OFFSET;
+            CharacterData finalCharacter = e.Character;
+
+            if (e.IsNpc)
             {
-                // 遅延してstartObjを表示
+                if (e.Character.name.Contains(CHARACTER_NAME_AME))
+                    finalCharacter = npcAmeData;
+                else if (e.Character.name.Contains(CHARACTER_NAME_TERAMI))
+                    finalCharacter = npcTeramiData;
+            }
+
+            if (finalCharacter.CharaPrefab == null)
+            {
+                CustomLogger.Error($"{finalCharacter.name}のCharaPrefabが設定されていません");
+                return;
+            }
+            
+            currentPicks[index] = new CharacterPick
+            {
+                playerId = e.PlayerId,
+                characterData = finalCharacter,
+                inputDevice = e.Device,
+                isNpc = e.IsNpc
+            };
+            
+            hasPicked[index] = true;
+            
+            var pickAnim = e.PlayerId == PlayerConstants.PLAYER_1_ID ? selectPickAnim_1p : selectPickAnim_2p;
+            pickAnim.PlayAnim(finalCharacter.CharaPrefab);
+            
+            eventBus.Publish(new SelectionUpdatedEvent
+            {
+                Player1SelectedCharacter = hasPicked[PlayerConstants.PLAYER_1_INDEX] ? currentPicks[PlayerConstants.PLAYER_1_INDEX].characterData : null,
+                Player2SelectedCharacter = hasPicked[PlayerConstants.PLAYER_2_INDEX] ? currentPicks[PlayerConstants.PLAYER_2_INDEX].characterData : null
+            });
+            
+            if (hasPicked[PlayerConstants.PLAYER_1_INDEX] && hasPicked[PlayerConstants.PLAYER_2_INDEX])
+            {
                 _ = DelayUtility.StartDelayedActionAsync(startDelay, () =>
                 {
-                    if (startObj != null)
-                        startObj.SetActive(true);
-                    else
+                    if (startObj == null)
+                    {
                         CustomLogger.Error("startObjが設定されていません");
+                        return;
+                    }
+                    startObj.SetActive(true);
                 });
             }
         }
-
-        public bool GetIsNpc() => iconController_2p.GetCurrentDevice() == null;
-        public bool CheckPicked(int id) => hasPicked[--id];
-
-        private void StartGame()
-        {
-            // AudioManager.I.PlaySE(SEID.ButtonClick);
-            OnStartGamePicked?.Invoke();
-        }
-
-        private void ResetSelect()
+        
+        private void OnSelectionReset(SelectionResetEvent e)
         {
             startObj.SetActive(false);
-            hasPicked[0] = false;
-            hasPicked[1] = false;
-            currentPicks[0].characterData = null;
-            currentPicks[1].characterData = null;
+            hasPicked[PlayerConstants.PLAYER_1_INDEX] = false;
+            hasPicked[PlayerConstants.PLAYER_2_INDEX] = false;
+            currentPicks[PlayerConstants.PLAYER_1_INDEX].characterData = null;
+            currentPicks[PlayerConstants.PLAYER_2_INDEX].characterData = null;
             iconController_1p.InitIcon();
             iconController_2p.InitIcon();
             selectPickAnim_1p.ResetAnim();
             selectPickAnim_2p.ResetAnim();
             p1DisplayImage.enabled = true;
             p2DisplayImage.enabled = true;
+        }
+        
+        private void OnCharacterHovered(CharacterHoveredEvent e)
+        {
+            Image targetImage = e.PlayerId == PlayerConstants.PLAYER_1_ID ? p1DisplayImage : p2DisplayImage;
+            if (targetImage == null || e.CharacterSprite == null) return;
+            targetImage.sprite = e.CharacterSprite;
         }
     }
 }

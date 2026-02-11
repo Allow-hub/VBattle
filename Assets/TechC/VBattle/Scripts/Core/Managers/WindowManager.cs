@@ -179,8 +179,8 @@ namespace TechC.VBattle.Core.Managers
                 int y = unityScreenY + yi * tileSize;
 
                 // 修正: 画面端までの残り距離を正確に計算
-                int remainWidth = (unityScreenX + unityScreenWidth) - x;
-                int remainHeight = (unityScreenY + unityScreenHeight) - y;
+                int remainWidth = unityScreenX + unityScreenWidth - x;
+                int remainHeight = unityScreenY + unityScreenHeight - y;
 
                 // 最小サイズは残り幅/高さとtileSizeの小さい方
                 int wMin = Mathf.Min(tileSize, remainWidth);
