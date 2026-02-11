@@ -163,7 +163,7 @@ namespace TechC.VBattle.InGame.Character
             CurrentHP -= damage;
             if(CurrentHP < 0)
             {
-                 CurrentHP = 0;
+                CurrentHP = 0;
                 InGameManager.I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = PlayerIndex });
             }
             stateMachine.ChangeState(damageState);

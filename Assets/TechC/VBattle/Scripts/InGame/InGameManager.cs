@@ -78,7 +78,7 @@ namespace TechC.VBattle.InGame
 
                 p1Controller.Init(PlayerConstants.PLAYER_1_ID, Keyboard.current, false);
                 p2Controller.Init(PlayerConstants.PLAYER_2_ID, Keyboard.current, useNpc); // useNpcフラグを使用
-
+                
                 battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
 
                 if (GameDataBridge.I != null)

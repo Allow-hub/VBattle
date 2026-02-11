@@ -281,7 +281,6 @@ namespace TechC.VBattle.Core.Managers
                     AudioManager.I?.PlayBGM(BGMID.Title);
                     SetCursorMode(true, CursorLockMode.None);
                     break;
-
                 case "SelectScene":
                     SetCursorMode(true, CursorLockMode.None);
                     break;
