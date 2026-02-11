@@ -13,34 +13,63 @@ namespace TechC.VBattle.InGame.Gimmick
         [SerializeField] private GameObject normalTabObj;
         private NormalTab normalTab;
         [SerializeField] private Vector2 intervalRange;
+        
         private float currentInterval;
         private int tabTypeLength;
         private TabType currnetTabType;
         private float timer;
+        
+        // タブ表示状態の管理
+        private bool isTabShowing = false;
+        private float tabShowTimer = 0f;
+        
         public void OnEnter()
         {
             Lottery();
             timer = 0f;
-            tabTypeLength = System.Enum.GetNames(typeof(TabType)).Length;
+            tabTypeLength = Enum.GetNames(typeof(TabType)).Length;
             normalTab = normalTabObj.GetComponent<NormalTab>();
+            isTabShowing = false;
+            tabShowTimer = 0f;
         }
 
         public void OnUpdate(float deltaTime)
         {
+            // タブ表示中の処理
+            if (isTabShowing)
+            {
+                tabShowTimer += deltaTime;
+                
+                // タブの表示時間が終了したら次のインターバル開始
+                if (tabShowTimer >= normalTab.VisibleTime)
+                {
+                    isTabShowing = false;
+                    tabShowTimer = 0f;
+                    Lottery();  // 次回の抽選
+                    timer = 0f;
+                }
+                return;  // タブ表示中は通常のタイマーを進めない
+            }
+            
+            // 通常のインターバルカウント
             timer += deltaTime;
             if (timer >= currentInterval)
             {
                 ExecuteTabEvent();
-                Lottery();
                 timer = 0f;
             }
         }
 
         public void OnExit()
         {
-
+            // 終了時にタブを非表示にする（必要なら）
+            if (isTabShowing && normalTab != null)
+            {
+                normalTab.Hide();  // Hideメソッドがある場合
+            }
+            isTabShowing = false;
+            tabShowTimer = 0f;
         }
-
 
         /// <summary>
         /// タブの抽選とインターバルの抽選
@@ -60,9 +89,10 @@ namespace TechC.VBattle.InGame.Gimmick
             {
                 case TabType.Normal:
                     normalTab.Show();
-                    currentInterval += normalTab.VisibleTime;
+                    isTabShowing = true;
+                    tabShowTimer = 0f;
                     break;
-            }   
+            }
         }
     }
 }

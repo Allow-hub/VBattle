@@ -108,7 +108,7 @@ MonoBehaviour:
     - rid: 7383766261992783873
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        attackData: {fileID: 0}
+        attackData: {fileID: 11400000, guid: 2e87f36bf282326449bdf3530a2b13f8, type: 2}
         col: {fileID: -4762859513916456547}
     - rid: 7383766261992783874
       type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
@@ -118,3 +118,5 @@ MonoBehaviour:
         moveDir: {x: 0, y: 0, z: 1}
         moverType: 1
         characterYOffset: 0
+        followDelay: 0.1
+        followSmoothness: 5

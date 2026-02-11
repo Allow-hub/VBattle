@@ -118,3 +118,5 @@ MonoBehaviour:
         moveDir: {x: 1, y: 0, z: 0}
         moverType: 2
         characterYOffset: 0.5
+        followDelay: 0.1
+        followSmoothness: 5

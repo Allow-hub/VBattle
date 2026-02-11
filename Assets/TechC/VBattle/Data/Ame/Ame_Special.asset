@@ -18,7 +18,7 @@ MonoBehaviour:
     type: 3}
   prefabOffset: {x: 0, y: 2, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
-  animationSpeed: 2.5
+  animationSpeed: 1.5
   attackDuration: 1.5
   hitDetectionMode: 2
   targetLayers:

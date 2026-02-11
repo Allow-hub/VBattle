@@ -29,32 +29,19 @@ namespace TechC.VBattle.Core.Managers
             try
             {
                 if (progressImage != null)
-                {
                     progressImage.fillAmount = 0f;
-                }
                 else
-                {
                     Debug.LogWarning("ProgressImageが設定されていません");
-                }
 
                 if (loadTex != null)
-                {
                     loadTex.text = "0%";
-                }
                 else
-                {
                     Debug.LogWarning("LoadTextが設定されていません");
-                }
 
                 if (canvasGroup != null)
-                {
                     canvasGroup.alpha = 0f;
-                }
                 else
-                {
                     Debug.LogWarning("CanvasGroupが設定されていません");
-                }
-
                 isInitialized = true;
             }
             catch (System.Exception e)
@@ -79,9 +66,7 @@ namespace TechC.VBattle.Core.Managers
                 {
                     elapsed += Time.deltaTime;
                     if (canvasGroup != null)
-                    {
                         canvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeInDuration);
-                    }
                     await UniTask.Yield();
                 }
 
@@ -108,7 +93,6 @@ namespace TechC.VBattle.Core.Managers
 
             try
             {
-
                 // 初期化完了まで待機（タイムアウト付き）
                 int initWaitCount = 0;
                 while (!isInitialized && initWaitCount < 60) // 最大2秒待機
@@ -128,9 +112,7 @@ namespace TechC.VBattle.Core.Managers
 
                 // allowSceneActivationの設定を確認
                 if (op.allowSceneActivation)
-                {
                     op.allowSceneActivation = false;
-                }
 
                 int loopCount = 0;
                 const int maxLoopCount = 3000; // 無限ループ防止（約100秒）
@@ -206,7 +188,7 @@ namespace TechC.VBattle.Core.Managers
                     progressImage.fillAmount = progress;
 
                 if (loadTex != null)
-                    loadTex.text = $"{(progress * 100f):0}%";
+                    loadTex.text = $"{progress * 100f:0}%";
             }
             catch (System.Exception e)
             {

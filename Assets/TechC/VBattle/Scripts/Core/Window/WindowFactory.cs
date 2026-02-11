@@ -13,7 +13,8 @@ namespace TechC.VBattle.Core.Window
     /// </summary>
     public class WindowFactory : Singleton<WindowFactory>
     {
-        public enum WindowType { Basic, Image, Web }
+        // ImageLayeredを追加：枠なしレイヤードウィンドウ
+        public enum WindowType { Basic, Image, ImageLayered, Web }
 
         private Dictionary<WindowType, Queue<NativeWindow>> poolByType = new();
         private int InitialPoolSize = 1;
@@ -21,8 +22,9 @@ namespace TechC.VBattle.Core.Window
         Dictionary<WindowType, int> initialPoolSizes = new Dictionary<WindowType, int>
         {
             { WindowType.Basic, 2 },
-            { WindowType.Image, 81 },
-            { WindowType.Web,   0 }
+            { WindowType.Image, 81 },          // 枠付き画像ウィンドウ
+            { WindowType.ImageLayered, 10 },   // 枠なし画像ウィンドウ
+            { WindowType.Web, 0 }
         };
 
         private List<NativeWindow> activeWindows = new();
@@ -105,6 +107,7 @@ namespace TechC.VBattle.Core.Window
             string className = type switch
             {
                 WindowType.Image => "WindowClass_Image",
+                WindowType.ImageLayered => "WindowClass_Image", // 同じクラスを使用
                 WindowType.Web => "WindowClass_Web",
                 _ => "WindowClass_Basic",
             };
@@ -122,8 +125,9 @@ namespace TechC.VBattle.Core.Window
                     WINDOW_EX_STYLE.WS_EX_TRANSPARENT
                 );
             }
-            else if (type == WindowType.Image)
+            else if (type == WindowType.ImageLayered)
             {
+                // レイヤード画像ウィンドウ: 枠なし・透過可能
                 style = (uint)WINDOW_STYLE.WS_POPUP;
                 exStyle = (uint)(
                     WINDOW_EX_STYLE.WS_EX_NOACTIVATE |
@@ -131,6 +135,12 @@ namespace TechC.VBattle.Core.Window
                     WINDOW_EX_STYLE.WS_EX_TOOLWINDOW |
                     WINDOW_EX_STYLE.WS_EX_LAYERED
                 );
+            }
+            else if (type == WindowType.Image)
+            {
+                // 通常の画像ウィンドウ: 枠付き・リサイズ可能
+                style = (uint)WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
+                exStyle = (uint)WINDOW_EX_STYLE.WS_EX_NOACTIVATE | (uint)WINDOW_EX_STYLE.WS_EX_TOPMOST;
             }
             else
             {
@@ -158,6 +168,9 @@ namespace TechC.VBattle.Core.Window
                     window = new BasicWindow(hwnd, width, height);
                     break;
                 case WindowType.Image:
+                case WindowType.ImageLayered:
+                    // ImageWindowは両方のタイプで使用可能
+                    // レイヤードかどうかはTypeで判別可能
                     window = new ImageWindow(hwnd, width, height, tex);
                     break;
                 case WindowType.Web:

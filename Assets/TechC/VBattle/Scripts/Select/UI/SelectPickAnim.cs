@@ -8,12 +8,18 @@ namespace TechC.VBattle.Select.UI
     /// </summary>
     public class SelectPickAnim : MonoBehaviour
     {
+        private const string CHARACTER_NAME_AME = "Ame";
+        private const string CHARACTER_NAME_TERAMI = "Terami";
+        private const string ANIMATOR_PARAM_IS_SHOWING_PANEL = "IsShowingPannel";
+
         [SerializeField] private float animDelay = 1f;
         [SerializeField] private float appearDelay = 1.2f;
         [SerializeField] private GameObject ameObj;
         [SerializeField] private GameObject teramiObj;
+
         private GameObject lastObj = null;
-        private int animName = Animator.StringToHash("IsShowingPannel");
+        private int animName = Animator.StringToHash(ANIMATOR_PARAM_IS_SHOWING_PANEL);
+
         public void PlayAnim(GameObject prefab)
         {
             GameObject obj = NameToObj(prefab.name);
@@ -26,10 +32,8 @@ namespace TechC.VBattle.Select.UI
 
         private GameObject NameToObj(string name)
         {
-            if (name.Contains("Ame"))
-                return ameObj;
-            else if (name.Contains("Terami"))
-                return teramiObj;
+            if (name.Contains(CHARACTER_NAME_AME)) return ameObj;
+            if (name.Contains(CHARACTER_NAME_TERAMI)) return teramiObj;
             return ameObj;
         }
 

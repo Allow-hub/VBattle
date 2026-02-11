@@ -19,10 +19,14 @@ namespace TechC.VBattle.Select
     /// </summary>
     public class GamepadPointer : MonoBehaviour
     {
+        private const int SCREEN_WIDTH_HALF = 2;
+        private const int SCREEN_HEIGHT_HALF = 2;
+        private const int SCREEN_COORDINATE_RANGE = 65535;
+
         [SerializeField] private List<Sprite> pointerSprite = new List<Sprite>();
         [SerializeField] private float cursorSpeed = 800f;
         [SerializeField] private Vector2 cursorSize = new Vector2(64, 64);
-        [SerializeField] private Canvas targetCanvas; // Unity UI 用
+        [SerializeField] private Canvas targetCanvas;
 
         private Dictionary<InputDevice, NativeWindow> nativeWindows = new Dictionary<InputDevice, NativeWindow>();
         private Dictionary<InputDevice, Vector2> cursorPositions = new Dictionary<InputDevice, Vector2>();
@@ -59,7 +63,7 @@ namespace TechC.VBattle.Select
                     Vector2 stick = gamepad.leftStick.ReadValue();
 
                     if (!cursorPositions.ContainsKey(device))
-                        cursorPositions[device] = new Vector2(Screen.width / 2, Screen.height / 2);
+                        cursorPositions[device] = new Vector2(Screen.width / SCREEN_WIDTH_HALF, Screen.height / SCREEN_HEIGHT_HALF);
 
                     Vector2 pos = cursorPositions[device];
                     pos += stick * cursorSpeed * Time.deltaTime;
@@ -96,8 +100,8 @@ namespace TechC.VBattle.Select
             inputs[0].type = INPUT_TYPE.INPUT_MOUSE;
             inputs[0].Anonymous.mi = new MOUSEINPUT
             {
-                dx = x * 65535 / screenW,
-                dy = y * 65535 / screenH,
+                dx = x * SCREEN_COORDINATE_RANGE / screenW,
+                dy = y * SCREEN_COORDINATE_RANGE / screenH,
                 dwFlags = MOUSE_EVENT_FLAGS.MOUSEEVENTF_MOVE | MOUSE_EVENT_FLAGS.MOUSEEVENTF_ABSOLUTE,
                 mouseData = 0,
                 time = 0,
@@ -169,7 +173,7 @@ namespace TechC.VBattle.Select
                 }
 
                 // カーソルウィンドウ生成
-                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
+                var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.ImageLayered);
                 int style = PInvoke.GetWindowLong((HWND)w.Hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
                 style &= ~(int)WINDOW_STYLE.WS_CAPTION;
                 style &= ~(int)WINDOW_STYLE.WS_THICKFRAME;
@@ -186,7 +190,7 @@ namespace TechC.VBattle.Select
                 if (w is ImageWindow imageWindow)
                     imageWindow?.SetTextureToBitmap(spriteToUse.texture);
 
-                Vector2 startPos = new Vector2(Screen.width / 2, Screen.height / 2);
+                Vector2 startPos = new Vector2(Screen.width / SCREEN_WIDTH_HALF, Screen.height / SCREEN_HEIGHT_HALF);
                 cursorPositions[device] = startPos;
 
                 int startX = (int)startPos.x;

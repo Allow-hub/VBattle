@@ -42,6 +42,21 @@ namespace TechC.VBattle.InGame.Systems
                 return;
             }
 
+            // カウンター判定を最優先で実行
+            if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
+            {
+                // 攻撃者がカウンター攻撃実行中かチェック（無限ループ防止）
+                var attackerOwner = attackEvent.attacker.Owner as CharacterController;
+                bool isAttackerCountering = attackerOwner != null && attackerOwner.IsExecutingCounterAttack;
+                
+                if (!isAttackerCountering)
+                {
+                    CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
+                    PublishAttackResult(attackEvent, target, true, true, false, 0);
+                    return;
+                }
+            }
+
             // 当たり判定（ヒット対象のリストに含まれるか）
             bool isHitRange = ContainsTargetInHitList(attackEvent, target);
 
@@ -54,7 +69,7 @@ namespace TechC.VBattle.InGame.Systems
             // 攻撃命中時のダメージ/属性判定
             bool isHit = true;
             bool isGuard = target.IsGuarding;
-            bool isCounter = false; // 追加入力予定があれば後で判定可能
+            bool isCounter = false;
             int damage = attackEvent.attackData.damage;
 
             if (target.IsInvincible || target.IsGuarding)

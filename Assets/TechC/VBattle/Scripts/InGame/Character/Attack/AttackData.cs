@@ -59,8 +59,11 @@ namespace TechC.VBattle.InGame.Character
         [Tooltip("ノックバックの強さ")]
         public float knockbackForce;
 
-        [Tooltip("この攻撃がカウンター攻撃かどうか")]
+        [Tooltip("この攻撃がカウンター可能かどうか（カウンター受付可能な攻撃）")]
         public bool isCounter;
+
+        [Tooltip("カウンター受付時間（攻撃開始からの秒数）。isCounter=trueの場合のみ有効")]
+        public float counterEnableDuration = 1.0f;
 
         [Header("硬直")]
         [Tooltip("攻撃後の硬直時間（空振り時）")]
@@ -172,6 +175,18 @@ namespace TechC.VBattle.InGame.Character
             cancelEndTime = Mathf.Max(0, cancelEndTime);
             attackDuration = Mathf.Max(0, attackDuration);
             recoveryDuration = Mathf.Max(0, recoveryDuration);
+            counterEnableDuration = Mathf.Max(0, counterEnableDuration);
+
+            // カウンター受付時間の検証（isCounter=trueの場合のみ）
+            if (isCounter)
+            {
+                float totalAttackTime = attackDuration + recoveryDuration;
+                if (counterEnableDuration > totalAttackTime)
+                {
+                    Debug.LogWarning($"[{name}] counterEnableDuration ({counterEnableDuration}) は攻撃全体時間 (attackDuration + recoveryDuration = {totalAttackTime}) を超えています。Auto-adjusting...");
+                    counterEnableDuration = totalAttackTime;
+                }
+            }
         }
 #endif
     }
