@@ -14,7 +14,7 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class AttackState : CharacterState
     {
-        private const float COUNTER_END_TIME = 2.0f;    // 攻撃開始からカウンター受付終了までの時間
+        private const float COUNTER_END_TIME = 1.0f;    // 攻撃開始からカウンター受付終了までの時間
         
         private AttackData currentAttackData;
         private AttackData pendingAttackData;

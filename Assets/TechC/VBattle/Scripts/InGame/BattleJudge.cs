@@ -42,14 +42,21 @@ namespace TechC.VBattle.InGame.Systems
                 return;
             }
 
-            // カウンター判定を最優先で実行（カウンター攻撃実行中は除く）
+            // カウンター判定を最優先で実行
             if (target is CharacterController character && character.CanCounter && !character.IsExecutingCounterAttack)
             {
-                CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
+                bool isCounterableAttack = attackEvent.attackData.isCounter;
                 
-                // 元の攻撃結果（カウンター成功として無効化）
-                PublishAttackResult(attackEvent, target, false, true, false, 0);
-                return;
+                var attackerOwner = attackEvent.attacker.Owner;
+                bool isAttackerCountering = attackerOwner != null && attackerOwner.IsExecutingCounterAttack;
+                
+                // カウンター可能な攻撃 かつ 攻撃者がカウンター実行中でない場合のみカウンター成功
+                if (isCounterableAttack && !isAttackerCountering)
+                {
+                    CustomLogger.Info($"🔄 Player {character.PlayerIndex}: カウンター判定成功！", LogTagUtil.TagAttack);
+                    PublishAttackResult(attackEvent, target, false, true, false, 0);
+                    return;
+                }
             }
 
             // 当たり判定（ヒット対象のリストに含まれるか）
