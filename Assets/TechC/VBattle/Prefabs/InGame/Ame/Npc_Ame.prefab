@@ -120,8 +120,10 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  handPos: {fileID: 7553835414419270921}
   playerIndex: 0
   playerTag: Player
+  wallCheckDistance: 0.6
   idleAnimSpeed: 1.1
   outlineController:
     outlineMaterialBase: {fileID: 2100000, guid: fc75c05700c521449b5b07e1c3f0661f,
