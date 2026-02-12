@@ -102,8 +102,8 @@ namespace TechC.VBattle.InGame.Character
                     CreateAttackObject();
                     PerformHitDetection();
                     
-                    // 繰り返し攻撃処理
-                    float repeatEndTime = currentAttackData.hitTiming;
+                    // 繰り返し攻撃処理（実際に経過した時間を追跡）
+                    float actualElapsedTime = currentAttackData.hitTiming; // hitTimingまで既に経過している
                     if (currentAttackData.canRepeat && currentAttackData.repeatDuration > 0 && currentAttackData.repeatInterval > 0)
                     {
                         float elapsedRepeatTime = 0f;
@@ -112,13 +112,13 @@ namespace TechC.VBattle.InGame.Character
                         {
                             await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.repeatInterval), cancellationToken: ct);
                             elapsedRepeatTime += currentAttackData.repeatInterval;
+                            actualElapsedTime += currentAttackData.repeatInterval;
                             
                             if (elapsedRepeatTime <= currentAttackData.repeatDuration)
                                 PerformHitDetection();
                         }
-                        
-                        repeatEndTime = currentAttackData.hitTiming + currentAttackData.repeatDuration;
                     }
+                    float repeatEndTime = actualElapsedTime; // 実際に経過した時間を使用
                     
                     // カウンター受付終了タイミングまでの待機
                     if (shouldEnableCounter && currentAttackData.counterEnableDuration > repeatEndTime)
