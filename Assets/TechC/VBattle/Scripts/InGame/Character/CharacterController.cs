@@ -5,6 +5,7 @@ using TechC.VBattle.Core;
 using TechC.VBattle.Core.Util;
 using UnityEngine.InputSystem;
 using TechC.VBattle.InGame.Events;
+using TechC.VBattle.Core.Managers;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -293,6 +294,9 @@ namespace TechC.VBattle.InGame.Character
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
+            var charaName = GameDataBridge.I.GetPlayerSetup(PlayerIndex).SelectedCharacter.CharacterName;
+
+            AudioManager.I?.PlayCharacterSE(charaName,Audio.CharacterSEType.Land);
             // 着地時に横方向の速度を少し減衰
             Vector3 velocity = rb.velocity;
             velocity.x *= 0.8f;

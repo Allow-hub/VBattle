@@ -517,6 +517,11 @@ namespace TechC.VBattle.InGame
 
         private void UpdateBattleState()
         {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+            {
+                MenuManager.I.PressMenu(isPaused);
+                isPaused = !isPaused;
+            }
             if (isPaused) return;
 
             // ----- 制限時間減算 -----
@@ -536,8 +541,6 @@ namespace TechC.VBattle.InGame
             if (UnityEngine.Input.GetKeyDown(KeyCode.R))
                 SceneLoader.I.LoadSceneAsync(0).Forget();
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
-                isPaused = !isPaused;
         }
         #endregion
 

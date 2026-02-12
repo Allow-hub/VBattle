@@ -1,6 +1,7 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Extensions;
+using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Util;
 using TechC.VBattle.InGame.Events;
 using UnityEngine;
@@ -74,6 +75,9 @@ namespace TechC.VBattle.InGame.Character
                     rb.AddForce(Vector3.up * characterData.JumpPower, ForceMode.Impulse);
                 else
                     rb.AddForce(Vector3.up * characterData.DoubleJumpPower, ForceMode.Impulse);
+
+                var charaName = GameDataBridge.I.GetPlayerSetup(PlayerIndex).SelectedCharacter.CharacterName;
+                AudioManager.I?.PlayCharacterSE(charaName, Audio.CharacterSEType.Jump);
 
                 if (stateMachine.CurrentState == GetState<AirState>()) return;
                 // 空中状態へ遷移
