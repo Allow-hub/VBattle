@@ -3,6 +3,7 @@ using TechC.VBattle.InGame.Character;
 using System.Linq;
 using TechC.VBattle.Core.Extensions;
 using TechC.VBattle.Core.Util;
+using TechC.VBattle.Core.Managers;
 
 namespace TechC.VBattle.InGame.Systems
 {
@@ -75,6 +76,7 @@ namespace TechC.VBattle.InGame.Systems
             if (target.IsInvincible || target.IsGuarding)
             {
                 // 無敵・ガード中はいずれもノーダメージ
+                AudioManager.I?.PlaySE(Audio.SEID.Guard);
                 isHit = false;
                 damage = 0;
             }

@@ -176,6 +176,8 @@ namespace TechC.VBattle.InGame.Character
             attackDuration = Mathf.Max(0, attackDuration);
             recoveryDuration = Mathf.Max(0, recoveryDuration);
             counterEnableDuration = Mathf.Max(0, counterEnableDuration);
+            repeatInterval = Mathf.Max(0, repeatInterval);
+            repeatDuration = Mathf.Max(0, repeatDuration);
 
             // カウンター受付時間の検証（isCounter=trueの場合のみ）
             if (isCounter)
@@ -186,6 +188,20 @@ namespace TechC.VBattle.InGame.Character
                     Debug.LogWarning($"[{name}] counterEnableDuration ({counterEnableDuration}) は攻撃全体時間 (attackDuration + recoveryDuration = {totalAttackTime}) を超えています。Auto-adjusting...");
                     counterEnableDuration = totalAttackTime;
                 }
+            }
+
+            // 繰り返し攻撃の検証（canRepeat=trueの場合のみ）
+            if (canRepeat)
+            {
+                if (repeatInterval <= 0)
+                    Debug.LogWarning($"[{name}] canRepeat=true ですが repeatInterval ({repeatInterval}) が0以下です。");
+                if (repeatDuration <= 0)
+                    Debug.LogWarning($"[{name}] canRepeat=true ですが repeatDuration ({repeatDuration}) が0以下です。");
+                
+                // 繰り返し攻撃の終了時間がキャンセル開始時間より後の場合は警告
+                float repeatEndTime = hitTiming + repeatDuration;
+                if (repeatEndTime > cancelStartTime)
+                    Debug.LogWarning($"[{name}] 繰り返し攻撃終了時間 ({repeatEndTime}) がキャンセル開始時間 ({cancelStartTime}) より後です。キャンセルタイミングを調整してください。");
             }
         }
 #endif

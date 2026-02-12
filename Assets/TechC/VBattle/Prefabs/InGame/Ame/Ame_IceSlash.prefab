@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviours:
   - rid: 5312645644256542750
+  - rid: 6489305818225442816
   references:
     version: 2
     RefIds:
@@ -54,6 +55,10 @@ MonoBehaviour:
       type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         lifeTime: 1
+    - rid: 6489305818225442816
+      type: {class: AttackPlaySe, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        seType: 5
 --- !u!1 &8355897307427429964
 GameObject:
   m_ObjectHideFlags: 0

@@ -511,11 +511,65 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 460194617731782586, guid: d2b88306faaa5b64ab2a02201b04613e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5935910319510647126}
   m_SourcePrefab: {fileID: 100100000, guid: d2b88306faaa5b64ab2a02201b04613e, type: 3}
 --- !u!4 &972749416497538052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1260001052026296204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1665941359402827830 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 460194617731782586, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1260001052026296204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5935910319510647126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665941359402827830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf0d3c6d3063c841b754f5d89d35b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 1799950009941420780}
+  mainParticleSystem: {fileID: 3702881709396681150}
+  mainTrailRenderer: {fileID: 2559979649695159098}
+  smokeTrailRenderer: {fileID: 6219259958306586578}
+  p1MainParticleMaterial: {fileID: 2100000, guid: 20876d8c8714cc9418075dfff1945b92,
+    type: 2}
+  p2MainParticleMaterial: {fileID: 2100000, guid: 92a20cd96a76af849839d41baa4ad5bb,
+    type: 2}
+  p1MainTrailMaterial: {fileID: 2100000, guid: f8cb7bc2ac75e0b429b1e0841438e932, type: 2}
+  p2MainTrailMaterial: {fileID: 2100000, guid: fdd8fa9501c2cc340b30decda6a13817, type: 2}
+  p1SmokeTrailMaterial: {fileID: 2100000, guid: d39406a0514f6304a90af97f089bb6ed,
+    type: 2}
+  p2SmokeTrailMaterial: {fileID: 2100000, guid: 083546b6e3d691049bd487b744f426e9,
+    type: 2}
+--- !u!96 &2559979649695159098 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 3673445990526502070, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1260001052026296204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3702881709396681150 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2458731253034399282, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1260001052026296204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &6219259958306586578 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 5130536471015057502, guid: d2b88306faaa5b64ab2a02201b04613e,
     type: 3}
   m_PrefabInstance: {fileID: 1260001052026296204}
   m_PrefabAsset: {fileID: 0}
@@ -721,7 +775,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4043627168609667197}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &8255172016756842040
+--- !u!1001 &6415522221740833453
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -742,37 +796,37 @@ PrefabInstance:
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.24057078
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.00014124296
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.00034758693
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.99989414
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.01444459
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.00012375021
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.0017855078
       objectReference: {fileID: 0}
     - target: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
         type: 3}
@@ -792,13 +846,67 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 460194617731782586, guid: d2b88306faaa5b64ab2a02201b04613e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5603672836737354058}
   m_SourcePrefab: {fileID: 100100000, guid: d2b88306faaa5b64ab2a02201b04613e, type: 3}
---- !u!4 &7967933172180708784 stripped
+--- !u!96 &2178564387503428339 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 5130536471015057502, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6415522221740833453}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4975080450148272421 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2018609027682448264, guid: d2b88306faaa5b64ab2a02201b04613e,
     type: 3}
-  m_PrefabInstance: {fileID: 8255172016756842040}
+  m_PrefabInstance: {fileID: 6415522221740833453}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6875435227008707863 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 460194617731782586, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6415522221740833453}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5603672836737354058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6875435227008707863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf0d3c6d3063c841b754f5d89d35b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 1799950009941420780}
+  mainParticleSystem: {fileID: 8869743209249016991}
+  mainTrailRenderer: {fileID: 7778333185554185755}
+  smokeTrailRenderer: {fileID: 2178564387503428339}
+  p1MainParticleMaterial: {fileID: 2100000, guid: 20876d8c8714cc9418075dfff1945b92,
+    type: 2}
+  p2MainParticleMaterial: {fileID: 2100000, guid: 92a20cd96a76af849839d41baa4ad5bb,
+    type: 2}
+  p1MainTrailMaterial: {fileID: 2100000, guid: f8cb7bc2ac75e0b429b1e0841438e932, type: 2}
+  p2MainTrailMaterial: {fileID: 2100000, guid: fdd8fa9501c2cc340b30decda6a13817, type: 2}
+  p1SmokeTrailMaterial: {fileID: 2100000, guid: d39406a0514f6304a90af97f089bb6ed,
+    type: 2}
+  p2SmokeTrailMaterial: {fileID: 2100000, guid: 083546b6e3d691049bd487b744f426e9,
+    type: 2}
+--- !u!96 &7778333185554185755 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 3673445990526502070, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6415522221740833453}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8869743209249016991 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2458731253034399282, guid: d2b88306faaa5b64ab2a02201b04613e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6415522221740833453}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8405530444228191898
 PrefabInstance:
@@ -2159,7 +2267,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1310066309696189116, guid: f0d2f52e1a5c3e141aa4c578a9abbdf0,
         type: 3}
       insertIndex: 0
-      addedObject: {fileID: 7967933172180708784}
+      addedObject: {fileID: 4975080450148272421}
     - targetCorrespondingSourceObject: {fileID: 1310066309696189116, guid: f0d2f52e1a5c3e141aa4c578a9abbdf0,
         type: 3}
       insertIndex: -1
