@@ -11,8 +11,9 @@ namespace TechC.VBattle.Systems
     /// </summary>
     public class EffectFactory : Singleton<EffectFactory>
     {
-        [SerializeField]
-        private ObjectPool effectPool;
+        [SerializeField] private ObjectPool effectPool;
+        [SerializeField] private GameObject debrisEffectPrefab;
+        public GameObject DebrisEffectPrefab => debrisEffectPrefab; 
 
         protected override bool UseDontDestroyOnLoad => false;
         public override void Init()

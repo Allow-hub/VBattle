@@ -193,11 +193,11 @@ namespace TechC.VBattle.InGame.Character
         public void TakeDamage(AttackData attackData, Vector3 attackerPosition, int damage)
         {
             var damageState = GetState<DamageState>();
-            damageState.SetDamageInfo(attackData, attackerPosition);
+            damageState.SetDamageInfo(attackData, attackerPosition, transform.forward);
             CurrentHP -= damage;
-            if(CurrentHP < 0)
+            if (CurrentHP < 0)
             {
-                 CurrentHP = 0;
+                CurrentHP = 0;
                 InGameManager.I.BattleBus.Publish(new PlayerOnDeathEvent() { PlayerIndex = PlayerIndex });
             }
             stateMachine.ChangeState(damageState);
@@ -211,7 +211,7 @@ namespace TechC.VBattle.InGame.Character
             var damageState = GetState<DamageState>();
             CurrentHP -= damage;
             damageState.SetStunDuration(stunDuration);
-            damageState.SetKnockback(attackerPosition, knockbackForce, knockbackDirection);
+            damageState.SetKnockback(attackerPosition, transform.forward, knockbackForce, knockbackDirection);
             stateMachine.ChangeState(damageState);
         }
 
@@ -222,33 +222,33 @@ namespace TechC.VBattle.InGame.Character
         public async UniTaskVoid ExecuteCounterAttack(AttackData attackData)
         {
             if (StateMachine == null) return;
-            
+
             // カウンター攻撃フラグを立てる
             SetExecutingCounterAttack(true);
-            
+
             // AttackStateに攻撃データを渡す
             GetState<AttackState>().SetPendingAttack(attackData);
-            
+
             // AttackDataから対応するAttackType/Directionを取得してセット
             var (attackType, attackDirection) = GetAttackTypeDirection(attackData);
             CurrentAttackType = attackType;
             CurrentAttackDirection = attackDirection;
-            
+
             // 現在の攻撃アニメーションを明示的に停止（Animatorに変化を認識させるため）
             Anim.SetBool(AnimatorParam.IsAttacking, false);
-            
+
             // アニメーターの更新を待つ（1フレーム）
             await UniTask.Yield(PlayerLoopTiming.Update);
-            
+
             // AttackStateに遷移（OnEnterでIsAttackingがtrueになる）
             StateMachine.ChangeState(GetState<AttackState>());
-            
+
             if (attackData != null)
                 CustomLogger.Info($"Player {PlayerIndex} カウンター攻撃: {attackData.attackName}", LogTagUtil.TagAttack);
             else
                 CustomLogger.Warning("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
         }
-        
+
         /// <summary>
         /// AttackDataから対応するAttackType/AttackDirectionを取得
         /// </summary>
@@ -259,7 +259,7 @@ namespace TechC.VBattle.InGame.Character
 
             if (attackData == null)
                 CustomLogger.Error("カウンター攻撃データがnullです", LogTagUtil.TagAttack);
-             
+
             if (AttackSet?.attacks == null)
             {
                 CustomLogger.Warning("AttackSetまたはattacksがnullです", LogTagUtil.TagAttack);

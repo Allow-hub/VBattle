@@ -12,6 +12,7 @@ namespace TechC.VBattle.InGame.Character
         /// このStateが所属するCharacterController
         /// </summary>
         protected CharacterController controller;
+        public virtual int Priority => 0;
 
         /// <summary>
         /// コンストラクタ
