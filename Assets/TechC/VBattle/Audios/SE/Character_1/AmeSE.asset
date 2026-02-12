@@ -26,7 +26,7 @@ MonoBehaviour:
     loop: 0
   - seType: 3
     clip: {fileID: 8300000, guid: 649975e5c359aea43b1ffc801f0dfc35, type: 3}
-    volume: 0.2
+    volume: 0.5
     pitch: 1
     loop: 0
   - seType: 4

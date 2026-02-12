@@ -1527,7 +1527,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioData: {fileID: 11400000, guid: 5adf9c0cdd6211a458aa0801c61d0cd7, type: 2}
-  characterAudioDataList: []
+  characterAudioDataList:
+  - {fileID: 11400000, guid: f855af0918f726b499a871ac9cf5a766, type: 2}
+  - {fileID: 11400000, guid: bda04b6aa6697eb49afb67653b0f79db, type: 2}
   masterVolume: 0.5
   bgmVolume: 1
   seVolume: 1
