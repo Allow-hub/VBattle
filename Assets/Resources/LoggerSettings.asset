@@ -66,10 +66,11 @@ MonoBehaviour:
   _enabledCategoryIds: []
   _disabledCategoryIds:
   - icon
-  - state
   - event
   - scene
   - window
   - command
   - npc
   - attack
+  - audio
+  - state
