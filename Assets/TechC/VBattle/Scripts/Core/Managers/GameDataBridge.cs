@@ -40,5 +40,13 @@ namespace TechC.VBattle.Core.Managers
             if (playerIndex == 1) Player_1Setup = data;
             else Player_2Setup = data;
         }
+
+        /// <summary>
+        /// 指定したプレイヤーの設定データを取得
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        public PlayerSetupData GetPlayerSetup(int playerIndex)
+            => playerIndex == 1 ? Player_1Setup : Player_2Setup;
     }
 }
