@@ -57,8 +57,8 @@ namespace TechC.VBattle.InGame.Input
         /// <param name="ctx"></param>
         public void OnSpecial(InputAction.CallbackContext ctx)
         {
-            if (ctx.started) OnButtonDown(InputButton.Special);
-            if (ctx.canceled) OnButtonUp(InputButton.Special);
+            // if (ctx.started) OnButtonDown(InputButton.Special);
+            // if (ctx.canceled) OnButtonUp(InputButton.Special);
         }
 
         /// <summary>

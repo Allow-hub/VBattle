@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5282953341439373956}
   - component: {fileID: 1208245583641169337}
   - component: {fileID: 655355980393771607}
+  - component: {fileID: 6648180179868049688}
   m_Layer: 0
   m_Name: Ame_Sliding
   m_TagString: Untagged
@@ -77,7 +78,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 124
@@ -120,3 +121,30 @@ MonoBehaviour:
         characterYOffset: 0.5
         followDelay: 0.1
         followSmoothness: 5
+        raycastDistance: 2
+        wallLayer:
+          serializedVersion: 2
+          m_Bits: 512
+        rayOriginYOffset: 0.5
+        debugMode: 1
+--- !u!65 &6648180179868049688
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720111611783576622}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 1463
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 0.8, z: 1}
+  m_Center: {x: 0, y: 0.7, z: 0}
