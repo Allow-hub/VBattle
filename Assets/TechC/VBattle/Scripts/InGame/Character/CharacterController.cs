@@ -72,7 +72,7 @@ namespace TechC.VBattle.InGame.Character
         private bool canCounter = false;
         private AttackData counterAttackData = null;
         private bool isExecutingCounterAttack = false;
-        
+
         public bool CanCounter => canCounter;
         public bool IsExecutingCounterAttack => isExecutingCounterAttack;
 
@@ -296,13 +296,22 @@ namespace TechC.VBattle.InGame.Character
             if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
             var charaName = GameDataBridge.I.GetPlayerSetup(PlayerIndex).SelectedCharacter.CharacterName;
 
-            AudioManager.I?.PlayCharacterSE(charaName,Audio.CharacterSEType.Land);
-            // 着地時に横方向の速度を少し減衰
+            AudioManager.I?.PlayCharacterSE(charaName, Audio.CharacterSEType.Land);
+            currentJumpCount = 0;
+        }
+
+        private void OnCollisionStay(Collision collision)
+        {
+            if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
+
+            // 移動入力がない場合のみ速度を減速（移動中は除外）
+            // if (!commandInvoker.HasMoveInput)
+            // {
             Vector3 velocity = rb.velocity;
             velocity.x *= 0.8f;
             velocity.z *= 0.8f;
             rb.velocity = velocity;
-            currentJumpCount = 0;
+            // }
         }
 
         /// <summary>

@@ -21,6 +21,7 @@ namespace TechC.VBattle.InGame.Character
         private bool isChainRequested = false;
         private int chain = 0;
         private bool isCounterAttack = false; // カウンター攻撃として実行された攻撃かどうか
+        private Transform lastAttackTransform;
         public AttackState(CharacterController controller) : base(controller) { }
 
         public override bool CanExecuteCommand<T>(T command)
@@ -168,6 +169,7 @@ namespace TechC.VBattle.InGame.Character
         }
         public override void OnExit()
         {
+            lastAttackTransform = null;
             controller.Anim.SetInteger(AnimatorParam.Chain, 0);//連鎖リセット
             controller.Anim.speed = controller.IdleAnimSpeed;
             controller.Anim.SetBool(AnimatorParam.IsAttacking, false);
@@ -226,13 +228,29 @@ namespace TechC.VBattle.InGame.Character
         private void CreateAttackObject()
         {
             if (currentAttackData.attackPrefab == null) return;
-            Vector3 spawnPos = controller.transform.position +
-                controller.transform.TransformDirection(currentAttackData.prefabOffset);
+            
+            Vector3 spawnPos;
+            
+            // Chain攻撃で現在のAttackDataがisChainPosがtrueなら前回の攻撃オブジェクト位置にスポーン
+            if (currentAttackData.isChainPos && lastAttackTransform != null)
+            {
+                spawnPos = lastAttackTransform.position;
+            }
+            else
+            {
+                spawnPos = controller.transform.position +
+                    controller.transform.TransformDirection(currentAttackData.prefabOffset);
+            }
+            
             Quaternion spawnRot = controller.transform.rotation *
                 Quaternion.Euler(currentAttackData.prefabRotation);
+            
             // 攻撃オブジェクトを取得
             var obj = CharaAttackFactory.I.GetAttackObj(currentAttackData.attackPrefab, spawnPos, spawnRot);
             obj.GetComponent<AttackObjectController>()?.SetPlayer(controller.PlayerIndex, controller.gameObject);
+            
+            // 次のChain用に今回の攻撃オブジェクトを保存
+            lastAttackTransform = obj.transform;
         }
     }
 }

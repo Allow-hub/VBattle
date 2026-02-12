@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4184559142752882382}
+  - component: {fileID: 1186354809906753879}
+  - component: {fileID: 1586649467089554273}
+  - component: {fileID: 147717517107718528}
   m_Layer: 0
   m_Name: Ame_IceExplosion
   m_TagString: Untagged
@@ -32,6 +35,81 @@ Transform:
   - {fileID: 4047025981006922025}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1186354809906753879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6615037448072735559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4576b7ad142573f429ce864f88ed57ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviours:
+  - rid: 6489305818225442820
+  - rid: 6489305818225442821
+  references:
+    version: 2
+    RefIds:
+    - rid: 6489305818225442820
+      type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        lifeTime: 2
+    - rid: 6489305818225442821
+      type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: 656552e683357cd4b991a44abb7274f7, type: 2}
+        col: {fileID: 1586649467089554273}
+--- !u!65 &1586649467089554273
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6615037448072735559}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 5, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &147717517107718528
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6615037448072735559}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &6687711695565795473
 GameObject:
   m_ObjectHideFlags: 0
