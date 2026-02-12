@@ -305,6 +305,16 @@ namespace TechC.VBattle.InGame.Character
             currentJumpCount = 0;
         }
 
+        /// <summary>
+        /// クローン用にプレイヤーIDを設定
+        /// </summary>
+        /// <param name="id"></param>
+        public void SetClonePlayerID(int index)
+        {
+            playerIndex = index;
+            outlineController?.ApplyOutline(playerIndex);
+        }
+
         // ===== カウンター関連メソッド =====
         public void SetCanCounter(bool val) => canCounter = val;
         public void SetCounterAttackData(AttackData data) => counterAttackData = data;
