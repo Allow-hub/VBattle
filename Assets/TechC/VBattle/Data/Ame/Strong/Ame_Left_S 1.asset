@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Ame_Left_S
+  m_Name: Ame_Left_S 1
   m_EditorClassIdentifier: 
   charaName: 0
   attackName: Left_S
