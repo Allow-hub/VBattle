@@ -31,6 +31,7 @@ MonoBehaviour:
   damage: 0
   knockbackForce: 0
   isCounter: 1
+  counterEnableDuration: 0.6
   recoveryDuration: 0.25
   cancelStartTime: 0
   cancelEndTime: 0
