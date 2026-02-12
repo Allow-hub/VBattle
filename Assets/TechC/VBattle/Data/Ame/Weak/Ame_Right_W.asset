@@ -47,8 +47,8 @@ MonoBehaviour:
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
   canRepeat: 1
-  repeatInterval: 0
-  repeatDuration: 0
+  repeatInterval: 0.2
+  repeatDuration: 1
   specialGaugeGain: 5
   specialGaugeGainOnHit: 3
   causesWallBounce: 0

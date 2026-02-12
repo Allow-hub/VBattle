@@ -102,10 +102,28 @@ namespace TechC.VBattle.InGame.Character
                     CreateAttackObject();
                     PerformHitDetection();
                     
-                    // カウンター受付終了タイミングまでの待機
-                    if (shouldEnableCounter && currentAttackData.counterEnableDuration > currentAttackData.hitTiming)
+                    // 繰り返し攻撃処理
+                    float repeatEndTime = currentAttackData.hitTiming;
+                    if (currentAttackData.canRepeat && currentAttackData.repeatDuration > 0 && currentAttackData.repeatInterval > 0)
                     {
-                        float remainingToCounterEnd = currentAttackData.counterEnableDuration - currentAttackData.hitTiming;
+                        float elapsedRepeatTime = 0f;
+                        
+                        while (elapsedRepeatTime < currentAttackData.repeatDuration)
+                        {
+                            await UniTask.Delay(TimeSpan.FromSeconds(currentAttackData.repeatInterval), cancellationToken: ct);
+                            elapsedRepeatTime += currentAttackData.repeatInterval;
+                            
+                            if (elapsedRepeatTime <= currentAttackData.repeatDuration)
+                                PerformHitDetection();
+                        }
+                        
+                        repeatEndTime = currentAttackData.hitTiming + currentAttackData.repeatDuration;
+                    }
+                    
+                    // カウンター受付終了タイミングまでの待機
+                    if (shouldEnableCounter && currentAttackData.counterEnableDuration > repeatEndTime)
+                    {
+                        float remainingToCounterEnd = currentAttackData.counterEnableDuration - repeatEndTime;
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCounterEnd), cancellationToken: ct);
                         
                         // カウンター受付終了
@@ -113,8 +131,8 @@ namespace TechC.VBattle.InGame.Character
                     }
 
                     // cancelStartTimeまでの残り時間を待機
-                    float counterEndOrHitTiming = shouldEnableCounter ? Mathf.Max(currentAttackData.counterEnableDuration, currentAttackData.hitTiming) : currentAttackData.hitTiming;
-                    float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrHitTiming;
+                    float counterEndOrRepeatEnd = shouldEnableCounter ? Mathf.Max(currentAttackData.counterEnableDuration, repeatEndTime) : repeatEndTime;
+                    float remainingToCancelStart = currentAttackData.cancelStartTime - counterEndOrRepeatEnd;
                     if (remainingToCancelStart > 0)
                         await UniTask.Delay(TimeSpan.FromSeconds(remainingToCancelStart), cancellationToken: ct);
 
