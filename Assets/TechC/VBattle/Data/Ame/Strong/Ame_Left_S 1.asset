@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Ame_Neutral_S
+  m_Name: Ame_Left_S 1
   m_EditorClassIdentifier: 
   charaName: 0
-  attackName: Neutral_S
-  attackPrefab: {fileID: 6231325556846580197, guid: b5177424dcc76cd419a85dd1f143a7b4,
+  attackName: Left_S
+  attackPrefab: {fileID: 8717769064835211765, guid: 3c37f48d380d4314792689061ac161ed,
     type: 3}
-  prefabOffset: {x: 0, y: 0, z: 0}
+  prefabOffset: {x: 0, y: 1, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
-  animationSpeed: 1.5
-  attackDuration: 1.2
+  animationSpeed: 2
+  attackDuration: 1.3
   hitDetectionMode: 2
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
   radius: 0
-  hitboxOffset: {x: 0, y: 1, z: 1}
+  hitboxOffset: {x: 0, y: 1, z: 3}
   hitTiming: 0
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
@@ -33,16 +33,16 @@ MonoBehaviour:
   knockbackForce: 0
   isCounter: 0
   counterEnableDuration: 1
-  recoveryDuration: 0.25
-  cancelStartTime: 0.9
-  cancelEndTime: 0.9
+  recoveryDuration: 0.1
+  cancelStartTime: 0.1
+  cancelEndTime: 1.3
   hitStunDuration: 0.25
   nextChain: {fileID: 0}
   canChain: 0
   isChainPos: 0
-  hitStopDuration: 0.3
-  hitStopTimeScale: 0.8
-  knockbackDirection: {x: 0, y: 2, z: 5}
+  hitStopDuration: 0
+  hitStopTimeScale: 0
+  knockbackDirection: {x: 0, y: -1, z: 4}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
@@ -55,5 +55,5 @@ MonoBehaviour:
   wallBounceForce: 8
   wallBounceVerticalBoost: 2
   wallBounceTime: 0.5
-  characterSEType: 0
+  characterSEType: 12
   characterVoiceType: 0

@@ -19,8 +19,8 @@ MonoBehaviour:
     type: 3}
   MoveSpeed: 2
   DashMoveSpeed: 8
-  JumpPower: 6
-  DoubleJumpPower: 8
+  JumpPower: 8
+  DoubleJumpPower: 10
   AirControlMultiplier: 1
   FastFallSpeed: 15
   MaxHP: 500
