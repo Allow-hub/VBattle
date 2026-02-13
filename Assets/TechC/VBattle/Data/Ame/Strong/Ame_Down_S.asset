@@ -33,8 +33,8 @@ MonoBehaviour:
   isCounter: 0
   counterEnableDuration: 1
   recoveryDuration: 0.25
-  cancelStartTime: 1
-  cancelEndTime: 1.5
+  cancelStartTime: 2
+  cancelEndTime: 2.5
   hitStunDuration: 0.25
   nextChain: {fileID: 0}
   canChain: 0
