@@ -19,7 +19,7 @@ namespace TechC.VBattle.InGame.Gimmick
         {
             base.Init();
             gimmicks.Add(tabGimickController);
-            gimmicks.Add(windowGimmickController);
+            // gimmicks.Add(windowGimmickController);
             foreach (var gimmick in gimmicks)
                 gimmick.OnEnter();
         }
