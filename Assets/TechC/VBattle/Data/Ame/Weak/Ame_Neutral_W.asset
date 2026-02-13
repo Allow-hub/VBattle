@@ -34,7 +34,7 @@ MonoBehaviour:
   isCounter: 0
   counterEnableDuration: 1
   recoveryDuration: 0.05
-  cancelStartTime: 0.3
+  cancelStartTime: 0.1
   cancelEndTime: 0.3
   hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
