@@ -26,7 +26,7 @@ MonoBehaviour:
     m_Bits: 128
   radius: 1.3
   hitboxOffset: {x: 0, y: 1.4, z: 1.2}
-  hitTiming: 0.1
+  hitTiming: 0
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
   damage: 10
@@ -34,7 +34,7 @@ MonoBehaviour:
   isCounter: 0
   counterEnableDuration: 1
   recoveryDuration: 0.01
-  cancelStartTime: 0.2
+  cancelStartTime: 0.1
   cancelEndTime: 0.3
   hitStunDuration: 0.35
   nextChain: {fileID: 11400000, guid: 2913520284c60444b8ee66f5a5736b6f, type: 2}

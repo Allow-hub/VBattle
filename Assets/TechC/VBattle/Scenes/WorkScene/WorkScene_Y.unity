@@ -29723,27 +29723,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: useNpc
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: isDebug
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: counterAttackData
-      value: 
-      objectReference: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d,
-        type: 2}
-    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: enableCounterTest
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -29759,26 +29738,6 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7102736807134503929, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7767785695839799985, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: buffFactory
-      value: 
-      objectReference: {fileID: 1858460308}
-    - target: {fileID: 7767785695839799985, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: commentDisplay
-      value: 
-      objectReference: {fileID: 1401811217}
-    - target: {fileID: 7767785695839799985, guid: de551b8e8565c92489c9ebc3cb126d65,
-        type: 3}
-      propertyPath: commentFactory
-      value: 
-      objectReference: {fileID: 843925931}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6199738385224189870, guid: de551b8e8565c92489c9ebc3cb126d65, type: 3}
