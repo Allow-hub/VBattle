@@ -270,7 +270,7 @@ PrefabInstance:
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -290,7 +290,7 @@ PrefabInstance:
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[4].name
-      value: Freeze
+      value: Debris
       objectReference: {fileID: 0}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -329,12 +329,12 @@ PrefabInstance:
         type: 3}
       propertyPath: poolItems.Array.data[4].parent
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2128801019}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: poolItems.Array.data[4].prefab
       value: 
-      objectReference: {fileID: 5998226615820575651, guid: 70f9bbca17414f84cbdf093514fe1e65,
+      objectReference: {fileID: 5164942412983795581, guid: 827a341af9f57734f843b301cb0740b1,
         type: 3}
     - target: {fileID: 6434067615194947122, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
@@ -29856,6 +29856,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593791575}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2128801019 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3133755519994864788, guid: de551b8e8565c92489c9ebc3cb126d65,
+    type: 3}
+  m_PrefabInstance: {fileID: 227301915}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

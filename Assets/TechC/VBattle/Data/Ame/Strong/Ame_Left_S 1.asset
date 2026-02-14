@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charaName: 0
   attackName: Left_S
-  attackPrefab: {fileID: 8717769064835211765, guid: 3c37f48d380d4314792689061ac161ed,
+  attackPrefab: {fileID: 6615037448072735559, guid: 59a1f1b437ccd234291d1101e274babb,
     type: 3}
   prefabOffset: {x: 0, y: 1, z: 0}
   prefabRotation: {x: 0, y: 0, z: 0}
   animationSpeed: 2
   attackDuration: 1.3
-  hitDetectionMode: 2
+  hitDetectionMode: 0
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
-  radius: 0
+  radius: 1
   hitboxOffset: {x: 0, y: 1, z: 3}
   hitTiming: 0
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
@@ -39,7 +39,7 @@ MonoBehaviour:
   hitStunDuration: 0.25
   nextChain: {fileID: 0}
   canChain: 0
-  isChainPos: 0
+  isChainPos: 1
   hitStopDuration: 0
   hitStopTimeScale: 0
   knockbackDirection: {x: 0, y: -1, z: 4}

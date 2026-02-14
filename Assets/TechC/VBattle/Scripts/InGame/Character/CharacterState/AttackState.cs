@@ -23,6 +23,7 @@ namespace TechC.VBattle.InGame.Character
         private bool isCounterAttack = false; // カウンター攻撃として実行された攻撃かどうか
         private Transform lastAttackTransform;
         public AttackState(CharacterController controller) : base(controller) { }
+        public override int Priority => 1;
 
         public override bool CanExecuteCommand<T>(T command)
         {
