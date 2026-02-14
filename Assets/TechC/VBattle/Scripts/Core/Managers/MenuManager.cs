@@ -19,10 +19,10 @@ namespace TechC.VBattle.Core.Managers
         [SerializeField] private Button minusButton;
         [SerializeField] private Slider audioSlider;
         [SerializeField] private float volumeStep = 0.1f; // 音量の増減幅
-        
+
         private float volumeRatio = 1.0f;
         private bool isMenu = false;
-        
+
         public bool IsMenu => isMenu;
         protected override bool UseDontDestroyOnLoad => true;
 
@@ -35,7 +35,7 @@ namespace TechC.VBattle.Core.Managers
         {
             volumeRatio = AudioManager.I.masterVolume;
             audioSlider.value = volumeRatio;
-            
+
             homeButton.onClick.AddListener(OnHomeButtonClicked);
             plusButton.onClick.AddListener(OnPlusButtonClicked);
             minusButton.onClick.AddListener(OnMinusButtonClicked);
@@ -54,11 +54,13 @@ namespace TechC.VBattle.Core.Managers
         private void OnHomeButtonClicked()
         {
             CloseMenu();
+            SceneLoader.I?.SetCursorMode(false, CursorLockMode.Locked);
             SceneLoader.I?.LoadTitleSceneAsync().Forget();
         }
 
         private void OnMinusButtonClicked()
         {
+            SceneLoader.I?.SetCursorMode(true, CursorLockMode.None);
             AudioManager.I?.PlaySE(SEID.ButtonClick);
             volumeRatio = Mathf.Clamp01(volumeRatio - volumeStep);
             AudioManager.I?.SetMasterVolume(volumeRatio);
