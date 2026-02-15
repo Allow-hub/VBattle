@@ -521,8 +521,6 @@ namespace TechC.VBattle.InGame
             {
                 MenuManager.I.PressMenu(isPaused);
                 isPaused = !isPaused;
-                // ポーズ状態に応じてマウスカーソルの表示/非表示を切り替え
-                SceneLoader.I.SetCursorMode(isPaused, isPaused ? CursorLockMode.None : CursorLockMode.Locked);
             }
             if (isPaused) return;
 
@@ -570,11 +568,7 @@ namespace TechC.VBattle.InGame
         #endregion
 
         #region 公開メソッド
-        public void SetPauseState(bool pause)
-        {
-            isPaused = pause;
-            SceneLoader.I.SetCursorMode(pause, pause ? CursorLockMode.None : CursorLockMode.Locked);
-        }
+        public void SetPauseState(bool pause) => isPaused = pause;
         #endregion
         
         #region NPC設定
