@@ -63,6 +63,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Terami_Castella
       objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 2c6b04ca5afc0e44396ede98fa1179d8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 2c6b04ca5afc0e44396ede98fa1179d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 2c6b04ca5afc0e44396ede98fa1179d8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -108,12 +123,12 @@ MonoBehaviour:
     - rid: 6489306022390267904
       type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
-        lifeTime: 2
+        lifeTime: 1.5
     - rid: 6489306022390267905
       type: {class: AttackObjRotate, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
         rotateAxis: {x: 0, y: 1, z: 0}
-        rotateSpeed: 180
+        rotateSpeed: 360
     - rid: 6489306022390267906
       type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
       data:
