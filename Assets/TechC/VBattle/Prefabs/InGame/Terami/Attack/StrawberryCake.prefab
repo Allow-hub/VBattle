@@ -61,10 +61,129 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
         type: 3}
       propertyPath: m_Name
-      value: tripo_convert_57b8eacc-1fd3-4893-ba35-2504e7396d6a
+      value: StrawberryCake
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3668911094158651052}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7935063361135017224}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1708185547300482917}
   m_SourcePrefab: {fileID: 100100000, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb, type: 3}
+--- !u!1 &5406248407540703277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9ad5f0d5cf0e9614ba384f9cab9dd6fb,
+    type: 3}
+  m_PrefabInstance: {fileID: 5172300169436274044}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3668911094158651052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5406248407540703277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4576b7ad142573f429ce864f88ed57ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviours:
+  - rid: 6489306022390267907
+  - rid: 6489306022390267908
+  - rid: 6489306022390267909
+  references:
+    version: 2
+    RefIds:
+    - rid: 6489306022390267907
+      type: {class: AttackLifeTime, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        lifeTime: 3
+    - rid: 6489306022390267908
+      type: {class: AttackDamageDetector, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        attackData: {fileID: 11400000, guid: 2454af20d7e205847ae73ace84666d49, type: 2}
+        col: {fileID: 1708185547300482917}
+    - rid: 6489306022390267909
+      type: {class: AttackMover, ns: TechC.VBattle.InGame.Character, asm: Assembly-CSharp}
+      data:
+        rb: {fileID: 7935063361135017224}
+        moveSpeed: 10
+        moveDir: {x: 1, y: 0, z: 0}
+        moverType: 0
+        characterYOffset: 0
+        followDelay: 0.1
+        followSmoothness: 5
+--- !u!54 &7935063361135017224
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5406248407540703277}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 124
+  m_CollisionDetection: 0
+--- !u!65 &1708185547300482917
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5406248407540703277}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.8, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

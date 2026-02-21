@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Terami_Left_S
+  m_Name: Terami_Left_S 1
   m_EditorClassIdentifier: 
   charaName: 1
   attackName: Left_S
   attackPrefab: {fileID: 5406248407540703277, guid: 16e1c28225b6e5b4cb2821552060d12f,
     type: 3}
-  prefabOffset: {x: 0, y: 1, z: 0}
-  prefabRotation: {x: 90, y: 0, z: 0}
-  animationSpeed: 2
+  prefabOffset: {x: 0, y: 0, z: 0}
+  prefabRotation: {x: 0, y: 0, z: 0}
+  animationSpeed: 1
   attackDuration: 1.5
-  hitDetectionMode: 2
+  hitDetectionMode: 0
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
   radius: 0
   hitboxOffset: {x: 0, y: 0, z: 0}
-  hitTiming: 1.2
+  hitTiming: 0.1
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
-  damage: 0
-  knockbackForce: 0
+  damage: 10
+  knockbackForce: 10
   isCounter: 0
   counterEnableDuration: 1
-  recoveryDuration: 0.1
+  recoveryDuration: 0.25
   cancelStartTime: 1
   cancelEndTime: 1
   hitStunDuration: 0.25
@@ -41,7 +41,7 @@ MonoBehaviour:
   canChain: 0
   isChainPos: 0
   hitStopDuration: 0
-  hitStopTimeScale: 0
+  hitStopTimeScale: 0.1
   knockbackDirection: {x: 0, y: 0, z: 1}
   shakeIntensity: 0.1
   shakeDuraion: 0.1

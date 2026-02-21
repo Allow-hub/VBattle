@@ -41,7 +41,7 @@ MonoBehaviour:
   - attackName: "\u5DE6\u5F37"
     type: 1
     direction: 1
-    attackData: {fileID: 11400000, guid: ef36d3cc186a6654c91ee9f79fd0b070, type: 2}
+    attackData: {fileID: 11400000, guid: 83a19fcd1f07ac04f81a66deb326b091, type: 2}
   - attackName: "\u53F3\u5F37"
     type: 1
     direction: 2
