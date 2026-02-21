@@ -49,7 +49,7 @@ MonoBehaviour:
   - attackName: "\u4E0A\u5F37"
     type: 1
     direction: 3
-    attackData: {fileID: 11400000, guid: 009f5493977d9064d96eba7b1fa67ec6, type: 2}
+    attackData: {fileID: 11400000, guid: de3a1e23079d2874e91ecffae1e69b80, type: 2}
   - attackName: "\u4E0B\u5F37"
     type: 1
     direction: 4

@@ -235,6 +235,11 @@ MonoBehaviour:
       type: 3}
     parent: {fileID: 7494553774910884408}
     initialSize: 5
+  - name: Terami_Castella
+    prefab: {fileID: 8364434917528230189, guid: 92c4483eb6201704c80d4cf2e99de383,
+      type: 3}
+    parent: {fileID: 3220482602424433265}
+    initialSize: 5
   autoExpand: 1
   expandSize: 5
 --- !u!114 &8042099456699637893
@@ -1327,6 +1332,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4880679695495569093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3220482602424433265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 947637499999118356}
+  m_Layer: 0
+  m_Name: Terami_Castella
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &947637499999118356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220482602424433265}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1968148422610238941}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3712460111668028359
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,6 +2131,8 @@ MonoBehaviour:
   p1Pos: {x: -1, y: 0, z: -6}
   p2Pos: {x: 1, y: 0, z: -6}
   ameObj: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c, type: 3}
+  teramiObj: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
+    type: 3}
   ameData: {fileID: 11400000, guid: be491b5c6ce52f648b023c6b378bd04e, type: 2}
   teramiData: {fileID: 11400000, guid: ced6e05b69db1ca49817e13e786da4fa, type: 2}
   cameraController: {fileID: 4061920828500462406}
@@ -2128,7 +2166,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5256032833623941496}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 451888f0c16d58a43a6f0b103ba90179, type: 3}
   m_Name: 
@@ -2823,7 +2861,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 947637499999118356}
   m_Father: {fileID: 5182385105509535813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7007914268250964940

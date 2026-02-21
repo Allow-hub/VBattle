@@ -44,6 +44,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p2Pos;
         [Header("IsDebugが有効の時に1Pから生成されるObj")]
         [SerializeField] private GameObject ameObj;
+        [SerializeField] private GameObject teramiObj;
 
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
@@ -94,7 +95,7 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                p1Controller = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p1Controller = Instantiate(teramiObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
 
                 if (useNpc)
                     p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
@@ -112,7 +113,7 @@ namespace TechC.VBattle.InGame
                         PlayerIndex = PlayerConstants.PLAYER_1_ID,
                         DeviceName = Keyboard.current,
                         IsNPC = false,
-                        SelectedCharacter = ameData
+                        SelectedCharacter = teramiData
                     });
 
                 if (GameDataBridge.I != null)
