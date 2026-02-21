@@ -125,6 +125,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &373182891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 373182892}
+  m_Layer: 0
+  m_Name: Terami_Castella
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &373182892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373182891}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1932949537}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1435828337
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -246,6 +277,32 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2123120922309505320, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: poolItems.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2123120922309505320, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: poolItems.Array.data[12].name
+      value: Terami_Castella
+      objectReference: {fileID: 0}
+    - target: {fileID: 2123120922309505320, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: poolItems.Array.data[12].parent
+      value: 
+      objectReference: {fileID: 373182891}
+    - target: {fileID: 2123120922309505320, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: poolItems.Array.data[12].prefab
+      value: 
+      objectReference: {fileID: 8364434917528230189, guid: 92c4483eb6201704c80d4cf2e99de383,
+        type: 3}
+    - target: {fileID: 2123120922309505320, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: poolItems.Array.data[12].initialSize
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2402348523171276801, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -356,6 +413,12 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: ameObj
+      value: 
+      objectReference: {fileID: 2916867313761328699, guid: a52086bb800b7ff43bbb98b165c88e3c,
+        type: 3}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -373,9 +436,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1968148422610238941, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 373182892}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de551b8e8565c92489c9ebc3cb126d65, type: 3}
+--- !u!4 &1932949537 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1968148422610238941, guid: de551b8e8565c92489c9ebc3cb126d65,
+    type: 3}
+  m_PrefabInstance: {fileID: 1756444364}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7827945202877369542
 PrefabInstance:
   m_ObjectHideFlags: 0
