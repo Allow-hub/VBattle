@@ -29,11 +29,11 @@ MonoBehaviour:
   - attackName: "\u4E0A\u5F31"
     type: 0
     direction: 3
-    attackData: {fileID: 11400000, guid: f3624993031602c41bf06e3580622c33, type: 2}
+    attackData: {fileID: 11400000, guid: 528ff7a6b7a0b3c40b3f16964c9f6ae1, type: 2}
   - attackName: "\u4E0B\u5F31"
     type: 0
     direction: 4
-    attackData: {fileID: 11400000, guid: 22c0167e7ef38b241b63cfbaf43bedcf, type: 2}
+    attackData: {fileID: 11400000, guid: 528ff7a6b7a0b3c40b3f16964c9f6ae1, type: 2}
   - attackName: "\u30CB\u30E5\u30FC\u30C8\u30E9\u30EB\u5F37"
     type: 1
     direction: 0

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
   m_Name: Terami_Up_W
   m_EditorClassIdentifier: 
-  charaName: 0
+  charaName: 1
   attackName: Up_W
-  attackPrefab: {fileID: 2289341869409332591, guid: 767a4079ac0c4dc4fa4d0d405ffb1340,
+  attackPrefab: {fileID: 8364434917528230189, guid: 92c4483eb6201704c80d4cf2e99de383,
     type: 3}
   prefabOffset: {x: 1, y: 1.6, z: 1}
   prefabRotation: {x: 0, y: -90, z: 0}
@@ -32,6 +32,7 @@ MonoBehaviour:
   damage: 10
   knockbackForce: 5
   isCounter: 0
+  counterEnableDuration: 1
   recoveryDuration: 0.1
   cancelStartTime: 0.4
   cancelEndTime: 0.5
@@ -48,6 +49,8 @@ MonoBehaviour:
   canRepeat: 0
   repeatInterval: 0
   repeatDuration: 0
+  specialGaugeGain: 5
+  specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8
   wallBounceVerticalBoost: 2
