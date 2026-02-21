@@ -10,44 +10,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d245d3ae5311deb4693929ca1baf762a, type: 3}
-  m_Name: Ame_Right_W 1
+  m_Name: Terami_Neutral_W
   m_EditorClassIdentifier: 
   charaName: 0
-  attackName: Right_W
-  attackPrefab: {fileID: 1683792544504208174, guid: 46e07cbaf6401a54eadc74e66cb0ecee,
+  attackName: NormalWeakAttack_1
+  attackPrefab: {fileID: 7930082209967865745, guid: f7f6cc70bafbaae4ebc8c0a1785c1d80,
     type: 3}
-  prefabOffset: {x: 0, y: 0, z: 0}
-  prefabRotation: {x: 0, y: 0, z: 0}
-  animationSpeed: 1.8
-  attackDuration: 0.6
-  hitDetectionMode: 0
+  prefabOffset: {x: 0, y: 2, z: 0.5}
+  prefabRotation: {x: -40, y: -90, z: 0}
+  animationSpeed: 2.5
+  attackDuration: 0.5
+  hitDetectionMode: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
-  radius: 1.5
-  hitboxOffset: {x: 0, y: 1, z: 0}
-  hitTiming: 0.1
+  radius: 1.3
+  hitboxOffset: {x: 0, y: 1.4, z: 1}
+  hitTiming: 0.2
   hitEffectPrefab: {fileID: 6232109079735096711, guid: ac8f7f2b2e8532a41bb356f4a1d9056c,
     type: 3}
-  damage: 5
-  knockbackForce: 4
+  damage: 10
+  knockbackForce: 3
   isCounter: 0
-  recoveryDuration: 0.25
-  cancelStartTime: 0.3
+  counterEnableDuration: 1
+  recoveryDuration: 0.05
+  cancelStartTime: 0.2
   cancelEndTime: 0.5
-  hitStunDuration: 0.25
-  nextChain: {fileID: 0}
-  canChain: 0
+  hitStunDuration: 0.35
+  nextChain: {fileID: 11400000, guid: b2f038d6c05185a4389c1dfd21a0c88d, type: 2}
+  canChain: 1
   isChainPos: 0
-  hitStopDuration: 0.9
-  hitStopTimeScale: 0.8
-  knockbackDirection: {x: 1, y: 1, z: 0}
+  hitStopDuration: 0
+  hitStopTimeScale: 0
+  knockbackDirection: {x: -1, y: 1, z: 0}
   shakeIntensity: 0.1
   shakeDuraion: 0.1
   noiseSettings: {fileID: 0}
   canRepeat: 0
   repeatInterval: 0
   repeatDuration: 0
+  specialGaugeGain: 5
+  specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8
   wallBounceVerticalBoost: 2
