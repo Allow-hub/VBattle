@@ -43,8 +43,7 @@ namespace TechC.VBattle.InGame
         [SerializeField] private Vector3 p1Pos;
         [SerializeField] private Vector3 p2Pos;
         [Header("IsDebugが有効の時に1Pから生成されるObj")]
-        [SerializeField] private GameObject ameObj;
-        [SerializeField] private GameObject teramiObj;
+        [SerializeField] private GameObject p1DebugObj;
 
         [SerializeField] private CharacterData ameData;
         [SerializeField] private CharacterData teramiData;
@@ -95,15 +94,40 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                p1Controller = Instantiate(teramiObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p1Controller = Instantiate(p1DebugObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
 
                 if (useNpc)
                     p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
                 else
-                    p2Controller = Instantiate(ameObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+                    p2Controller = Instantiate(p1DebugObj, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
+
+                // デバッグモードでもデバイスを適切に割り当て
+                InputDevice p2Device = null;
+
+                // ゲームパッドが接続されているかチェック
+                var gamepads = Gamepad.all;
+                if (gamepads.Count > 0)
+                    p2Device = gamepads[0];
+
+                var p1Input = p1Controller.GetComponent<PlayerInput>();
+                if (p1Input != null)
+                    p1Input.SwitchCurrentControlScheme(KEYBOARD_CONTROL_SCHEME, Keyboard.current);
+
+                var p2Input = p2Controller.GetComponent<PlayerInput>();
+                if (!useNpc && p2Device != null && p2Input != null)
+                {
+                    string p2Scheme = p2Device is Gamepad ? GAMEPAD_CONTROL_SCHEME : KEYBOARD_CONTROL_SCHEME;
+                    p2Input.SwitchCurrentControlScheme(p2Scheme, p2Device);
+                }
+                else if (p2Input != null)
+                {
+                    // NPCまたはデバイスがない場合はInputActionを無効化してからコンポーネントを削除
+                    p2Input.DeactivateInput();
+                    Destroy(p2Input);
+                }
 
                 p1Controller.Init(PlayerConstants.PLAYER_1_ID, Keyboard.current, false);
-                p2Controller.Init(PlayerConstants.PLAYER_2_ID, Keyboard.current, useNpc); // useNpcフラグを使用
+                p2Controller.Init(PlayerConstants.PLAYER_2_ID, p2Device, useNpc);
                 
                 battleJudge = new BattleJudge(p1Controller, p2Controller, BattleBus);
 
@@ -120,7 +144,7 @@ namespace TechC.VBattle.InGame
                     GameDataBridge.I.SetupPlayer(PlayerConstants.PLAYER_2_ID, new GameDataBridge.PlayerSetupData
                     {
                         PlayerIndex = PlayerConstants.PLAYER_2_ID,
-                        DeviceName = Keyboard.current,
+                        DeviceName = p2Device,
                         IsNPC = useNpc,
                         SelectedCharacter = ameData
                     });

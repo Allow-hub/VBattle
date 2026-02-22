@@ -267,6 +267,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
         type: 3}
+    - target: {fileID: 6733301921680445614, guid: de551b8e8565c92489c9ebc3cb126d65,
+        type: 3}
+      propertyPath: p1DebugObj
+      value: 
+      objectReference: {fileID: 2916867313761328699, guid: 26387cda0cc30da439e9ae56eb086c84,
+        type: 3}
     - target: {fileID: 6932460048054945814, guid: de551b8e8565c92489c9ebc3cb126d65,
         type: 3}
       propertyPath: m_AnchorMax.x
