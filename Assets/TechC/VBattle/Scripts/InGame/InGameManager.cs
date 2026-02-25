@@ -95,7 +95,7 @@ namespace TechC.VBattle.InGame
             hitStopController = new HitStopController(BattleBus);
             if (isDebug)
             {
-                p1Controller = Instantiate(teramiObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
+                p1Controller = Instantiate(ameObj, p1Pos, Quaternion.Euler(p1Rot)).GetComponent<Character.CharacterController>();
 
                 if (useNpc)
                     p2Controller = Instantiate(ameData.NpcPrefab, p2Pos, Quaternion.Euler(p2Rot)).GetComponent<Character.CharacterController>();
@@ -113,7 +113,7 @@ namespace TechC.VBattle.InGame
                         PlayerIndex = PlayerConstants.PLAYER_1_ID,
                         DeviceName = Keyboard.current,
                         IsNPC = false,
-                        SelectedCharacter = teramiData
+                        SelectedCharacter = ameData
                     });
 
                 if (GameDataBridge.I != null)

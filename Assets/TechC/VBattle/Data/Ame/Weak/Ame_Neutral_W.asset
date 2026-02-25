@@ -49,7 +49,7 @@ MonoBehaviour:
   canRepeat: 1
   repeatInterval: 0.1
   repeatDuration: 0.2
-  specialGaugeGain: 2
+  specialGaugeGain: 100
   specialGaugeGainOnHit: 3
   causesWallBounce: 0
   wallBounceForce: 8
