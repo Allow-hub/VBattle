@@ -55,15 +55,15 @@ namespace TechC.VBattle.InGame.Character
                 hitPosition = other.gameObject.transform.position,
                 hitTargets = new[] { other }
             });
-            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.Image, maxSize: 700, intervalPerWindow: 0.01f,tex: tex);
+            WindowManager.I.PopupWindow(Core.Window.WindowFactory.WindowType.ImageLayered, maxSize: 700, intervalPerWindow: 0.01f,tex: tex);
 
             DelayUtility.StartDelayedActionWithPauseAsync(popupDelay, () =>
             {
                 GameObject ult = Object.Instantiate(ultPrefab);
                 ult.transform.position = ultSpawnPos;
                 UnityEngine.Camera.main.gameObject.SetActive(false);
-            },InGameManager.I.GetPauseStateFunc);
-            InGameManager.I.SetPauseState(true);
+                InGameManager.I.SetPauseState(true);
+            }, InGameManager.I.GetPauseStateFunc);
         }
     }
 }

@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TechC.VBattle.Core.Managers;
 using TechC.VBattle.Core.Window;
 using UnityEngine;
+using Windows.Win32.Foundation;
 
 namespace TechC.VBattle.InGame.Character
 {
@@ -13,7 +12,11 @@ namespace TechC.VBattle.InGame.Character
     /// </summary>
     public class AmeCutIn : MonoBehaviour, ICutInSequence
     {
-        [SerializeField] private Sprite tex;
+        [SerializeField] private Vector3 p1Pos;
+        [SerializeField] private Vector3 p1Rot;
+        [SerializeField] private Vector3 p2Pos;
+        [SerializeField] private Vector3 p2Rot;
+
         public event Action OnFinished;
 
         private void OnEnable()
@@ -23,9 +26,13 @@ namespace TechC.VBattle.InGame.Character
 
         public async UniTask Play()
         {
-            var w = WindowFactory.I.GetWindow(WindowFactory.WindowType.Image);
-
             await UniTask.Delay(TimeSpan.FromSeconds(2f));
+            //TODO:必殺技を打ったのがプレイヤー1かプレイヤー2かで、どちらのキャラを先に出すか変える
+            var p1Obj = Instantiate(GameDataBridge.I.Player_1Setup.SelectedCharacter.CharaPrefab, p1Pos, Quaternion.Euler(p1Rot));
+            var p2Obj = Instantiate(GameDataBridge.I.Player_2Setup.SelectedCharacter.CharaPrefab, p2Pos, Quaternion.Euler(p2Rot));
+
+            WindowManager.I.ResetWindow(true);
+
             OnFinished?.Invoke();
         }
     }
